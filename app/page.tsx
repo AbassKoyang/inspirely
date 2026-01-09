@@ -1,65 +1,344 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import React, { useEffect, useRef, useState, useMemo } from 'react'
+import Link from 'next/link'
+import { 
+  BookOpen, 
+  Users, 
+  TrendingUp, 
+  Sparkles, 
+  ArrowRight,
+  PenTool,
+  Pen,
+  Pencil,
+  Edit,
+  FileEdit,
+  FileText,
+  Book,
+  Notebook,
+  NotebookPen,
+  Type,
+  Quote,
+  Feather,
+  ScrollText,
+  Newspaper,
+  FilePenLine
+} from 'lucide-react'
+
+const WritingIconGrid = () => {
+  const gridCols = 12
+  const gridRows = 8
+  
+  const iconComponents = [
+    PenTool,
+    Pen,
+    Pencil,
+    Edit,
+    FileEdit,
+    FileText,
+    BookOpen,
+    Book,
+    Notebook,
+    NotebookPen,
+    Type,
+    Quote,
+    Feather,
+    ScrollText,
+    Newspaper,
+    FilePenLine,
+  ]
+
+  const gridItems = useMemo(() => {
+    const items = []
+    
+    for (let i = 0; i < gridRows * gridCols; i++) {
+      const randomIcon = iconComponents[Math.floor(Math.random() * iconComponents.length)]
+      items.push({
+        id: i,
+        Icon: randomIcon,
+      })
+    }
+    return items
+  }, [])
+
+  const [hoveredItems, setHoveredItems] = useState<Set<number>>(new Set())
+  const [revealedItems, setRevealedItems] = useState<Set<number>>(new Set())
+  const timeoutRefs = useRef<Map<number, NodeJS.Timeout>>(new Map())
+
+  const handleMouseEnter = (id: number) => {
+    const existingTimeout = timeoutRefs.current.get(id)
+    if (existingTimeout) {
+      clearTimeout(existingTimeout)
+      timeoutRefs.current.delete(id)
+    }
+    
+    setHoveredItems((prev) => new Set(prev).add(id))
+    setRevealedItems((prev) => new Set(prev).add(id))
+  }
+
+  const handleMouseLeave = (id: number) => {
+    // Remove from hovered items immediately
+    setHoveredItems((prev) => {
+      const newSet = new Set(prev)
+      newSet.delete(id)
+      return newSet
+    })
+    
+    // Keep in revealed items and remove after 0.5 seconds
+    const timeout = setTimeout(() => {
+      setRevealedItems((prev) => {
+        const newSet = new Set(prev)
+        newSet.delete(id)
+        return newSet
+      })
+      timeoutRefs.current.delete(id)
+    }, 500)
+    
+    timeoutRefs.current.set(id, timeout)
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="absolute inset-0 z-[1] grid grid-cols-12 gap-0 pointer-events-none">
+      {gridItems.map((item) => {
+        const Icon = item.Icon
+        const isHovered = hoveredItems.has(item.id)
+        const isRevealed = revealedItems.has(item.id)
+        
+        return (
+          <div
+            key={item.id}
+            className="relative aspect-square flex items-center justify-center border border-transparent pointer-events-auto"
+            onMouseEnter={() => handleMouseEnter(item.id)}
+            onMouseLeave={() => handleMouseLeave(item.id)}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+            <Icon
+              className={`h-6 w-6 md:h-8 md:w-8 text-emerald-500/60 transition-all duration-300 ${
+                isHovered 
+                  ? 'opacity-100 scale-125 text-emerald-600' 
+                  : isRevealed 
+                  ? 'opacity-40 scale-110' 
+                  : 'opacity-0 scale-100'
+              }`}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+          </div>
+        )
+      })}
     </div>
-  );
+  )
 }
+
+const Home = () => {
+  const featuredPosts = [
+    {
+      title: "The Future of Writing in the Digital Age",
+      excerpt: "Exploring how technology is reshaping the way we write, read, and share stories.",
+      author: "Sarah Chen",
+      date: "Mar 15, 2024",
+      readTime: "5 min read",
+      category: "Technology"
+    },
+    {
+      title: "Finding Your Voice as a Writer",
+      excerpt: "A guide to discovering and developing your unique writing style that resonates with readers.",
+      author: "Michael Torres",
+      date: "Mar 12, 2024",
+      readTime: "7 min read",
+      category: "Writing"
+    },
+    {
+      title: "Building a Community Through Stories",
+      excerpt: "How storytelling connects people and creates meaningful communities in our digital world.",
+      author: "Emily Johnson",
+      date: "Mar 10, 2024",
+      readTime: "6 min read",
+      category: "Community"
+    }
+  ]
+
+  const trendingTopics = [
+    "Technology",
+    "Writing",
+    "Productivity",
+    "Design",
+    "Business",
+    "Culture",
+    "Science",
+    "Philosophy"
+  ]
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden px-6 py-20 md:py-18 lg:px-8">
+        {/* Grid Background */}
+        <div 
+          className="absolute inset-0 z-0 opacity-40"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
+              linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px',
+          }}
+        />
+        {/* Writing Icons Grid */}
+        <WritingIconGrid />
+        <div className="relative z-10 mx-auto max-w-4xl text-center">
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-2 text-sm">
+            <Sparkles className="h-4 w-4 text-primary" />
+            <span className="text-muted-foreground">Welcome to Inspirely</span>
+          </div>
+          
+          <h1 className="mb-6 text-5xl font-bold tracking-tight text-foreground sm:text-6xl md:text-7xl lg:text-8xl">
+            Ideas worth
+            <span className="block bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
+              sharing
+            </span>
+          </h1>
+          
+          <p className="mx-auto mb-10 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
+            Discover stories, insights, and perspectives from writers around the world. 
+            Join a community where meaningful ideas flourish.
+          </p>
+          
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Link
+              href="/signup"
+              className="group inline-flex items-center gap-2 rounded-full bg-emerald-600 px-8 py-4 text-base font-medium text-white transition-all hover:scale-105 hover:bg-emerald-700 hover:shadow-lg hover:shadow-emerald-500/50"
+            >
+              Get started
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+            <Link
+              href="/signin"
+              className="inline-flex items-center gap-2 rounded-full border border-emerald-600/30 bg-transparent px-8 py-4 text-base font-medium text-emerald-600 transition-all hover:border-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
+            >
+              Sign in
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="border-y border-border bg-muted/30 px-6 py-16 md:px-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div className="text-center">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                <BookOpen className="h-6 w-6 text-primary" />
+              </div>
+              <div className="text-4xl font-bold text-foreground">10K+</div>
+              <div className="mt-2 text-muted-foreground">Stories published</div>
+            </div>
+            
+            <div className="text-center">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                <Users className="h-6 w-6 text-primary" />
+              </div>
+              <div className="text-4xl font-bold text-foreground">50K+</div>
+              <div className="mt-2 text-muted-foreground">Active readers</div>
+            </div>
+            
+            <div className="text-center">
+              <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                <TrendingUp className="h-6 w-6 text-primary" />
+              </div>
+              <div className="text-4xl font-bold text-foreground">1M+</div>
+              <div className="mt-2 text-muted-foreground">Monthly reads</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Stories Section */}
+      <section className="px-6 py-20 md:px-8 lg:py-28">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 flex items-center justify-between">
+            <h2 className="text-3xl font-bold text-foreground md:text-4xl">Featured stories</h2>
+            <Link
+              href="/stories"
+              className="hidden items-center gap-2 text-muted-foreground transition-colors hover:text-foreground sm:flex"
+            >
+              View all
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {featuredPosts.map((post, index) => (
+              <article
+                key={index}
+                className="group cursor-pointer space-y-4 rounded-lg border border-border bg-card p-6 transition-all hover:border-foreground/20 hover:shadow-lg"
+              >
+                <div className="flex items-center gap-3 text-sm">
+                  <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-foreground">
+                    {post.category}
+                  </span>
+                  <span className="text-muted-foreground">{post.readTime}</span>
+                </div>
+                
+                <h3 className="text-xl font-bold leading-tight text-foreground transition-colors group-hover:text-primary md:text-2xl">
+                  {post.title}
+                </h3>
+                
+                <p className="line-clamp-3 text-muted-foreground">
+                  {post.excerpt}
+                </p>
+                
+                <div className="flex items-center justify-between pt-4">
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full bg-linear-to-br from-primary to-primary/60"></div>
+                    <div>
+                      <div className="text-sm font-medium text-foreground">{post.author}</div>
+                      <div className="text-xs text-muted-foreground">{post.date}</div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trending Topics Section */}
+      <section className="border-t border-border bg-muted/30 px-6 py-20 md:px-8">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="mb-8 text-3xl font-bold text-foreground md:text-4xl">Trending topics</h2>
+          
+          <div className="flex flex-wrap gap-3">
+            {trendingTopics.map((topic, index) => (
+              <Link
+                key={index}
+                href={`/topics/${topic.toLowerCase()}`}
+                className="group rounded-full border border-border bg-card px-6 py-3 text-sm font-medium text-foreground transition-all hover:border-foreground hover:bg-foreground hover:text-background"
+              >
+                {topic}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="px-6 py-20 md:px-8 lg:py-28">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2 className="mb-6 text-4xl font-bold text-foreground md:text-5xl">
+            Start writing today
+          </h2>
+          <p className="mb-10 text-lg text-muted-foreground md:text-xl">
+            Share your thoughts with the world. Join thousands of writers who are already publishing on Inspirely.
+          </p>
+          <Link
+            href="/signup"
+            className="group inline-flex items-center gap-2 rounded-full bg-emerald-600 px-8 py-4 text-base font-medium text-white transition-all hover:scale-105 hover:bg-emerald-700 hover:shadow-lg hover:shadow-emerald-500/50"
+          >
+            Create your account
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+export default Home
