@@ -3,9 +3,11 @@
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
+import { useAuth } from '@/lib/contexts/authContext'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const {user, loading} = useAuth()
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -34,20 +36,24 @@ const Navbar = () => {
             About
           </Link>
           
-          <div className="flex items-center gap-4">
-            <Link
-              href="/signin"
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/signup"
-              className="rounded-full bg-emerald-600 px-6 py-2 text-sm font-medium text-white transition-all hover:scale-105 hover:bg-emerald-700"
-            >
-              Get started
-            </Link>
-          </div>
+          {user ? (
+            <p className='text-lg text-primary font-medium'>Hello, {user.first_name}</p>
+          ):(
+            <div className="flex items-center gap-4">
+              <Link
+                href="/signin"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/signup"
+                className="rounded-full bg-emerald-600 px-6 py-2 text-sm font-medium text-white transition-all hover:scale-105 hover:bg-emerald-700"
+              >
+                Get started
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu Button */}

@@ -69,6 +69,6 @@ export const updateUserProfileSchema = userSchema.pick({
 }).partial()
 
 export type User = z.infer<typeof userSchema>
-export type CreateUserInput = z.infer<typeof createUserSchema>
+export type CreateUserInput = z.input<typeof createUserSchema>
 export type UpdateUserInput = z.infer<typeof updateUserSchema>
 export type UpdateUserProfileInput = z.infer<typeof updateUserProfileSchema>
