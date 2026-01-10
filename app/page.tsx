@@ -98,7 +98,7 @@ const WritingIconGrid = () => {
   }
 
   return (
-    <div className="absolute inset-0 z-[1] grid grid-cols-12 gap-0 pointer-events-none">
+    <div className="absolute inset-0 z-10 grid grid-cols-12 gap-0 pointer-events-none">
       {gridItems.map((item) => {
         const Icon = item.Icon
         const isHovered = hoveredItems.has(item.id)
@@ -168,9 +168,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
       <section className="relative overflow-hidden px-6 py-20 md:py-18 lg:px-8">
-        {/* Grid Background */}
         <div 
           className="absolute inset-0 z-0 opacity-40"
           style={{
@@ -181,7 +179,6 @@ const Home = () => {
             backgroundSize: '40px 40px',
           }}
         />
-        {/* Writing Icons Grid */}
         <WritingIconGrid />
         <div className="relative z-10 mx-auto max-w-4xl text-center">
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-2 text-sm">
@@ -210,7 +207,7 @@ const Home = () => {
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
-              href="/signin"
+              href="/login"
               className="inline-flex items-center gap-2 rounded-full border border-emerald-600/30 bg-transparent px-8 py-4 text-base font-medium text-emerald-600 transition-all hover:border-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
             >
               Sign in
@@ -219,7 +216,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
       <section className="border-y border-border bg-muted/30 px-6 py-16 md:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">

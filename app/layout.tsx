@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner"
 import { AuthProvider } from "@/lib/contexts/authContext";
+import Script from 'next/script';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
