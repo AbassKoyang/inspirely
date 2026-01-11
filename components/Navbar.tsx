@@ -41,7 +41,7 @@ const Navbar = () => {
           ):(
             <div className="flex items-center gap-4">
               <Link
-                href="/signin"
+                href="/login"
                 className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 Sign in
@@ -56,14 +56,15 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
+        {!user && (
+          <button
           className="md:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
         >
           {isMenuOpen ? (<X className="h-6 w-6 text-foreground" />) : (<Menu className="h-6 w-6 text-foreground" />)}
         </button>
+        )}
       </div>
 
       {isMenuOpen && (
@@ -92,7 +93,7 @@ const Navbar = () => {
             </Link>
             <div className="flex items-center gap-4 pt-4 border-t border-border">
               <Link
-                href="/signin"
+                href="/login"
                 className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                 onClick={() => setIsMenuOpen(false)}
               >

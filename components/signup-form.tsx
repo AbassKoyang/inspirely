@@ -26,6 +26,7 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 import { useAuth } from "@/lib/contexts/authContext";
+import axios from "axios";
 
 
 declare global {
@@ -97,11 +98,12 @@ export function SignupForm({
     };
   }, [gisLoaded]);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     window.google?.accounts.id.cancel();
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (user) {
+      window.google?.accounts.id.cancel();
+      router.push('/')
+    }
+  }, [user]);
     
     const form = useForm<CreateUserInput>({
       resolver: zodResolver(createUserSchema),
@@ -119,38 +121,31 @@ export function SignupForm({
     }
 
     const handleSignUp = async (data: CreateUserInput) => {
-      setisLoading(true)
+      setisLoading(true);
     
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register/`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(data),
-          }
-        )
+        const res = await axios.post(
+          `/api/auth/register/`,
+          data,
+          { withCredentials: true }
+        );
+        console.log(res.data);
+        toast.success("Account created successfully");
+        router.push("/");
     
-        if (!res.ok) {
-          const error = await res.json()
-          toast.error(error.detail ?? "Signup failed")
-          return
+      } catch (err: any) {
+        if (err.response) {
+          const errorMessage = err.response.data?.detail || "Signup failed";
+          toast.error(errorMessage);
+        } else {
+          toast.error("Something went wrong");
         }
-    
-        const result = await res.json()
-        console.log(result)
-    
-        toast.success("Account created successfully")
-        router.push("/")
-    
-      } catch (err) {
-        toast.error("Something went wrong")
-        console.error(err)
+        console.error(err);
       } finally {
-        setisLoading(false)
+        setisLoading(false);
       }
-    }
+    };
+    
     
 
   return (

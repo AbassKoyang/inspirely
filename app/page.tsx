@@ -26,8 +26,8 @@ import {
 } from 'lucide-react'
 
 const WritingIconGrid = () => {
-  const gridCols = 12
-  const gridRows = 8
+  const gridCols = 30
+  const gridRows = 15
   
   const iconComponents = [
     PenTool,
@@ -65,64 +65,64 @@ const WritingIconGrid = () => {
   const [revealedItems, setRevealedItems] = useState<Set<number>>(new Set())
   const timeoutRefs = useRef<Map<number, NodeJS.Timeout>>(new Map())
 
-  const handleMouseEnter = (id: number) => {
-    const existingTimeout = timeoutRefs.current.get(id)
-    if (existingTimeout) {
-      clearTimeout(existingTimeout)
-      timeoutRefs.current.delete(id)
-    }
+  // const handleMouseEnter = (id: number) => {
+  //   const existingTimeout = timeoutRefs.current.get(id)
+  //   if (existingTimeout) {
+  //     clearTimeout(existingTimeout)
+  //     timeoutRefs.current.delete(id)
+  //   }
     
-    setHoveredItems((prev) => new Set(prev).add(id))
-    setRevealedItems((prev) => new Set(prev).add(id))
-  }
+  //   setHoveredItems((prev) => new Set(prev).add(id))
+  //   setRevealedItems((prev) => new Set(prev).add(id))
+  // }
 
-  const handleMouseLeave = (id: number) => {
-    // Remove from hovered items immediately
-    setHoveredItems((prev) => {
-      const newSet = new Set(prev)
-      newSet.delete(id)
-      return newSet
-    })
+  // const handleMouseLeave = (id: number) => {
+  //   setHoveredItems((prev) => {
+  //     const newSet = new Set(prev)
+  //     newSet.delete(id)
+  //     return newSet
+  //   })
     
-    // Keep in revealed items and remove after 0.5 seconds
-    const timeout = setTimeout(() => {
-      setRevealedItems((prev) => {
-        const newSet = new Set(prev)
-        newSet.delete(id)
-        return newSet
-      })
-      timeoutRefs.current.delete(id)
-    }, 500)
+  //   const timeout = setTimeout(() => {
+  //     setRevealedItems((prev) => {
+  //       const newSet = new Set(prev)
+  //       newSet.delete(id)
+  //       return newSet
+  //     })
+  //     timeoutRefs.current.delete(id)
+  //   }, 500)
     
-    timeoutRefs.current.set(id, timeout)
-  }
+  //   timeoutRefs.current.set(id, timeout)
+  // }
 
   return (
-    <div className="absolute inset-0 z-10 grid grid-cols-12 gap-0 pointer-events-none">
-      {gridItems.map((item) => {
-        const Icon = item.Icon
-        const isHovered = hoveredItems.has(item.id)
-        const isRevealed = revealedItems.has(item.id)
-        
-        return (
-          <div
-            key={item.id}
-            className="relative aspect-square flex items-center justify-center border border-transparent pointer-events-auto"
-            onMouseEnter={() => handleMouseEnter(item.id)}
-            onMouseLeave={() => handleMouseLeave(item.id)}
-          >
-            <Icon
-              className={`h-6 w-6 md:h-8 md:w-8 text-emerald-500/60 transition-all duration-300 ${
-                isHovered 
-                  ? 'opacity-100 scale-125 text-emerald-600' 
-                  : isRevealed 
-                  ? 'opacity-40 scale-110' 
-                  : 'opacity-0 scale-100'
-              }`}
-            />
-          </div>
-        )
-      })}
+    <div className="absolute inset-0 z-10 grid grid-rows-15 grid-cols-30 gap-0 pointer-events-none">
+      {gridItems.map((item) => <IconBox icon={item.Icon}/>)}
+    </div>
+  )
+}
+
+const IconBox = ({icon}:{icon: any}) => {
+  const [isHovered, setisHovered] = useState(false)
+  const Icon = icon
+  const handleMouseEnter = () => {
+    setisHovered(true)
+  }
+  const handleMouseLeave = () => {
+    setTimeout(() => {
+      setisHovered(false)
+    }, 500);
+  }
+  return (
+    <div
+      className="relative col-span-1 row-span-1 aspect-square flex items-center justify-center border border-transparent pointer-events-auto group"
+      onMouseEnter={() => handleMouseEnter()}
+      onMouseLeave={() => handleMouseLeave()}
+    >
+      <Icon
+      strokeWidth={1}
+        className={`h-3 w-3 md:h-6 md:w-6  transition-all duration-300 ease-in-out ${isHovered? 'opacity-100 text-emerald-500' : 'opacity-20 text-emerald-500/60'}`}
+      />
     </div>
   )
 }
@@ -180,7 +180,7 @@ const Home = () => {
           }}
         />
         <WritingIconGrid />
-        <div className="relative z-10 mx-auto max-w-4xl text-center">
+        <div className="relative z-10 mx-auto max-w-fit text-center bg-transparent">
           <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-2 text-sm">
             <Sparkles className="h-4 w-4 text-primary" />
             <span className="text-muted-foreground">Welcome to Inspirely</span>
@@ -246,7 +246,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Stories Section */}
       <section className="px-6 py-20 md:px-8 lg:py-28">
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 flex items-center justify-between">
@@ -296,7 +295,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Trending Topics Section */}
       <section className="border-t border-border bg-muted/30 px-6 py-20 md:px-8">
         <div className="mx-auto max-w-6xl">
           <h2 className="mb-8 text-3xl font-bold text-foreground md:text-4xl">Trending topics</h2>
@@ -315,7 +313,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="px-6 py-20 md:px-8 lg:py-28">
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="mb-6 text-4xl font-bold text-foreground md:text-5xl">

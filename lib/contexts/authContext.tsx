@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import { User } from '../schemas/user'
+import axios from 'axios'
 
 const AuthContext = createContext<{
   user: User | null
@@ -16,12 +17,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me/`, {
-      credentials: 'include',
-    })
-      .then(res => (res.ok ? res.json() : null))
-      .then(data => setUser(data))
-      .finally(() => setLoading(false))
+    const getUser = async () => {
+        setLoading(true)
+        try {
+            const response = await axios.get(`/api/auth/me/`, {withCredentials: true})
+            setUser(response.data)
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    getUser();
   }, [])
 
   return (

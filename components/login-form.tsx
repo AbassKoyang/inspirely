@@ -21,11 +21,80 @@ import Link from "next/link"
 import z from "zod"
 import { useForm, Controller } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useEffect, useRef, useState } from "react"
+import { useAuth } from "@/lib/contexts/authContext"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import Script from "next/script"
+import axios, { AxiosError } from "axios"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
+  const [isLoading, setisLoading] = useState(false)
+  const googleButtonRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
+  const { user, loading } = useAuth();
+  const [gisLoaded, setGisLoaded] = useState(false);  
+  console.log(user);
+
+  const handleGoogleResponse = async (response: any) => {
+    try {
+      const formData = new FormData();
+      formData.append("token", response.credential)
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/google_login/`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      })
+
+      if (!res.ok) {
+        throw new Error("Google login failed");
+      }
+
+      toast.success("Logged in with Google");
+      router.push("/");
+    } catch (error) {
+      console.error(error)
+      toast.error("Google authentication failed")
+    }
+  }
+
+  useEffect(() => {
+    if (!gisLoaded) return;
+
+    const google = window.google;
+
+    google.accounts.id.initialize({
+      client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+      callback: handleGoogleResponse,
+    });
+
+    if (googleButtonRef.current) {
+      google.accounts.id.renderButton(googleButtonRef.current, {
+        theme: "outline",
+        size: "large",
+        text: "sign_in_with",
+        shape: "rectangular",
+      });
+    }
+
+    google.accounts.id.prompt();
+
+    return () => {
+      google.accounts.id.cancel();
+    };
+  }, [gisLoaded]);
+
+  useEffect(() => {
+    if (user) {
+      window.google?.accounts.id.cancel();
+      router.push('/')
+    }
+  }, [user]);
 
   const loginFormSchema = z.object({
     email: z.email('Enter a valid email adress'),
@@ -39,8 +108,43 @@ export function LoginForm({
       password: ''
     }
   })
+
+  const onSubmit = (data: z.infer<typeof loginFormSchema>) => {
+    handleLogin(data);
+}
+
+const handleLogin = async (data: z.infer<typeof loginFormSchema>) => {
+  setisLoading(true)
+
+  try {
+    const res = await axios.post(
+      `/api/auth/login/`, data, {withCredentials: true}
+    )
+    const result = await res.data
+    console.log(result)
+
+    toast.success("Logged in successfully")
+    router.push("/")
+
+  } catch (err: any) {
+    if (err.response) {
+      const errorMessage = err.response.data?.detail || "Login failed";
+      toast.error(errorMessage);
+    } else {
+      toast.error("Something went wrong");
+    }
+    console.error(err)
+  } finally {
+    setisLoading(false)
+  }
+}
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <Script
+        src="https://accounts.google.com/gsi/client"
+        strategy="afterInteractive"
+        onLoad={() => setGisLoaded(true)}
+      />
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
@@ -49,18 +153,12 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form id="login-form" onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
               <Field>
-                <Button variant="outline" type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path
-                      d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                  Login with Google
-                </Button>
+                <div ref={googleButtonRef}>
+                  
+                </div>
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
@@ -108,7 +206,7 @@ export function LoginForm({
                />
           
               <Field>
-                <Button className="bg-emerald-600" type="submit">Login</Button>
+                <Button className="bg-emerald-600 hover:bg-emerald-700" type="submit">{isLoading ? "Logging in..." : "Log in"}</Button>               
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <Link href="/signup">Sign up</Link>
                 </FieldDescription>
