@@ -1,21 +1,74 @@
 'use client'
 
 import Link from 'next/link'
-import { Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { Bell, Menu, Search, SquarePen, X } from 'lucide-react'
+import { FormEvent, useState } from 'react'
 import { useAuth } from '@/lib/contexts/authContext'
+import Image from 'next/image'
+import defaultAvatar from '@/public/assets/images/default-avatar.png'
+import { useRouter } from 'next/navigation'
+import { addRecentSearch } from '@/lib/utils'
+import { useSideBarActive } from '@/lib/contexts/sidebardContext'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const {user, loading} = useAuth()
+  const [query, setQuery] = useState('');
+  const {isActive, setIsActive} = useSideBarActive() 
+
+  const router = useRouter();
+    const handleFormSubmit = (e: FormEvent) => {
+      e.preventDefault();
+        if(query !== ''){
+            router.push(`/search/search-results/${query}`)
+            addRecentSearch(query);
+        }
+    }
+    
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-8">
-        <Link href="/" className="text-2xl font-bold text-emerald-600 transition-colors hover:text-emerald-700">
-          Inspirely
-        </Link>
+    <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/40">
+      <div className="mx-auto flex max-w-full items-center justify-between px-4 py-4 md:px-6">
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-4">
+            <button className='hidden md:block' onClick={() => setIsActive(!isActive)}>
+              <Menu strokeWidth={1} className='size-6 text-black' />
+            </button>
+            <Link href="/" className="text-3xl font-bold text-emerald-600 transition-colors hover:text-emerald-700">
+              Inspirely
+            </Link>
+          </div>
+          <form onSubmit={handleFormSubmit} className="focus-within:border focus-within:border-emerald-600 hidden md:flex w-[240px] h-[40px] rounded-4xl bg-gray-100/90 items-center justify-between overflow-hidden pl-3">
+            <button type='submit' className="flex items-center justify-center mr-2 cursor-pointer">
+                <Search strokeWidth={1} className="size-[19px] text-emerald-600" />
+            </button>
+            <input 
+              onChange={(e) => setQuery(e.target.value)} type="text" placeholder="Search" className="h-full w-[85%] bg-transparent placeholder:text-foreground placeholder:font-light outline-0 stroke-0 border-0" />
+          </form>
+        </div>
 
+        {user ? (
+            <div className='flex items-center gap-5 md:gap-8'>
+              <Link href='#' className='hidden md:block'>
+                <div className="flex gap-2 items-center group">
+                  <SquarePen strokeWidth={1} className='size-5.5 text-black/75 group-hover:text-black transition-all duration-200 ease-in-out' />
+                  <p className='text-[16px] font-light text-black/75 group-hover:text-black transition-all duration-200 ease-in-out'>Write</p>
+                </div>
+              </Link>
+              <Link href='#'>
+                <Bell strokeWidth={1} className='size-5.5 text-black/70 hover:text-black transition-all duration-200 ease-in-out' />
+              </Link>
+              <button className='rounded-full overflow-hidden object-center object-cover cursor-pointer'>
+                <Image
+                className='size-full'
+                src={user.profile_pic_url || defaultAvatar}
+                width={30}
+                height={30}
+                alt='Profle Picture'
+                />
+              </button>
+            </div>
+          ):(
         <div className="hidden items-center gap-8 md:flex">
           <Link
             href="/write"
@@ -36,9 +89,6 @@ const Navbar = () => {
             About
           </Link>
           
-          {user ? (
-            <p className='text-lg text-primary font-medium'>Hello, {user.first_name}</p>
-          ):(
             <div className="flex items-center gap-4">
               <Link
                 href="/login"
@@ -53,8 +103,8 @@ const Navbar = () => {
                 Get started
               </Link>
             </div>
-          )}
-        </div>
+        </div>)}
+
 
         {!user && (
           <button

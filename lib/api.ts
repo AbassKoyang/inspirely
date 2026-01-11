@@ -52,3 +52,24 @@ api.interceptors.response.use(
   }
 );
 
+
+export const fetchPersonalisedPosts = async () => {
+    try {
+        const response =  await api.get("/api/feeds/personalized/")
+        console.log(response.data)
+        return response.data
+    } catch (error) {
+        console.error("error fetching posts", error)
+    }
+}
+
+export const fetchTrendingPosts = async () => {
+    try {
+        const response =  await api.get("/api/feeds/trending/")
+        console.log(response.data)
+        return response.data
+    } catch (error) {
+        console.error("error fetching trending posts", error)
+    }
+}
+

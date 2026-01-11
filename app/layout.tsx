@@ -6,6 +6,10 @@ import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner"
 import { AuthProvider } from "@/lib/contexts/authContext";
 import Script from 'next/script';
+import QueryProvider from "@/components/tanstackConfig";
+import SideBar from "@/components/SideBar";
+import { SidebarProvider, useSideBarActive } from "@/lib/contexts/sidebardContext";
+import LayoutWrapper from "@/components/LayoutWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,10 +37,18 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <Navbar />
-          {children}
-          <Footer />
-          <Toaster />
+          <QueryProvider>
+            <SidebarProvider>
+              <main className="w-full min-h-dvh relative">
+              <Navbar />
+              <LayoutWrapper>
+                {children}
+              </LayoutWrapper>
+              <Footer />
+              <Toaster />
+              </main>
+          </ SidebarProvider>
+          </QueryProvider>
         </AuthProvider>
       </body>
     </html>

@@ -27,6 +27,7 @@ import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import Script from "next/script"
 import axios, { AxiosError } from "axios"
+import { api } from "@/lib/api"
 
 export function LoginForm({
   className,
@@ -45,15 +46,7 @@ export function LoginForm({
       const formData = new FormData();
       formData.append("token", response.credential)
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/google_login/`, {
-        method: 'POST',
-        body: formData,
-        credentials: 'include'
-      })
-
-      if (!res.ok) {
-        throw new Error("Google login failed");
-      }
+      const res = await api.post(`/api/auth/google_login/`, formData, {withCredentials: true})
 
       toast.success("Logged in with Google");
       router.push("/");
@@ -117,7 +110,7 @@ const handleLogin = async (data: z.infer<typeof loginFormSchema>) => {
   setisLoading(true)
 
   try {
-    const res = await axios.post(
+    const res = await api.post(
       `/api/auth/login/`, data, {withCredentials: true}
     )
     const result = await res.data

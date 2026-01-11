@@ -61,9 +61,9 @@ const WritingIconGrid = () => {
     return items
   }, [])
 
-  const [hoveredItems, setHoveredItems] = useState<Set<number>>(new Set())
-  const [revealedItems, setRevealedItems] = useState<Set<number>>(new Set())
-  const timeoutRefs = useRef<Map<number, NodeJS.Timeout>>(new Map())
+  // const [hoveredItems, setHoveredItems] = useState<Set<number>>(new Set())
+  // const [revealedItems, setRevealedItems] = useState<Set<number>>(new Set())
+  // const timeoutRefs = useRef<Map<number, NodeJS.Timeout>>(new Map())
 
   // const handleMouseEnter = (id: number) => {
   //   const existingTimeout = timeoutRefs.current.get(id)
@@ -97,7 +97,7 @@ const WritingIconGrid = () => {
 
   return (
     <div className="absolute inset-0 z-10 grid grid-rows-15 grid-cols-30 gap-0 pointer-events-none">
-      {gridItems.map((item) => <IconBox icon={item.Icon}/>)}
+      {gridItems.map((item) => <IconBox key={item.id} icon={item.Icon}/>)}
     </div>
   )
 }
@@ -167,7 +167,7 @@ const Home = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-full bg-background">
       <section className="relative overflow-hidden px-6 py-20 md:py-18 lg:px-8">
         <div 
           className="absolute inset-0 z-0 opacity-40"
