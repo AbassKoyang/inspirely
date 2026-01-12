@@ -73,3 +73,23 @@ export const fetchTrendingPosts = async () => {
     }
 }
 
+export const fetchLatestPosts = async () => {
+    try {
+        const response =  await api.get("/api/feeds/recent/")
+        console.log(response.data)
+        return response.data
+    } catch (error) {
+        console.error("error fetching latest posts", error)
+    }
+}
+
+export const fetchCombinedPosts = async () => {
+    try {
+        const response =  await api.get("/api/feeds/combined/")
+        console.log(response.data)
+        return response.data
+    } catch (error) {
+        console.error("error fetching combined posts", error)
+    }
+}
+

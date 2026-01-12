@@ -41,9 +41,7 @@ export default function RootLayout({
             <SidebarProvider>
               <main className="w-full min-h-dvh relative">
               <Navbar />
-              <LayoutWrapper>
                 {children}
-              </LayoutWrapper>
               <Footer />
               <Toaster />
               </main>

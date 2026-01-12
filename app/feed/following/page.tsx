@@ -1,10 +1,9 @@
 'use client';
-import Nav from '@/components/feed/Nav';
-import { useFetchCombinedPosts } from '@/lib/queries'
+import { useFetchPersonalisedPosts } from '@/lib/queries'
 import React from 'react'
 
 const Page = () => {
-    const {isLoading, isError, data} = useFetchCombinedPosts()
+    const {isLoading, isError, data} = useFetchPersonalisedPosts()
   return (
     <section className='w-full bg-white h-dvh'>
         {isLoading && (<p>
