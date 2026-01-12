@@ -6,7 +6,7 @@ import { FormEvent, useState } from 'react'
 import { useAuth } from '@/lib/contexts/authContext'
 import Image from 'next/image'
 import defaultAvatar from '@/public/assets/images/default-avatar.png'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { addRecentSearch } from '@/lib/utils'
 import { useSideBarActive } from '@/lib/contexts/sidebardContext'
 
@@ -15,8 +15,9 @@ const Navbar = () => {
   const {user, loading} = useAuth()
   const [query, setQuery] = useState('');
   const {isActive, setIsActive} = useSideBarActive() 
-
   const router = useRouter();
+  const pathname = usePathname()
+
     const handleFormSubmit = (e: FormEvent) => {
       e.preventDefault();
         if(query !== ''){
@@ -27,8 +28,8 @@ const Navbar = () => {
     
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/40">
-      <div className="mx-auto flex max-w-full items-center justify-between px-4 py-4 md:px-6">
+    <nav className={`sticky top-0 z-50 md:border-b border-gray-100 ${pathname == '/' ? 'bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/40' : 'bg-white'}`}>
+      <div className="mx-auto flex max-w-full items-center justify-between px-4 py-2 md:px-6">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-4">
             <button className='hidden md:block' onClick={() => setIsActive(!isActive)}>

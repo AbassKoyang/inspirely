@@ -1,4 +1,6 @@
 import axios from "axios";
+import { PostType } from "./schemas/post";
+import { PostResponseType } from "./types";
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -73,23 +75,25 @@ export const fetchTrendingPosts = async () => {
     }
 }
 
-export const fetchLatestPosts = async () => {
+export const fetchLatestPosts = async () : Promise<PostResponseType> => {
     try {
         const response =  await api.get("/api/feeds/recent/")
         console.log(response.data)
-        return response.data
+        return response.data as PostResponseType
     } catch (error) {
         console.error("error fetching latest posts", error)
+        throw error
     }
 }
 
-export const fetchCombinedPosts = async () => {
+export const fetchCombinedPosts = async () : Promise<PostResponseType> => {
     try {
         const response =  await api.get("/api/feeds/combined/")
         console.log(response.data)
-        return response.data
+        return response.data as PostResponseType
     } catch (error) {
         console.error("error fetching combined posts", error)
+        throw error
     }
 }
 

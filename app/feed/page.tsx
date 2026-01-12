@@ -6,7 +6,7 @@ import React from 'react'
 const Page = () => {
     const {isLoading, isError, data} = useFetchCombinedPosts()
   return (
-    <section className='w-full bg-white h-dvh'>
+    <section className='w-full min-h-dvh mt-5 bg-pink-300'>
         {isLoading && (<p>
             Loading...
         </p>)}

@@ -7,7 +7,7 @@ const layout = ({children} :{children: React.ReactNode}) => {
   return (
     <ProtectedRoute>
       <LayoutWrapper>
-       <section className="w-full min-h-full px-4 [@media(min-width:375px)]:px-6 overflow-x-hidden">
+       <section className="w-full min-h-full px-4 md:px-12 md:pl-16">
         <Nav/>
           {children}
         </section>
