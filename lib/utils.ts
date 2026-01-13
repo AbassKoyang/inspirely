@@ -39,3 +39,11 @@ export const deleteRecentSearch = (keyword: string) => {
 export const clearRecentSearches = () => {
 localStorage.removeItem(STORAGE_KEY);
 };
+
+export const formatFollowersCount = (count: number): string => {
+  return new Intl.NumberFormat("en", {
+    notation: "compact",
+    compactDisplay: "short",
+    maximumFractionDigits: 1,
+  }).format(count);
+};

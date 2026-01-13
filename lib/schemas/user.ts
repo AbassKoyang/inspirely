@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const REGISTRATION_METHODS = ['email', 'google'] as const
 
 export const userSchema = z.object({
+  id: z.string(),
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required').max(128, 'Password must be at most 128 characters'),
   first_name: z.string().max(30, 'First name must be at most 30 characters').nullable().optional(),

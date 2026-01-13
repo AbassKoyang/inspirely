@@ -1,6 +1,7 @@
 import axios from "axios";
 import { PostType } from "./schemas/post";
-import { PostResponseType } from "./types";
+import { Follow, PaginatedResponse, PostResponseType } from "./types";
+import { User } from "./schemas/user";
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -55,6 +56,17 @@ api.interceptors.response.use(
 );
 
 
+export const fetchUserPost = async (userId: string) : Promise<PaginatedResponse<PostType>> => {
+    try {
+        const response =  await api.get(`/api/users/${userId}/posts/`)
+        console.log(response.data)
+        return response.data as PaginatedResponse<PostType>
+    } catch (error) {
+        console.error("error fetching user posts", error)
+        throw error
+    }
+}
+
 export const fetchPersonalisedPosts = async () => {
     try {
         const response =  await api.get("/api/feeds/personalized/")
@@ -93,6 +105,39 @@ export const fetchCombinedPosts = async () : Promise<PostResponseType> => {
         return response.data as PostResponseType
     } catch (error) {
         console.error("error fetching combined posts", error)
+        throw error
+    }
+}
+
+export const fetchUser = async (userId: string) : Promise<User> => {
+      try {
+        const response =  await api.get(`/api/users/${userId}/`)
+        console.log(response.data)
+        return response.data as User
+    } catch (error) {
+        console.error("error fetching user", error)
+        throw error
+    }
+}
+
+export const fetchFollowing = async (userId: string) : Promise<PaginatedResponse<Follow>> => {
+      try {
+        const response =  await api.get(`/api/users/${userId}/following/`)
+        console.log(response.data)
+        return response.data as PaginatedResponse<Follow>
+    } catch (error) {
+        console.error("error fetching following", error)
+        throw error
+    }
+}
+
+export const fetchIsFollowing = async (userId: string) : Promise<{is_following: boolean}> => {
+      try {
+        const response =  await api.get(`/api/users/${userId}/is-following/`)
+        console.log(response.data)
+        return response.data as {is_following: boolean}
+    } catch (error) {
+        console.error("error fetching isfollowing", error)
         throw error
     }
 }

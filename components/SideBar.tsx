@@ -30,10 +30,10 @@ const SideBar = () => {
             </Link>
             <Link className='w-full group' href='#'>
                 <div className="w-full flex items-center gap-4 mt-5">
-                <div className={`h-[24px] w-[2px] ${pathname == '/profile' ? 'bg-emerald-600' : 'bg-white'}`}></div>
-                <svg className={`${pathname =='/profile' ? 'stroke-emerald-600' : 'stroke-black/60'} group-hover:stroke-emerald-600 transition-all duration-200 ease-in-out size-[24px]`}  width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.14 21.62C17.26 21.88 16.22 22 15 22H9C7.78 22 6.74 21.88 5.86 21.62M18.14 21.62C17.92 19.02 15.25 16.97 12 16.97C8.75 16.97 6.08 19.02 5.86 21.62M18.14 21.62C20.86 20.85 22 18.78 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 18.78 3.14 20.85 5.86 21.62M12 14.17C10.02 14.17 8.42 12.56 8.42 10.58C8.42 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58C15.58 12.56 13.98 14.17 12 14.17Z"  strokeWidth="1.5"strokeLinecap="round" strokeLinejoin="round"/></svg>
+                <div className={`h-[24px] w-[2px] ${pathname.includes('/profile') ? 'bg-emerald-600' : 'bg-white'}`}></div>
+                <svg className={`${pathname.includes('/profile') ? 'stroke-emerald-600' : 'stroke-black/60'} group-hover:stroke-emerald-600 transition-all duration-200 ease-in-out size-[24px]`}  width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.14 21.62C17.26 21.88 16.22 22 15 22H9C7.78 22 6.74 21.88 5.86 21.62M18.14 21.62C17.92 19.02 15.25 16.97 12 16.97C8.75 16.97 6.08 19.02 5.86 21.62M18.14 21.62C20.86 20.85 22 18.78 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 18.78 3.14 20.85 5.86 21.62M12 14.17C10.02 14.17 8.42 12.56 8.42 10.58C8.42 8.60002 10.02 7 12 7C13.98 7 15.58 8.60002 15.58 10.58C15.58 12.56 13.98 14.17 12 14.17Z"  strokeWidth="1.5"strokeLinecap="round" strokeLinejoin="round"/></svg>
 
-                    <p className={`text-lg font-normal font-sans ${pathname == '/profile' ? 'text-emerald-600' : 'text-black/60'} group-hover:text-emerald-600 transition-all duration-200 ease-in-out`}>Profile</p>
+                    <p className={`text-lg font-normal font-sans ${pathname.includes('/profile') ? 'text-emerald-600' : 'text-black/60'} group-hover:text-emerald-600 transition-all duration-200 ease-in-out`}>Profile</p>
                 </div>
             </Link>
             <Link className='w-full group' href='#'>

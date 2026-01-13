@@ -113,7 +113,7 @@ const handleLogin = async (data: z.infer<typeof loginFormSchema>) => {
     const res = await api.post(
       `/api/auth/login/`, data, {withCredentials: true}
     )
-    const result = await res.data
+    const result = res.data
     console.log(result)
 
     toast.success("Logged in successfully")

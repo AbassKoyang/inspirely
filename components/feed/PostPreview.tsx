@@ -21,7 +21,7 @@ const PostPreview = ({post}:{post: PostType}) => {
         month: "long",
         day: "numeric"}).format(date);   
   return (
-    <div className='w-full md:w-[70%] flex md:flex-row flex-col md:justify-between py-4 bg-white mb-5'>
+    <div className='w-full flex md:flex-row flex-col md:justify-between py-4 bg-white mb-5'>
         <div className="w-full">
         <div className="w-full flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
