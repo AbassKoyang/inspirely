@@ -10,6 +10,8 @@ const Nav = () => {
     const userId = useParams<{userId: string}>().userId;
     const {data:user, isLoading, isError} = useFetchUser(userId);
 
+
+    if(pathname.includes('/profile/settings')) return null
   return (
     <div className="w-full">
         {
