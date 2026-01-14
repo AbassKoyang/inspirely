@@ -3,14 +3,16 @@ import { z } from 'zod'
 export const REGISTRATION_METHODS = ['email', 'google'] as const
 
 export const userSchema = z.object({
-  id: z.string(),
+  id: z.number(),
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required').max(128, 'Password must be at most 128 characters'),
   first_name: z.string().max(30, 'First name must be at most 30 characters').nullable().optional(),
   last_name: z.string().max(30, 'Last name must be at most 30 characters').nullable().optional(),
   registration_method: z.enum(REGISTRATION_METHODS).default('email'),
   profile_pic_url: z.union([z.string().url('Invalid URL'), z.literal('')]).nullable().optional(),
+  banner_url: z.union([z.string().url('Invalid URL'), z.literal('')]).nullable().optional(),
   bio: z.string().nullable().optional(),
+  about: z.string().nullable().optional(),
   phone_number: z.string().max(15, 'Phone number must be at most 15 characters').nullable().optional(),
   address: z.string().nullable().optional(),
   city: z.string().max(100, 'City must be at most 100 characters').nullable().optional(),

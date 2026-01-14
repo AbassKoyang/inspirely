@@ -1,5 +1,5 @@
 'use client';
-import PostPreview from '@/components/feed/PostPreview'
+import ProfilePostPreview from '@/components/profile/ProfilePostPreview';
 import { useAuth } from '@/lib/contexts/authContext'
 import { useFetchUserPosts } from '@/lib/queries'
 import { useParams } from 'next/navigation';
@@ -18,7 +18,7 @@ const ProfilePage = () => {
             error occured...
         </p>)}
         {data && data.results.map((post) => (
-            <PostPreview post={post} />
+            <ProfilePostPreview post={post} />
         ))}
     </section>
   )

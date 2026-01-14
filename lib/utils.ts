@@ -47,3 +47,11 @@ export const formatFollowersCount = (count: number): string => {
     maximumFractionDigits: 1,
   }).format(count);
 };
+
+
+export const truncateText = (text: string, count: number) : string => {
+  if(text.length > count ){
+    return text.substring(0, count) + '...'
+  }
+  return text
+}
