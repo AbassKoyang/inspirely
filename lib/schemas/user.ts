@@ -6,23 +6,23 @@ export const userSchema = z.object({
   id: z.number(),
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required').max(128, 'Password must be at most 128 characters'),
-  first_name: z.string().max(30, 'First name must be at most 30 characters').nullable().optional(),
-  last_name: z.string().max(30, 'Last name must be at most 30 characters').nullable().optional(),
+  first_name: z.string().max(30, 'First name must be at most 30 characters').optional().default(''),
+  last_name: z.string().max(30, 'Last name must be at most 30 characters').optional().default(''),
   registration_method: z.enum(REGISTRATION_METHODS).default('email'),
-  profile_pic_url: z.union([z.string().url('Invalid URL'), z.literal('')]).nullable().optional(),
-  banner_url: z.union([z.string().url('Invalid URL'), z.literal('')]).nullable().optional(),
-  bio: z.string().nullable().optional(),
-  about: z.string().nullable().optional(),
-  phone_number: z.string().max(15, 'Phone number must be at most 15 characters').nullable().optional(),
-  address: z.string().nullable().optional(),
-  city: z.string().max(100, 'City must be at most 100 characters').nullable().optional(),
-  state: z.string().max(100, 'State must be at most 100 characters').nullable().optional(),
-  country: z.string().max(100, 'Country must be at most 100 characters').nullable().optional(),
-  website: z.union([z.string().url('Invalid URL'), z.literal('')]).nullable().optional(),
-  linkedin: z.union([z.string().url('Invalid URL'), z.literal('')]).nullable().optional(),
-  instagram: z.union([z.string().url('Invalid URL'), z.literal('')]).nullable().optional(),
-  twitter: z.union([z.string().url('Invalid URL'), z.literal('')]).nullable().optional(),
-  github: z.union([z.string().url('Invalid URL'), z.literal('')]).nullable().optional(),
+  profile_pic_url: z.union([z.string().url('Invalid URL'), z.literal('')]).optional().default(''),
+  banner_url: z.union([z.string().url('Invalid URL'), z.literal('')]).optional().default(''),
+  bio: z.string().optional().default(''),
+  about: z.string().optional().default(''),
+  phone_number: z.string().max(15, 'Phone number must be at most 15 characters').optional().default(''),
+  address: z.string().optional().default(''),
+  city: z.string().max(100, 'City must be at most 100 characters').optional().default(''),
+  state: z.string().max(100, 'State must be at most 100 characters').optional().default(''),
+  country: z.string().max(100, 'Country must be at most 100 characters').optional().default(''),
+  website: z.union([z.string().url('Invalid URL'), z.literal('')]).optional().default(''),
+  linkedin: z.union([z.string().url('Invalid URL'), z.literal('')]).optional().default(''),
+  instagram: z.union([z.string().url('Invalid URL'), z.literal('')]).optional().default(''),
+  twitter: z.union([z.string().url('Invalid URL'), z.literal('')]).optional().default(''),
+  github: z.union([z.string().url('Invalid URL'), z.literal('')]).optional().default(''),
   followers_count: z.number().int().nonnegative().default(0),
   following_count: z.number().int().nonnegative().default(0),
   posts_count: z.number().int().nonnegative().default(0),
@@ -73,5 +73,5 @@ export const updateUserProfileSchema = userSchema.pick({
 
 export type User = z.infer<typeof userSchema>
 export type CreateUserInput = z.input<typeof createUserSchema>
-export type UpdateUserInput = z.infer<typeof updateUserSchema>
-export type UpdateUserProfileInput = z.infer<typeof updateUserProfileSchema>
+export type UpdateUserInput = z.input<typeof updateUserSchema>
+export type UpdateUserProfileInput = z.input<typeof updateUserProfileSchema>
