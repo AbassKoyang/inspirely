@@ -36,8 +36,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+      <QueryProvider>
         <AuthProvider>
-          <QueryProvider>
             <SidebarProvider>
               <main className="w-full min-h-dvh relative">
               <Navbar />
@@ -46,8 +46,8 @@ export default function RootLayout({
               <Toaster />
               </main>
           </ SidebarProvider>
-          </QueryProvider>
         </AuthProvider>
+      </QueryProvider>
       </body>
     </html>
   );

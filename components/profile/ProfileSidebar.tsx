@@ -81,10 +81,10 @@ const ProfileSidebar = () => {
     <div className="w-[30%] p-8 bg-white border-l border-gray-100">
         <div className="w-[100px] h-[100px] rounded-full object-cover object-center overflow-hidden mt-2">
             <Image
-            className='size-full'
+            className=''
             src={user?.profile_pic_url || defaultAvatar}
-            width={50}
-            height={50}
+            width={100}
+            height={100}
             alt='Profle Picture'
             />
         </div>
@@ -92,13 +92,13 @@ const ProfileSidebar = () => {
          <p className='font-sans text-sm font-normal text-black/60 mt-1'>{followersCount} followers</p>
          <p className='font-sans text-sm font-normal text-black/60 mt-3 mb-5'>{user?.bio}</p>
          {isSelf ? (
-            <Link href='#' className=' text-emerald-600 rounded-4xl cursor-pointer text-sm font-medium'>Edit profile</Link>
+            <Link href='/me/settings' className=' text-emerald-700 rounded-4xl cursor-pointer text-sm font-medium'>Edit profile</Link>
          ) : (
             <>
                 {isFollowing?.is_following ? (
                     <button onClick={() => unfollowMutation.mutate()} className='mt-3 bg-white text-black border border-black px-4.5 py-1 rounded-4xl cursor-pointer'>Unfollow</button>
                 ) : (
-                    <button onClick={() => followMutation.mutate()} className='mt-3 bg-emerald-600 border border-emerald-600 text-white px-4.5 py-1 rounded-4xl cursor-pointer'>Follow</button>
+                    <button onClick={() => followMutation.mutate()} className='mt-3 bg-emerald-700 border border-emerald-700 text-white px-4.5 py-1 rounded-4xl cursor-pointer'>Follow</button>
                 )}
             </>
          )}

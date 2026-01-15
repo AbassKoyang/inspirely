@@ -35,13 +35,13 @@ const Navbar = () => {
             <button className='hidden md:block' onClick={() => setIsActive(!isActive)}>
               <Menu strokeWidth={1} className='size-6 text-black' />
             </button>
-            <Link href="/" className="text-3xl font-bold text-emerald-600 transition-colors hover:text-emerald-700">
+            <Link href="/" className="text-3xl font-bold text-emerald-700 transition-colors hover:text-emerald-700">
               Inspirely
             </Link>
           </div>
-          <form onSubmit={handleFormSubmit} className="focus-within:border focus-within:border-emerald-600 hidden md:flex w-[240px] h-[40px] rounded-4xl bg-gray-100/90 items-center justify-between overflow-hidden pl-3">
+          <form onSubmit={handleFormSubmit} className="focus-within:border focus-within:border-emerald-700 hidden md:flex w-[240px] h-[40px] rounded-4xl bg-gray-100/90 items-center justify-between overflow-hidden pl-3">
             <button type='submit' className="flex items-center justify-center mr-2 cursor-pointer">
-                <Search strokeWidth={1} className="size-[19px] text-emerald-600" />
+                <Search strokeWidth={1} className="size-[19px] text-emerald-700" />
             </button>
             <input 
               onChange={(e) => setQuery(e.target.value)} type="text" placeholder="Search" className="h-full w-[85%] bg-transparent placeholder:text-foreground placeholder:font-light outline-0 stroke-0 border-0" />
@@ -59,9 +59,9 @@ const Navbar = () => {
               <Link href='#'>
                 <Bell strokeWidth={1} className='size-5.5 text-black/70 hover:text-black transition-all duration-200 ease-in-out' />
               </Link>
-              <button className='rounded-full overflow-hidden object-center object-cover cursor-pointer'>
+              <button className='size-[30px] rounded-full overflow-hidden object-center object-cover cursor-pointer'>
                 <Image
-                className='size-full'
+                className=''
                 src={user.profile_pic_url || defaultAvatar}
                 width={30}
                 height={30}
@@ -99,7 +99,7 @@ const Navbar = () => {
               </Link>
               <Link
                 href="/signup"
-                className="rounded-full bg-emerald-600 px-6 py-2 text-sm font-medium text-white transition-all hover:scale-105 hover:bg-emerald-700"
+                className="rounded-full bg-emerald-700 px-6 py-2 text-sm font-medium text-white transition-all hover:scale-105 hover:bg-emerald-700"
               >
                 Get started
               </Link>
@@ -152,7 +152,7 @@ const Navbar = () => {
               </Link>
               <Link
                 href="/signup"
-                className="rounded-full bg-emerald-600 px-6 py-2 text-sm font-medium text-white transition-all hover:bg-emerald-700"
+                className="rounded-full bg-emerald-700 px-6 py-2 text-sm font-medium text-white transition-all hover:bg-emerald-700"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Get started

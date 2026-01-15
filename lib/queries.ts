@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { fetchCombinedPosts, fetchFollowing, fetchIsFollowing, fetchLatestPosts, fetchPersonalisedPosts, fetchTrendingPosts, fetchUser, fetchUserPost } from "./api"
+import { fetchCombinedPosts, fetchFollowing, fetchIsFollowing, fetchLatestPosts, fetchPersonalisedPosts, fetchSessionUser, fetchTrendingPosts, fetchUser, fetchUserPost } from "./api"
 
 export const useFetchUserPosts = (userId: string) => {
     return useQuery({
@@ -37,6 +37,13 @@ export const useFetchUser = (userId:string) => {
     return useQuery({
         queryFn: () => fetchUser(userId),
         queryKey: ['user']
+    })
+}
+
+export const useFetchSessionUser = () => {
+    return useQuery({
+        queryFn: () => fetchSessionUser(),
+        queryKey: ['session-user']
     })
 }
 export const useFetchIsFollowing = (userId:string) => {

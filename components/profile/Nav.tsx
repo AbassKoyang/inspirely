@@ -25,12 +25,12 @@ const Nav = () => {
         <nav className="w-full py-4 pt-6 bg-white border-b border-gray-100 overflow-hidden">
             <div className='min-w-full flex items-center gap-3 lg:gap-5 bg-white overflow-x-auto'>
             <Link href={`/${userId}/profile`}>
-                <div className={`px-5 py-1 rounded-4xl min-w-[100px] border ${pathname.endsWith('/profile') ? 'bg-emerald-600/90 border-emerald-600/90' : 'bg-white border-black/60'} text-white flex items-center justify-center hover:bg-emerald-600 hover:border-emerald-600 group transition-all duration-300 ease-in-out`}>
+                <div className={`px-5 py-1 rounded-4xl min-w-[100px] border ${pathname.endsWith('/profile') ? 'bg-emerald-700/90 border-emerald-700/90' : 'bg-white border-black/60'} text-white flex items-center justify-center hover:bg-emerald-700 hover:border-emerald-700 group transition-all duration-300 ease-in-out`}>
                     <p className={`text-xs md:text-sm font-sans group-hover:text-white ${pathname.endsWith('/profile') ? 'text-white' : 'text-black/60'} transition-all duration-300 ease-in-out`}>Home</p>
                 </div>
             </Link>
             <Link href={`/${userId}/profile/about`}>
-                <div className={`px-5 py-1 rounded-4xl min-w-[100px] border ${pathname.endsWith('/profile/about') ? 'bg-emerald-600/90 border-emerald-600/90' : 'bg-white border-black/60'} text-white flex items-center justify-center hover:bg-emerald-600 hover:border-emerald-600 group transition-all duration-300 ease-in-out`}>
+                <div className={`px-5 py-1 rounded-4xl min-w-[100px] border ${pathname.endsWith('/profile/about') ? 'bg-emerald-700/90 border-emerald-700/90' : 'bg-white border-black/60'} text-white flex items-center justify-center hover:bg-emerald-700 hover:border-emerald-700 group transition-all duration-300 ease-in-out`}>
                     <p className={`text-xs md:text-sm font-sans group-hover:text-white ${pathname.endsWith('/profile/about') ? 'text-white' : 'text-black/60'} transition-all duration-300 ease-in-out`}>About</p>
                 </div>
             </Link>
