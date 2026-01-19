@@ -12,7 +12,7 @@ const LayoutWrapper = ({children}: {children: React.ReactNode}) => {
         </div>
         <div className={`hidden md:block ${isActive? 'w-[18%]' : 'w-0'} h-dvh bg-white transition-all duration-400 ease-in-out`}>
         </div>
-        <div className={`w-full ${isActive? 'md:w-[82%]' : 'w-full'} bg-white transition-all duration-400 ease-in-out flex justify-between`}>
+        <div className={`${isActive? 'md:w-[82%] w-full' : 'w-full md:w-[90%]'} bg-white transition-all duration-400 ease-in-out flex justify-between`}>
         {children}
         </div>
     </div>

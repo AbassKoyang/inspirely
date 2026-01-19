@@ -107,18 +107,18 @@ const ProfileSidebar = () => {
             <h4 className='font-sans text-base font-semibold text-black'>Following</h4>
             <div className="w-full mt-3">
                 {following?.results.map((follow) => (
-                    <div className='w-full flex items-center justify-between mb-2'>
+                    <div className='w-full flex items-center justify-between mb-3'>
                        <div className="flex items-center gap-3.5">
-                        <div className="w-[25px] h-[25px] rounded-full object-cover object-center overflow-hidden mt-2">
+                        <div className="w-[25px] h-[25px] rounded-full object-cover object-center overflow-hidden">
                                 <Image
-                                className='size-full'
+                                className=''
                                 src={follow.following?.profile_pic_url || defaultAvatar}
                                 width={25}
                                 height={25}
                                 alt='Profle Picture'
                                 />
                             </div>
-                            <h6 className='font-sans text-sm font-normal text-black/60'>{follow.following?.first_name} {follow.following?.last_name}</h6>
+                            <p className='font-sans text-sm font-normal text-black/60'>{follow.following?.first_name} {follow.following?.last_name}</p>
                        </div>
                         <button><Ellipsis className='text-black/60 size-4' /></button>
                     </div>

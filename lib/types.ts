@@ -20,4 +20,11 @@ export type PaginatedResponse<T> = {
     previous: number | null;
     results: T[];
   };
+
+  export type TagType = {
+    id: number,
+    name: string,
+    slug: string,
+    created_at: string
+  }
   

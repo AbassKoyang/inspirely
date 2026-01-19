@@ -68,9 +68,10 @@ const handleImageUpload = async () => {
 }
 
 const updateProfileMutation = useMutation({
-    mutationFn: (data: UpdateUserProfileInput) => {
+    mutationFn: async (data: UpdateUserProfileInput) => {
         try {
-            api.patch(`/api/users/${user?.id}/update/`, data, {withCredentials: true})
+            const response = await api.patch(`/api/users/${user?.id}/update/`, data, {withCredentials: true})
+            return response.data
         } catch (error) {
             console.error(error)
         }
@@ -93,10 +94,6 @@ const updateProfileMutation = useMutation({
   
     onSettled: () => {
       queryClient.invalidateQueries({queryKey: ['session-user']});
-    },
-
-    onError: (error, variables, onMutateResult, context) => {
-        console.log(`rolling back optimistic update with`)
     },
 
     onSuccess: () => {

@@ -26,7 +26,7 @@ const Navbar = () => {
         }
     }
     
-
+  if (pathname == '/write') return null;
   return (
     <nav className={`sticky top-0 z-50 md:border-b border-gray-100 ${pathname == '/' ? 'bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/40' : 'bg-white'}`}>
       <div className="mx-auto flex max-w-full items-center justify-between px-4 py-2 md:px-6">

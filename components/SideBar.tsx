@@ -1,15 +1,25 @@
 'use client'
+import { useAuth } from '@/lib/contexts/authContext'
 import { useSideBarActive } from '@/lib/contexts/sidebardContext'
+import { useFetchFollowing } from '@/lib/queries'
+import {Ellipsis, Users } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
+import defaultAvatar from '@/public/assets/images/default-avatar.png'
+import { truncateText } from '../lib/utils'
+
 
 const SideBar = () => {
+    const {user} = useAuth();
     const {isActive} = useSideBarActive()
+    const {data:following} = useFetchFollowing(String(user?.id ) || '')
     const pathname = usePathname() 
+
   return (
     <div className='w-full h-full overflow-y-auto hidden md:block mt-26 px-1'>
-        <div className="w-full">
+        <div className="w-full border-b border-gray-100 pb-10">
             <Link className='w-full group' href='/feed'>
                 <div className="w-full flex items-center gap-4">
                     <div className={`h-[24px] w-[2px] ${pathname.includes('feed') ? 'bg-emerald-600' : 'bg-white'}`}></div>
@@ -53,6 +63,36 @@ const SideBar = () => {
                 </div>
             </Link>
         </div>
+
+        <div className="px-4 mt-10">
+            <div className='w-full flex items-center gap-4 mb-5'>
+                <Users strokeWidth={1} className='size-[24px] text-black/60' />
+                <h3 className='font-sans text-base font-normal text-black/60'>Following</h3>
+            </div>
+            <div className="w-full mt-3">
+            {following?.results.map((follow) => { 
+                    const followingName = truncateText(`${follow.following?.first_name} ${follow.following?.last_name}`, 15)
+
+                return (
+                    <div className='w-full flex items-center justify-between mb-3'>
+                       <div className="flex items-center gap-4">
+                        <div className="w-[20px] h-[20px] rounded-full object-cover object-center overflow-hidden">
+                                <Image
+                                className=''
+                                src={follow.following?.profile_pic_url || defaultAvatar}
+                                width={20}
+                                height={20}
+                                alt='Profle Picture'
+                                />
+                            </div>
+                            <p className='font-sans text-sm font-normal text-black/60'>{followingName}</p>
+                       </div>
+                        <button><Ellipsis className='text-black/60 size-4' /></button>
+                    </div>
+                )})}
+            </div>
+        </div>
+
     </div>
   )
 }

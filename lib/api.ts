@@ -1,6 +1,6 @@
 import axios from "axios";
 import { PostType } from "./schemas/post";
-import { Follow, PaginatedResponse, PostResponseType } from "./types";
+import { Follow, PaginatedResponse, PostResponseType, TagType } from "./types";
 import { User } from "./schemas/user";
 
 export const api = axios.create({
@@ -149,6 +149,27 @@ export const fetchIsFollowing = async (userId: string) : Promise<{is_following: 
         return response.data as {is_following: boolean}
     } catch (error) {
         console.error("error fetching isfollowing", error)
+        throw error
+    }
+}
+
+export const fetchCategories = async () : Promise<TagType[]> => {
+      try {
+        const response =  await api.get(`/api/categories/`)
+        console.log(response.data)
+        return response.data as TagType[]
+    } catch (error) {
+        console.error("error fetching categories", error)
+        throw error
+    }
+}
+export const fetchTags = async () : Promise<TagType[]> => {
+      try {
+        const response =  await api.get(`/api/tags/`)
+        console.log(response.data)
+        return response.data as TagType[]
+    } catch (error) {
+        console.error("error fetching categories", error)
         throw error
     }
 }
