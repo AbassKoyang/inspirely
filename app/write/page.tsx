@@ -1,7 +1,7 @@
 'use client';
 import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor'
 import { Button } from '@/components/ui/button'
-import { Bell, Ellipsis, ImagePlus, X } from 'lucide-react'
+import { Bell, Ellipsis, ImagePlus, RotateCcw, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import defaultAvatar from '@/public/assets/images/default-avatar.png'
@@ -29,6 +29,7 @@ import { CreatePostInput, createPostSchema } from '@/lib/schemas/post';
 import { useFetchCategories, useFetchTags } from '@/lib/queries';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'sonner';
 
 const WritePage = () => {
   const {user} = useAuth()
@@ -37,6 +38,9 @@ const WritePage = () => {
   const {data:tags} = useFetchTags()
   const [tagField, settagField] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [thumbnail, setThumbnail] = useState('');
+  const [isUploading, setisUploading] = useState(false)
+
 
   const form = useForm<CreatePostInput>({
     resolver: zodResolver(createPostSchema),
@@ -46,7 +50,7 @@ const WritePage = () => {
       content: '',
       slug: '',
       thumbnail: '',
-      category: 0,
+      category: '',
       tags: [],
     },
   })
@@ -91,26 +95,59 @@ const WritePage = () => {
     content: 'Tell your story...',
   })
 
-  const onSubmit = () => {
-
+  const onSubmit = async (data: CreatePostInput) => {
+    console.log("Submitted data:", data)
   }
 
 
 
   const addTagToSelectedTags = (tag: string) => {
+    const index = selectedTags.findIndex((selectedTag) => selectedTag == tag)
+    console.log(index)
+    if(index !== -1) return
     const newtags = [...selectedTags, tag]
     setSelectedTags(newtags)
+    form.setValue("tags", selectedTags, {shouldValidate: true})
   }
 
   const removeTagFromSelectedTags = (tag: string) => {
-    const index = selectedTags.findIndex((tag) => tag == tag)
+    const index = selectedTags.findIndex((selectedTag) => selectedTag == tag)
     const duplicate = [...selectedTags]
     if(index !== -1){
       duplicate.splice(index, 1)
     }
     const newtags = [...duplicate]
     setSelectedTags(newtags)
+    form.setValue("tags", selectedTags, {shouldValidate: true})
   }
+
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setisUploading(true)
+    const file = e.target.files ? Array.from(e.target.files)[0] : null;
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("file", file as File);
+    formData.append("upload_preset", "inspirely-profile-picture-preset");
+
+    try {
+        const res = await fetch(
+            `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+          const result = await res.json();
+          const url =  result.secure_url as string;
+          setThumbnail(url)
+          form.setValue("thumbnail", url, {shouldValidate: true})
+    } catch (error) {
+        console.error(error)
+        toast.error('Failed to upload thumbnail.')
+    } finally {
+      setisUploading(false)
+    }
+}
 
 
   return (
@@ -137,7 +174,7 @@ const WritePage = () => {
               <button className='size-[35px] rounded-full overflow-hidden object-center object-cover cursor-pointer'>
                 <Image
                 className=''
-                src={defaultAvatar}
+                src={user?.profile_pic_url? user.profile_pic_url : defaultAvatar}
                 width={35}
                 height={35}
                 alt='Profle Picture'
@@ -146,24 +183,60 @@ const WritePage = () => {
             </div>
         </div>
       </div>
+
       <div className="w-full max-w-4xl mt-5">
+        {thumbnail && (
+          <div className="w-full h-[300px] object-cover object-center overflow-hidden relative">
+            <img
+            className='w-full'
+            src={thumbnail}
+            alt='Thumbnail'
+            />
+            <button onClick={()=> setThumbnail('')} className='absolute top-5 right-5 z-20 p-2 bg-white rounded-full cursor-pointer'>
+              <X className='size-[20px] text-black/70'/>
+            </button>
+         </div>
+        )}
         <div className="flex">
-          <button className="flex items-center gap-3 py-[5px] px-3 bg-white hover:bg-gray-100/90 transition-all duration-300 ease-in-out rounded-4xl">
-            <ImagePlus strokeWidth={2} className='size-[20px] text-black/60' />
-            <p className='text-black/60 text-base font-medium font-sans'>Add Cover</p>
-          </button>
+          {isUploading ? (
+            <div className='flex items-center gap-3 py-[5px] px-3'>
+              <RotateCcw strokeWidth={2} className='size-[20px] text-black/60 animate-spin' />
+              <p className='text-black/60 text-base font-medium font-sans'>Uploading...</p>
+            </div>
+          ):
+          (
+            <>
+              {!thumbnail && (
+                <button className="flex items-center gap-3 py-[5px] px-3 bg-white hover:bg-gray-100/90 transition-all duration-300 ease-in-out rounded-4xl relative">
+                <input
+                className='z-20 opacity-0 size-full absolute top-0 left-0'
+                type="file"
+                accept="image/*"
+                onChange={handleThumbnailUpload}
+                placeholder='Update'
+                />
+                <ImagePlus  strokeWidth={2} className='size-[20px] text-black/60' />
+                <p className='text-black/60 text-base font-medium font-sans'>Add Cover</p>
+              </button>
+              )}
+            </>
+          )}
         </div>
         <div className="w-full mt-3">
-          <textarea className='w-full min-h-[50px] h-[50px] md:min-h-[60px] md:h-fit max-h-fit bg-white text-xl md:text-5xl font-bold outline-0 stroke-0 border-0 placeholder:text-black/65' placeholder='Article Title...'></textarea>
+          <textarea onChange={(e) => form.setValue('title', e.target.value, {shouldValidate: true})} className='w-full min-h-[50px] h-[50px] md:min-h-[60px] md:h-fit max-h-fit bg-white text-xl md:text-5xl font-bold outline-0 stroke-0 border-0 placeholder:text-black/65' placeholder='Article Title...'></textarea>
         </div>
       </div>
       <div className="w-full max-w-4xl overflow-x-hidden mt-5">
           <SimpleEditor  editor={editor}/>
       </div>
-      <motion.div className='w-[450px] fixed top-0 right-0 bg-white shadow-xl h-dvh z-200' initial={{x:'110%'}} animate={{x: isSidebarOpen ? '110%' : 0, animationDuration: 0.5, transition: {type: 'tween'}}}>
+
+      <motion.div className='w-[450px] fixed top-0 right-0 bg-white shadow-xl h-dvh z-200' initial={{x:'110%'}} animate={{x: isSidebarOpen ? 0 : '110%', animationDuration: 0.5, transition: {type: 'tween'}}}>
         <div className="w-full h-full relative overflow-auto">
-          <div className="w-full py-8 px-8 border-b border-gray-100 sticky top-0 bg-white">
+          <div className="w-full py-8 px-8 border-b border-gray-100 sticky top-0 bg-white flex items-center justify-between">
             <h2 className='font-sans text-xl text-black font-semibold leading-1'>Draft Settings</h2>
+            <button onClick={() => setisSidebarOpen(false)} className='p-2 bg-white rounded-full cursor-pointer'>
+              <X className='size-[20px] text-black/70'/>
+            </button>
           </div>
           <div className="w-full px-8 mt-8">
             <div className="w-full bg-gray-100/90 rounded-xs p-3 px-4 flex items-center justify-between">
@@ -182,7 +255,7 @@ const WritePage = () => {
             </div>
           </div>
 
-          <form className='w-full mt-8 px-8 pb-30' onSubmit={form.handleSubmit(onSubmit)}>
+          <form className='w-full mt-8 px-8 pb-0' onSubmit={form.handleSubmit(onSubmit)}>
             <Controller
                   name='subtitle'
                   control={form.control}
@@ -216,40 +289,73 @@ const WritePage = () => {
                   )}
               />
 
-              <Input
-              onChange={(e) => settagField(e.target.value)}
-              className='border-none border-gray-100/90 bg-gray-100/90 focus-visible:bg-white rounded-xs focus-visible:ring-[1px] focus-visible:ring-black mt-8'
-              type="text"
+              <Controller
+                  name='tags'
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                  <Field className='mt-8'>
+                      <FieldLabel htmlFor="slug">Tags</FieldLabel>
+                     <Input
+                      onChange={(e) => settagField(e.target.value)}
+                      className='border-none border-gray-100/90 bg-gray-100/90 focus-visible:bg-white rounded-xs focus-visible:ring-[1px] focus-visible:ring-black'
+                      type="text"
+                      />
+                      <div className="w-full relative">
+                      <div className={`${tagField == '' ? 'hidden' : 'block'} w-full max-h-[400px] overscroll-y-auto p-0 bg-white z-100 absolute top-2 right-0 rounded-xs shadow-xs`}>
+                        {tags?.filter((tag) => tag.name.includes(tagField) || tag.slug.includes(tagField)).map((tag) => (
+                          <div className='w-full'>
+                            <button onClick={() => {addTagToSelectedTags(tag.name); settagField('')}} className='w-full flex items-center justify-start p-3 hover:bg-gray-100 text-sm text-black/70 cursor-pointer'> 
+                              <p>{tag.name}</p>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      </div>
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                  )}
               />
-              <div className="w-full relative">
-              <div className={`${tagField == '' ? 'hidden' : 'block'} w-full max-h-[400px] overscroll-y-auto p-3 bg-white z-100 absolute top-2 right-0 rounded-xs shadow-xs`}>
-                {tags?.filter((tag) => tag.name.includes(tagField) || tag.slug.includes(tagField)).map((tag) => (
-                  <div className='w-full'>
-                    <button onClick={() => addTagToSelectedTags(tag.name)} className='w-full flex items-center justify-start py-3 hover:bg-gray-100 text-sm text-black/70'> 
-                      <p>{tag.name}</p>
+              
+              <div className="w-full flex items-center flex-wrap gap-3 mt-2">
+                {selectedTags.map((tag) => (
+                  <div className='p-2.5 rounded-sm bg-white border-gray-100 border flex items-center gap-3'>
+                    <p className='text-sm font-sans text-black/70'>{tag}</p>
+                    <button onClick={() => {removeTagFromSelectedTags(tag)}} className='size-[20px] text-black/70'>
+                      <X className='size-[18px] cursor-pointer text-black/70'/>
                     </button>
                   </div>
                 ))}
               </div>
+
+              <Controller
+                  name='category'
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                  <Field className='mt-8'>
+                      <FieldLabel htmlFor="slug">Category</FieldLabel>
+                      <Select
+                      name={field.name}
+                      value={String(field.value)}
+                      onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-full border-none border-gray-100/90 bg-gray-100/90 focus-visible:bg-white rounded-xs focus-visible:ring-[1px] focus-visible:ring-black">
+                          <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                        <SelectContent className='z-300'>
+                          {categories?.map((category) => (
+                            <SelectItem value={String(category.id)}>{category.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                  )}
+              />
+              <div className="w-full py-5 px-8 border-t border-gray-100 sticky bottom-0 bg-white flex items-center justify-end mt-8 mb-0">
+                <button type='submit' className='text-sm py-[5px] px-4.5 text-white bg-emerald-700/90 hover:bg-emerald-700 rounded-4xl transition-all duration-200 ease-in-out cursor-pointer'>
+                  Publish
+                </button>
               </div>
-              <div className="w-full flex items-center flex-wrap gap-3">
-                {selectedTags.map((tag) => (
-                  <div className='px-3 py-1 rounded-sm bg-white shadow-sm flex gap-3'>
-                    <p className='text-xs font-sans text-black/70'>{tag}</p>
-                    <button onClick={() => removeTagFromSelectedTags(tag)} className='size-[20px] text-black/70'><X/></button>
-                  </div>
-                ))}
-              </div>
-              <Select>
-                <SelectTrigger className="w-full border-none border-gray-100/90 bg-gray-100/90 focus-visible:bg-white rounded-xs focus-visible:ring-[1px] focus-visible:ring-black mt-8">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent className='z-300'>
-                  {categories?.map((category) => (
-                    <SelectItem value={String(category.id)}>{category.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
           </form>
         </div>
       </motion.div>

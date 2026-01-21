@@ -37,14 +37,14 @@ const postSchema = z.object({
   updated_at: z.date(),
 });
 
-export const createPostSchema = postSchema.pick({
-  title: true,
-  subtitle: true,
-  content: true,
-  slug: true,
-  thumbnail: true,
-  category: true,
-  tags: true,
+export const createPostSchema = z.object({
+  title: z.string(),
+  subtitle: z.string(),
+  content: z.string(),
+  slug: z.string().min(1, 'Slug cannot be empty').nonempty(),
+  thumbnail: z.string().nullable(),
+  category: z.string().min(1, 'Category cannot be empty').nonempty(),
+  tags: z.array(z.string()),
 })
 export type CreatePostInput = z.input<typeof createPostSchema>
 export type PostType = z.infer<typeof postSchema>

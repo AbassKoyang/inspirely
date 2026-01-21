@@ -212,7 +212,6 @@ const updateProfileMutation = useMutation({
                 )}
             />
 
-            {/* Bio */}
             <Controller
                 name='bio'
                 control={form.control}
@@ -229,7 +228,6 @@ const updateProfileMutation = useMutation({
                 )}
             />
 
-            {/* Phone number */}
             <Controller
                 name='phone_number'
                 control={form.control}
@@ -247,7 +245,6 @@ const updateProfileMutation = useMutation({
                 )}
             />
 
-            {/* Address */}
             <Controller
                 name='address'
                 control={form.control}
@@ -265,7 +262,6 @@ const updateProfileMutation = useMutation({
                 )}
             />
 
-            {/* City */}
             <Controller
                 name='city'
                 control={form.control}
