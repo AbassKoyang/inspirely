@@ -30,6 +30,8 @@ import { useFetchCategories, useFetchTags } from '@/lib/queries';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
+import { api } from '@/lib/api';
+import { useRouter } from 'next/navigation';
 
 const WritePage = () => {
   const {user} = useAuth()
@@ -40,6 +42,8 @@ const WritePage = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [thumbnail, setThumbnail] = useState('');
   const [isUploading, setisUploading] = useState(false)
+  const [isSubmmitting, setIsSubmmitting] = useState(false);
+  const router = useRouter();
 
 
   const form = useForm<CreatePostInput>({
@@ -95,11 +99,6 @@ const WritePage = () => {
     content: 'Tell your story...',
   })
 
-  const onSubmit = async (data: CreatePostInput) => {
-    console.log("Submitted data:", data)
-  }
-
-
 
   const addTagToSelectedTags = (tag: string) => {
     const index = selectedTags.findIndex((selectedTag) => selectedTag == tag)
@@ -149,6 +148,25 @@ const WritePage = () => {
     }
 }
 
+const onSubmit = async (data: CreatePostInput) => {
+  console.log("Submitted data:", data)
+  setIsSubmmitting(true)
+    try {
+        const response =  await api.post(`/api/posts/`, {
+          ...data,
+          category_id: Number(data.category)
+        }, {withCredentials: true})
+        console.log(response.data)
+        toast.success("Article posted successfully")
+        router.push('/feed')
+        return response.data
+    } catch (error) {
+        console.error("error creating article categories", error)
+        toast.error("Failed to create post")
+    }finally{
+      setIsSubmmitting(false)
+    }
+}
 
   return (
     <section className='w-full min-h-dvh flex items-center flex-col bg-white'>
@@ -192,7 +210,7 @@ const WritePage = () => {
             src={thumbnail}
             alt='Thumbnail'
             />
-            <button onClick={()=> setThumbnail('')} className='absolute top-5 right-5 z-20 p-2 bg-white rounded-full cursor-pointer'>
+            <button type="button" onClick={()=> setThumbnail('')} className='absolute top-5 right-5 z-20 p-2 bg-white rounded-full cursor-pointer'>
               <X className='size-[20px] text-black/70'/>
             </button>
          </div>
@@ -304,7 +322,7 @@ const WritePage = () => {
                       <div className={`${tagField == '' ? 'hidden' : 'block'} w-full max-h-[400px] overscroll-y-auto p-0 bg-white z-100 absolute top-2 right-0 rounded-xs shadow-xs`}>
                         {tags?.filter((tag) => tag.name.includes(tagField) || tag.slug.includes(tagField)).map((tag) => (
                           <div className='w-full'>
-                            <button onClick={() => {addTagToSelectedTags(tag.name); settagField('')}} className='w-full flex items-center justify-start p-3 hover:bg-gray-100 text-sm text-black/70 cursor-pointer'> 
+                            <button type="button" onClick={() => {addTagToSelectedTags(tag.name); settagField('')}} className='w-full flex items-center justify-start p-3 hover:bg-gray-100 text-sm text-black/70 cursor-pointer'> 
                               <p>{tag.name}</p>
                             </button>
                           </div>
@@ -320,7 +338,7 @@ const WritePage = () => {
                 {selectedTags.map((tag) => (
                   <div className='p-2.5 rounded-sm bg-white border-gray-100 border flex items-center gap-3'>
                     <p className='text-sm font-sans text-black/70'>{tag}</p>
-                    <button onClick={() => {removeTagFromSelectedTags(tag)}} className='size-[20px] text-black/70'>
+                    <button type="button" onClick={() => {removeTagFromSelectedTags(tag)}} className='size-[20px] text-black/70'>
                       <X className='size-[18px] cursor-pointer text-black/70'/>
                     </button>
                   </div>
@@ -353,7 +371,7 @@ const WritePage = () => {
               />
               <div className="w-full py-5 px-8 border-t border-gray-100 sticky bottom-0 bg-white flex items-center justify-end mt-8 mb-0">
                 <button type='submit' className='text-sm py-[5px] px-4.5 text-white bg-emerald-700/90 hover:bg-emerald-700 rounded-4xl transition-all duration-200 ease-in-out cursor-pointer'>
-                  Publish
+                {isSubmmitting ? 'Publishing...' : ' Publish'}
                 </button>
               </div>
           </form>

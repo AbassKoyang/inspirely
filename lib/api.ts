@@ -163,6 +163,7 @@ export const fetchCategories = async () : Promise<TagType[]> => {
         throw error
     }
 }
+
 export const fetchTags = async () : Promise<TagType[]> => {
       try {
         const response =  await api.get(`/api/tags/`)
