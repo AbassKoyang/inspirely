@@ -59,12 +59,15 @@ const Navbar = () => {
               <Link href='#'>
                 <Bell strokeWidth={1} className='size-5.5 text-black/70 hover:text-black transition-all duration-200 ease-in-out' />
               </Link>
-              <button className='size-[30px] rounded-full overflow-hidden object-center object-cover cursor-pointer'>
+              <button className='size-[30px] rounded-full overflow-hidden cursor-pointer relative'>
                 <Image
-                className=''
+                className='object-cover'
+                fill
+                sizes="(max-width: 768px) 100px, 100px"
                 src={user.profile_pic_url || defaultAvatar}
-                width={30}
-                height={30}
+                loading='eager'
+                placeholder='blur'
+                blurDataURL='/assets/images/default-avatar.png'
                 alt='Profle Picture'
                 />
               </button>

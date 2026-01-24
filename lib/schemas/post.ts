@@ -41,7 +41,7 @@ export const createPostSchema = z.object({
   title: z.string(),
   subtitle: z.string(),
   content: z.string(),
-  slug: z.string().min(1, 'Slug cannot be empty').nonempty(),
+  slug: z.string(),
   thumbnail: z.string().nullable(),
   category: z.string().min(1, 'Category cannot be empty').nonempty(),
   tags: z.array(z.string()),

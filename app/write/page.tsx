@@ -43,6 +43,9 @@ const WritePage = () => {
   const [thumbnail, setThumbnail] = useState('');
   const [isUploading, setisUploading] = useState(false)
   const [isSubmmitting, setIsSubmmitting] = useState(false);
+  const [wordCount, setwordCount] = useState(0)
+  const [paragraphCount, setParagraphCount] = useState(0)
+  const [readTime, setreadTime] = useState(0)
   const router = useRouter();
 
 
@@ -97,6 +100,12 @@ const WritePage = () => {
       }),
     ],
     content: 'Tell your story...',
+    onUpdate({editor}){
+      const text = editor.getText()
+      calculateWordCount(text)      
+      calculateParagraphCount(text)
+      calculateReadtime(text)      
+    }
   })
 
 
@@ -151,14 +160,21 @@ const WritePage = () => {
 const onSubmit = async (data: CreatePostInput) => {
   console.log("Submitted data:", data)
   setIsSubmmitting(true)
+  console.log(generateArticleSlug(data.title))
     try {
         const response =  await api.post(`/api/posts/`, {
           ...data,
-          category_id: Number(data.category)
+          slug: generateArticleSlug(data.title.length > 50 ? data.title.slice(0, 50) : data.title),
+          tags: selectedTags,
+          content: editor?.getHTML() || '',
+          category_id: Number(data.category),
+          read_time: readTime,
+          word_count: wordCount,
+          paragraph_count: paragraphCount
         }, {withCredentials: true})
         console.log(response.data)
         toast.success("Article posted successfully")
-        router.push('/feed')
+        // router.push('/feed')
         return response.data
     } catch (error) {
         console.error("error creating article categories", error)
@@ -166,6 +182,27 @@ const onSubmit = async (data: CreatePostInput) => {
     }finally{
       setIsSubmmitting(false)
     }
+}
+
+console.log(editor?.getText())
+console.log(editor?.getHTML())
+
+const calculateWordCount = (content:string) => {
+  const count = content.split(/\s+/).length
+  setwordCount(count)
+}
+const calculateParagraphCount = (content:string) => {
+  const count = content.split(/\n\s*\n+/).length
+  setParagraphCount(count)
+}
+
+const generateArticleSlug = (title:string) => {
+  return title.toLowerCase().replaceAll(' ', '-').replaceAll(".", '')
+}
+
+const calculateReadtime = (content: string) => {
+  const readTime = Math.ceil(content.split(/\s+/).length/225)
+  setreadTime(readTime)
 }
 
   return (
@@ -260,15 +297,15 @@ const onSubmit = async (data: CreatePostInput) => {
             <div className="w-full bg-gray-100/90 rounded-xs p-3 px-4 flex items-center justify-between">
               <div className="">
                 <h6 className='text-black/70 font-medium font-sans text-base'>Word count</h6>
-                <p className='text-black/60 font-normal font-sans text-sm mt-3'>1 word</p>
+                <p className='text-black/60 font-normal font-sans text-sm mt-3'>{wordCount} {wordCount > 1 ? 'words' : 'word'}</p>
               </div>
               <div className="">
                 <h6 className='text-black/70 font-medium font-sans text-base'>Paragraph</h6>
-                <p className='text-black/60 font-normal font-sans text-sm mt-3'>1 word</p>
+                <p className='text-black/60 font-normal font-sans text-sm mt-3'>{paragraphCount} {paragraphCount > 1 ? 'paragraphs' : 'paragraph'}</p>
               </div>
               <div className="">
                 <h6 className='text-black/70 font-medium font-sans text-base'>Read time</h6>
-                <p className='text-black/60 font-normal font-sans text-sm mt-3'>1 word</p>
+                <p className='text-black/60 font-normal font-sans text-sm mt-3'>{readTime} mins</p>
               </div>
             </div>
           </div>
@@ -290,22 +327,6 @@ const onSubmit = async (data: CreatePostInput) => {
                   )}
               />
 
-              <Controller
-                  name='slug'
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                  <Field className='mt-5'>
-                      <FieldLabel htmlFor="slug">Article slug</FieldLabel>
-                      <Input
-                      {...field}
-                      className='border-none border-gray-100/90 bg-gray-100/90 focus-visible:bg-white rounded-xs focus-visible:ring-[1px] focus-visible:ring-black'
-                      id={field.name}
-                      type="text"
-                      />
-                      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                  </Field>
-                  )}
-              />
 
               <Controller
                   name='tags'

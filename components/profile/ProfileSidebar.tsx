@@ -79,13 +79,15 @@ const ProfileSidebar = () => {
       
   return (
     <div className="w-[30%] p-8 bg-white border-l border-gray-100">
-        <div className="w-[100px] h-[100px] rounded-full object-cover object-center overflow-hidden mt-2">
+        <div className="w-[100px] h-[100px] rounded-full object-center overflow-hidden mt-2 relative">
             <Image
-            className=''
-            src={user?.profile_pic_url || defaultAvatar}
-            width={100}
-            height={100}
+            fill
             alt='Profle Picture'
+            className='object-cover'
+            src={user?.profile_pic_url || defaultAvatar}
+            loading='eager'
+            placeholder='blur'
+            blurDataURL='/assets/images/default-avatar.png'
             />
         </div>
          <h6 className='font-sans text-lg font-semibold text-black mt-3'>{user?.first_name} {user?.last_name}</h6>
