@@ -34,19 +34,23 @@ const ProfilePostPreview = ({post}:{post: PostType}) => {
   return (
     <div className='w-full flex md:flex-row flex-col md:justify-between py-4 bg-white mb-5'>
         <div className="w-full md:w-[70%]">
-        <div className="w-full h-[200px] rounded-xl object-cover object-center overflow-hidden mt-2 md:hidden">
+        <div className="w-full h-[200px] rounded-xl object-cover object-center overflow-hidden mt-2 md:hidden relative">
             <Image
-            className='w-full'
+            className='object-cover'
+            fill
             src={post.thumbnail || thumbnailPlaceholder}
-            width={50}
-            height={50}
+            loading='eager'
+            placeholder='blur'
+            blurDataURL='/assets/images/thumbnail-placeholder.png'
             alt='Profle Picture'
             />
         </div>
 
+        <Link href='' className='w-full'>
         <p className='text-sm font-normal font-sans text-black/60 mt-3 md:hidden'>{formattedDate}</p>
         <h4 className='text-lg md:text-2xl font-semibold md:font-bold font-sans text-black mt-1 md:mt-5'>{title}</h4>
         <h4 className='text-base font-normal font-sans text-black/60 mt-1'>{subtitle || content}</h4>
+        </Link>
 
         <div className="w-full flex items-center justify-between mt-5">
             <div className="flex items-center gap-4">

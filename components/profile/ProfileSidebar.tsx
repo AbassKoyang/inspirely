@@ -10,9 +10,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { Ellipsis } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '@/lib/contexts/authContext';
 
 const ProfileSidebar = () => {
     const [isSelf, setIsSelf] = useState(false)
+    const {user: sessionUser} = useAuth();
     const userId = useParams<{userId: string}>().userId;
     const {data:user, isLoading, isError} = useFetchUser(userId);
     const {data:isFollowing} = useFetchIsFollowing(userId)
@@ -22,8 +24,8 @@ const ProfileSidebar = () => {
     const queryClient = useQueryClient();
 
     useEffect(() => {
-        setIsSelf(user?.id == Number(userId))
-    }, [user, userId])
+        setIsSelf(sessionUser?.id == Number(userId))
+    }, [user, userId, sessionUser])
 
     
     const followMutation = useMutation({
@@ -78,7 +80,7 @@ const ProfileSidebar = () => {
 
       
   return (
-    <div className="w-[30%] p-8 bg-white border-l border-gray-100">
+    <div className="hidden md:block w-[30%] p-8 bg-white border-l border-gray-100">
         <div className="w-[100px] h-[100px] rounded-full object-center overflow-hidden mt-2 relative">
             <Image
             fill

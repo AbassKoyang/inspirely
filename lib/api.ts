@@ -175,3 +175,14 @@ export const fetchTags = async () : Promise<TagType[]> => {
     }
 }
 
+export const fetchPost = async (postId: string) : Promise<PostType> => {
+      try {
+        const response =  await api.get(`/api/posts/${postId}`)
+        console.log(response.data)
+        return response.data as PostType
+    } catch (error) {
+        console.error("error fetching post", error)
+        throw error
+    }
+}
+

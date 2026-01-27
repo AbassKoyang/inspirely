@@ -164,7 +164,7 @@ const onSubmit = async (data: CreatePostInput) => {
     try {
         const response =  await api.post(`/api/posts/`, {
           ...data,
-          slug: generateArticleSlug(data.title.length > 50 ? data.title.slice(0, 50) : data.title),
+          slug: generateArticleSlug(data.title),
           tags: selectedTags,
           content: editor?.getHTML() || '',
           category_id: Number(data.category),
@@ -197,7 +197,8 @@ const calculateParagraphCount = (content:string) => {
 }
 
 const generateArticleSlug = (title:string) => {
-  return title.toLowerCase().replaceAll(' ', '-').replaceAll(".", '')
+  const truncatedTitle = title.length > 50 ? title.slice(0, 50) : title
+  return truncatedTitle.toLowerCase().replaceAll(' ', '-').replaceAll(".", '')
 }
 
 const calculateReadtime = (content: string) => {

@@ -1,8 +1,11 @@
+'use client';
 import Link from 'next/link'
 import { Twitter, Github, Linkedin, Mail } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
+  const pathname = usePathname()
 
   const footerLinks = {
     product: [
@@ -31,6 +34,8 @@ const Footer = () => {
     { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com' },
     { name: 'Email', icon: Mail, href: 'mailto:hello@inspirely.com' },
   ]
+
+  if (pathname !== '/') return null;
 
   return (
     <footer className="border-t border-border bg-muted/30">
