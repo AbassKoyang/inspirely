@@ -186,3 +186,24 @@ export const fetchPost = async (postId: string) : Promise<PostType> => {
     }
 }
 
+export const followUser = async (postId: string) : Promise<User> => {
+      try {
+        const response = await api.post(`/api/users/${postId}/follow/`)
+        console.log(response.data)
+        return response.data as User
+    } catch (error) {
+        console.error("error fetching post", error)
+        throw error
+    }
+}
+export const unfollowUser = async (postId: string) : Promise<User> => {
+      try {
+        const response = await api.delete(`/api/users/${postId}/follow/`)
+        console.log(response.data)
+        return response.data as User
+    } catch (error) {
+        console.error("error fetching post", error)
+        throw error
+    }
+}
+

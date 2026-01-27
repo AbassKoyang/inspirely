@@ -33,6 +33,8 @@ const postSchema = z.object({
   word_count: z.number().optional(),
   paragraph_count: z.number().optional(),
   read_time: z.number().optional(),
+  is_liked: z.boolean(),
+  is_bookmarked: z.boolean(),
   created_at: z.date(),
   updated_at: z.date(),
 });

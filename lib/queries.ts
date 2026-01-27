@@ -77,6 +77,6 @@ export const useFetchTags = () => {
 export const useFetchPost = (postId:string) => {
     return useQuery({
         queryFn: () => fetchPost(postId),
-        queryKey: ['post']
+        queryKey: ['article']
     })
 }
