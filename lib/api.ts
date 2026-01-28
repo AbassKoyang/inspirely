@@ -1,6 +1,6 @@
 import axios from "axios";
 import { PostType } from "./schemas/post";
-import { Follow, PaginatedResponse, PostResponseType, TagType } from "./types";
+import { CommentType, Follow, PaginatedResponse, PostResponseType, TagType } from "./types";
 import { User } from "./schemas/user";
 
 export const api = axios.create({
@@ -192,7 +192,7 @@ export const followUser = async (postId: string) : Promise<User> => {
         console.log(response.data)
         return response.data as User
     } catch (error) {
-        console.error("error fetching post", error)
+        console.error("error following user", error)
         throw error
     }
 }
@@ -202,8 +202,39 @@ export const unfollowUser = async (postId: string) : Promise<User> => {
         console.log(response.data)
         return response.data as User
     } catch (error) {
-        console.error("error fetching post", error)
+        console.error("error unfollowing post", error)
         throw error
     }
+}
+
+export const likePost = async (postId: string) => {
+      try {
+        const response = await api.post(`/api/posts/${postId}/reactions/`, {reaction_type: 'upvote'}, {withCredentials: true})
+        console.log(response.data)
+    } catch (error) {
+        console.error("error liking post", error)
+        throw error
+    }
+}
+
+export const bookmarkPost = async (postId: string) => {
+      try {
+        const response = await api.post(`/api/posts/${postId}/bookmark/`,null, {withCredentials: true})
+        console.log(response.data)
+    } catch (error) {
+        console.error("error liking post", error)
+        throw error
+    }
+}
+
+export const fetchComments = async (postId: string) : Promise<PaginatedResponse<CommentType>> => {
+  try {
+    const response =  await api.get(`/api/posts/${postId}/comments/`)
+    console.log(response.data)
+    return response.data as PaginatedResponse<CommentType>
+} catch (error) {
+    console.error("error fetching comments", error)
+    throw error
+}
 }
 

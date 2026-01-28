@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { fetchCategories, fetchCombinedPosts, fetchFollowing, fetchIsFollowing, fetchLatestPosts, fetchPersonalisedPosts, fetchPost, fetchSessionUser, fetchTags, fetchTrendingPosts, fetchUser, fetchUserPost } from "./api"
+import { fetchCategories, fetchCombinedPosts, fetchComments, fetchFollowing, fetchIsFollowing, fetchLatestPosts, fetchPersonalisedPosts, fetchPost, fetchSessionUser, fetchTags, fetchTrendingPosts, fetchUser, fetchUserPost } from "./api"
 
 export const useFetchUserPosts = (userId: string) => {
     return useQuery({
@@ -78,5 +78,12 @@ export const useFetchPost = (postId:string) => {
     return useQuery({
         queryFn: () => fetchPost(postId),
         queryKey: ['article']
+    })
+}
+
+export const useFetchComments = (postId:string) => {
+    return useQuery({
+        queryFn: () => fetchComments(postId),
+        queryKey: ['comments']
     })
 }

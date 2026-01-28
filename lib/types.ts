@@ -22,9 +22,21 @@ export type PaginatedResponse<T> = {
   };
 
   export type TagType = {
-    id: number,
-    name: string,
-    slug: string,
+    id: number;
+    name: string;
+    slug: string;
     created_at: string
+  }
+  export type CommentType = {
+    id: number;
+    post: PostType;
+    user: User;
+    content : string;
+    reply_count : number;
+    reaction_count: number;
+    views_count: number;
+    parent_id: number;
+    created_at: string;
+    updated_at: string
   }
   
