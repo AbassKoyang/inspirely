@@ -216,6 +216,15 @@ export const likePost = async (postId: string) => {
         throw error
     }
 }
+export const likeComment = async (commentId: string) => {
+      try {
+        const response = await api.post(`/api/comments/${commentId}/reactions/`, {reaction_type: 'upvote'}, {withCredentials: true})
+        console.log(response.data)
+    } catch (error) {
+        console.error("error liking comment", error)
+        throw error
+    }
+}
 
 export const bookmarkPost = async (postId: string) => {
       try {
@@ -234,6 +243,16 @@ export const fetchComments = async (postId: string) : Promise<PaginatedResponse<
     return response.data as PaginatedResponse<CommentType>
 } catch (error) {
     console.error("error fetching comments", error)
+    throw error
+}
+}
+export const fetchReplies = async (commentid: string) : Promise<PaginatedResponse<CommentType>> => {
+  try {
+    const response =  await api.get(`/api/comments/${commentid}/replies/`)
+    console.log(response.data)
+    return response.data as PaginatedResponse<CommentType>
+} catch (error) {
+    console.error("error fetching replies", error)
     throw error
 }
 }

@@ -36,6 +36,7 @@ export type PaginatedResponse<T> = {
     reaction_count: number;
     views_count: number;
     parent_id: number;
+    is_liked: boolean;
     created_at: string;
     updated_at: string
   }

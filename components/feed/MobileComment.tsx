@@ -42,7 +42,7 @@ import { createComment } from '@/lib/api';
 
 
 
-const CommentsSidebar = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeSidebar: () => void; post: PostType}) => {
+const MobileComments = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeSidebar: () => void; post: PostType}) => {
     const {data: comments} = useFetchComments(String(post.id))
     const queryClient = useQueryClient();
     const {user} = useAuth();
@@ -85,7 +85,10 @@ const CommentsSidebar = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeS
     });
 
   return (
-    <motion.div className='w-[400px] fixed top-0 right-0 bg-white shadow-xl h-dvh z-200 hidden md:block' initial={{x:'110%'}} animate={{x: isOpen ? 0 : '110%', animationDuration: 0.8, transition: {type: 'tween'}}}>
+    <motion.div className='w-full fixed bottom-0 right-0 h-dvh z-200 lg:hidden' initial={{y:'100%'}} animate={{y: isOpen ? 0 : '100%', animationDuration: 1, transition: {type: 'tween'}}}>
+        <div className="w-full h-full relative flex-col flex justify-end">
+        <div onClick={closeSidebar} className={`${isOpen ? 'block' : 'hidden'} z-0 absolute top-0 left-0 size-full bg-black/25`}></div>
+        <div className="w-full bg-white shadow-xl h-[90%] rounded-t-[35px] z-50 overflow-hidden">
         {comments && (
             <div className="w-full h-full relative overflow-auto">
                 <div className="w-full py-5 px-5 border-b border-gray-100 sticky top-0 z-200 bg-white flex items-center justify-between">
@@ -149,8 +152,10 @@ const CommentsSidebar = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeS
             </div>
 
         )}
+        </div>
+        </div>
     </motion.div>
   )
 }
 
-export default CommentsSidebar
+export default MobileComments

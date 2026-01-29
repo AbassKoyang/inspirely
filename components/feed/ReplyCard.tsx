@@ -16,16 +16,11 @@ import { createComment, likeComment } from '@/lib/api';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import {motion} from 'motion/react'
-import RepliesContainer from './RepliesContainer';
 
 
-const CommentCard = ({comment}:{comment: CommentType}) => {
+const ReplyCard = ({comment}:{comment: CommentType}) => {
     const queryClient = useQueryClient();
     const [formattedDate, setFormattedDate] = useState('')
-    const [showReplies, setShowReplies] = useState(false)
-    const [showReplyInput, setShowReplyInput] = useState(false)
-    const [replyContent, setreplyContent] = useState('')
-    const [isTextAreaOpen, setIsTextAreaOpen] = useState(false)
     const name = truncateText(`${comment.user.first_name} ${comment.user.last_name}`, 20)
 
     useEffect(() => {
@@ -42,10 +37,10 @@ const CommentCard = ({comment}:{comment: CommentType}) => {
     const likeMutation = useMutation({
         mutationFn: () => likeComment(String(comment.id) || ''),      
         onMutate: async () => {     
-            await queryClient.cancelQueries({ queryKey: ['comments'] })
-          const prevValue = queryClient.getQueryData(['comments']);
+            await queryClient.cancelQueries({ queryKey: [`replies-${String(comment.parent_id)}`] })
+          const prevValue = queryClient.getQueryData([`replies-${String(comment.parent_id)}`]);
 
-          queryClient.setQueryData(['comments'], (old: any) => {
+          queryClient.setQueryData([`replies-${String(comment.parent_id)}`], (old: any) => {
             console.log(old)
             const new_comments = old.results.map((c: any) =>
               c.id === comment.id
@@ -68,45 +63,16 @@ const CommentCard = ({comment}:{comment: CommentType}) => {
         },
       
         onError: (error, __, context) => {
-          queryClient.setQueryData(['comments'], context?.prevValue);
+          queryClient.setQueryData([`replies-${String(comment.parent_id)}`], context?.prevValue);
           console.log(error)
           toast.error("An error occured")
         },
       
         onSettled: () => {
-          queryClient.invalidateQueries({queryKey: ['comments']});
+          queryClient.invalidateQueries({queryKey: [`replies-${String(comment.parent_id)}`]});
         },
       });
 
-      const createCommentMutation = useMutation({
-        mutationFn: (c: {content: string; parent_id?: number}) => createComment(String(comment.id), c),
-        onMutate: async (comment) => {     
-            await queryClient.cancelQueries({ queryKey: ['comments'] })
- 
-          const prevValue = queryClient.getQueryData(['comments']);
-          queryClient.setQueryData(['comments'], (old: any) => ({
-            ...old,
-            comment,
-          }));
-      
-          return { prevValue };
-        },
-      
-        onError: (_, __, context) => {
-          queryClient.setQueryData(['comments'], context?.prevValue);
-          toast.error("An error occured")
-        },
-
-        onSuccess: () => {
-            setreplyContent('')
-            setShowReplyInput(false)
-            toast.error("Reply sent")
-        },
-      
-        onSettled: () => {
-          queryClient.invalidateQueries({queryKey: ['comments']});
-        },
-    });
 
   return (
     <div className='w-full mb-3 border-b last:border-0 border-gray-100 py-6 first:pt-0'>
@@ -175,42 +141,9 @@ const CommentCard = ({comment}:{comment: CommentType}) => {
                     </div>
                 </HoverCardContent>
             </HoverCard>
-
-            {comment.reply_count > 0 && (
-                 <HoverCard openDelay={700} closeDelay={100}>
-                    <HoverCardTrigger asChild>
-                        <button onClick={() => setShowReplies(true)} className="flex items-center gap-2 cursor-pointer group">
-                            <MessageCircle className="size-[18px] text-black/60 group-hover:text-black transition-all duration-200 ease-in-out" />
-                            <span className='text-sm font-normal font-sans text-black/60'>{comment.reply_count}</span>
-                        </button>
-                    </HoverCardTrigger>
-                    <HoverCardContent side='top' className="w-fit flex items-center justify-center p-0">
-                        <div className=" bg-black/95 relative p-2 flex items-center justify-center rounded-sm">
-                            <p className='text-sm font-sans text-white font-normal'>Comment</p>
-                            <div className="size-5 bg-black/95 [clip-path:polygon(0_0,100%_0,50%_100%)] absolute left-[50%] translate-x-[-50%] bottom-[-7px]"></div>
-                        </div>
-                    </HoverCardContent>
-                </HoverCard>
-            )}
-
-            <Button onClick={() => setShowReplyInput(true)} variant='link' className='text-sm font-sans text-black/90 font-normal cursor-pointer p-0'>Reply</Button>
         </div>
-        {showReplyInput && (
-            <div className="w-full px-5 mt-3 border-l-3 border-gray-100/90">
-                <div className="w-full p-4 rounded-sm bg-gray-100/90">
-                    <motion.textarea initial={{height:20}} animate={{height: isTextAreaOpen ? '200px' : 20, animationDuration: 1.5, transition: {type: 'tween'}}} onFocus={() => setIsTextAreaOpen(true)} onChange={(e) => setreplyContent(e.target.value)} className={`w-full min-h-[20px] md:min-h-[20px] max-h-fit text-sm font-medium outline-0 stroke-0 border-0 placeholder:text-black/65`} placeholder='What are your thoughts?'></motion.textarea>
-                    <div className={`w-full ${isTextAreaOpen ? 'flex' : 'hidden'} items-center gap-2 justify-end mt-3`}>
-                        <Button onClick={() => setShowReplyInput(false)} variant='secondary' className='cursor-pointer'>Cancel</Button>
-                        <Button onClick={() => createCommentMutation.mutate({content: replyContent, parent_id: comment.id})} variant='default' className='rounded-4xl cursor-pointer text-xs px-3 py-1'>Respond</Button>
-                    </div>
-                </div>
-            </div>
-        )}
-        {showReplies && (
-            <RepliesContainer comment={comment} />
-        )}
     </div>
   )
 }
 
-export default CommentCard
+export default ReplyCard

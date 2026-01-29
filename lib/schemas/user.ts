@@ -28,6 +28,7 @@ export const userSchema = z.object({
   posts_count: z.number().int().nonnegative().default(0),
   reactions_count: z.number().int().nonnegative().default(0),
   bookmarks_count: z.number().int().nonnegative().default(0),
+  is_following: z.boolean(),
   is_staff: z.boolean().default(false),
   is_superuser: z.boolean().default(false),
   is_active: z.boolean().default(true),

@@ -19,6 +19,7 @@ import {
 import { formatFollowersCount } from '@/lib/utils';
 import ProfilePopup from '@/components/feed/ProfilePopup';
 import CommentsSidebar from '@/components/feed/CommentsSidebar';
+import MobileComments from '@/components/feed/MobileComment';
 
 const ArticlePage = () => {
     const [isSelf, setIsSelf] = useState(false)
@@ -26,7 +27,6 @@ const ArticlePage = () => {
     const slug = useParams<{slug: string}>().slug
     const {data:post} = useFetchPost(slug)
     const {data:isFollowing} = useFetchIsFollowing(String(post?.author.id) || '')
-    const {data:user} = useFetchUser(String(post?.author.id) || '')
     const queryClient = useQueryClient();
     const [formattedMonth, setformattedMonth] = useState('');
     const [visible, setVisible] = useState(false);
@@ -86,10 +86,10 @@ const ArticlePage = () => {
     const followMutation = useMutation({
         mutationFn: () => followUser(String(post?.author.id) || ''),
         onMutate: async () => {     
-            await queryClient.cancelQueries({ queryKey: ['is-following'] })
+            await queryClient.cancelQueries({ queryKey: [`user-${post?.author.id}`] })
  
-          const prevValue = queryClient.getQueryData(['is-following', String(post?.author.id)]);
-          queryClient.setQueryData(['is-following', String(post?.author.id)], (old: any) => ({
+          const prevValue = queryClient.getQueryData([`user-${post?.author.id}`, String(post?.author.id)]);
+          queryClient.setQueryData([`user-${post?.author.id}`, String(post?.author.id)], (old: any) => ({
             ...old,
             is_following: true,
           }));
@@ -98,12 +98,12 @@ const ArticlePage = () => {
         },
       
         onError: (_, __, context) => {
-          queryClient.setQueryData(['is-following', String(post?.author.id)], context?.prevValue);
+          queryClient.setQueryData([`user-${post?.author.id}`, String(post?.author.id)], context?.prevValue);
           toast.error("An error occured")
         },
       
         onSettled: () => {
-          queryClient.invalidateQueries({queryKey: ['is-following']});
+          queryClient.invalidateQueries({queryKey: [`user-${post?.author.id}`]});
         },
       });
 
@@ -111,10 +111,10 @@ const ArticlePage = () => {
         mutationFn: () => unfollowUser(String(post?.author.id) || ''),
       
         onMutate: async () => {     
-            await queryClient.cancelQueries({ queryKey: ['is-following'] })
+            await queryClient.cancelQueries({ queryKey: [`user-${post?.author.id}`] })
  
-          const prevValue = queryClient.getQueryData(['is-following']);
-          queryClient.setQueryData(['is-following'], (old: any) => ({
+          const prevValue = queryClient.getQueryData([`user-${post?.author.id}`]);
+          queryClient.setQueryData([`user-${post?.author.id}`], (old: any) => ({
             ...old,
             is_following: false,
           }));
@@ -123,12 +123,12 @@ const ArticlePage = () => {
         },
       
         onError: (_, __, context) => {
-          queryClient.setQueryData(['is-following'], context?.prevValue);
+          queryClient.setQueryData([`user-${post?.author.id}`], context?.prevValue);
           toast.error("An error occured")
         },
       
         onSettled: () => {
-          queryClient.invalidateQueries({queryKey: ['is-following']});
+          queryClient.invalidateQueries({queryKey: [`user-${post?.author.id}`]});
         },
       });
 
@@ -182,7 +182,7 @@ const ArticlePage = () => {
 
   return (
     <section className='w-full max-w-2xl bg-white min-h-dvh overflow-x-hidden'>
-       {post && user && (
+       {post && (
         <>
          <div className="w-full">
          <h5 className='max-w-full font-sans font-bold text-3xl lg:text-[40px] text-black/90 leading-[40px] lg:leading-[50px] tracking-normal'>{post?.title}</h5>
@@ -207,16 +207,16 @@ const ArticlePage = () => {
                          </Link>
                      </HoverCardTrigger>
                      <HoverCardContent side='right' className="w-[290px] bg-white p-6">
-                     <ProfilePopup user={user} isFollowing={isFollowing?.is_following || true} isSelf={isSelf} unfollow={() => unfollowMutation.mutate()} follow={() => followMutation.mutate()}  />                             
+                     <ProfilePopup userId={String(post?.author.id) || ''} />                             
                      </HoverCardContent>
                  </HoverCard>
 
                  <HoverCard openDelay={700} closeDelay={100}>
                      <HoverCardTrigger asChild>
-                          <Link href='#' className='text-sm font-sans text-black hover:underline'>{user?.first_name} {user?.last_name}</Link>
+                          <Link href='#' className='text-sm font-sans text-black hover:underline'>{post?.author.first_name} {post?.author.last_name}</Link>
                      </HoverCardTrigger>
                      <HoverCardContent side='right' className="w-[290px] bg-white p-6">
-                         <ProfilePopup user={user} isFollowing={isFollowing?.is_following || true} isSelf={isSelf} unfollow={() => unfollowMutation.mutate()} follow={() => followMutation.mutate()}  />
+                         <ProfilePopup userId={String(post?.author.id) || ''}  />
                      </HoverCardContent>
                  </HoverCard>
 
@@ -357,7 +357,7 @@ const ArticlePage = () => {
                  <path className={`${post?.is_liked ? 'fill-[#4CAF50]' : 'fill-black/60'} group-hover:fill-[#4CAF50] transition-all duration-200 ease-in-out`} d="M5.83333 15.8975C5.41236 15.8975 5.04938 15.7517 4.74438 15.46C4.43938 15.1683 4.27354 14.812 4.24688 14.391H7.41979C7.39313 14.812 7.22729 15.1683 6.92229 15.46C6.61729 15.7517 6.25431 15.8975 5.83333 15.8975ZM3.33333 13.2371C3.15597 13.2371 3.0075 13.1773 2.88792 13.0577C2.76819 12.938 2.70833 12.7894 2.70833 12.6121C2.70833 12.4347 2.76819 12.2863 2.88792 12.1667C3.0075 12.0469 3.15597 11.9871 3.33333 11.9871H8.33333C8.5107 11.9871 8.65917 12.0469 8.77875 12.1667C8.89847 12.2863 8.95833 12.4347 8.95833 12.6121C8.95833 12.7894 8.89847 12.938 8.77875 13.0577C8.65917 13.1773 8.5107 13.2371 8.33333 13.2371H3.33333ZM2.83646 10.8333C1.96368 10.2906 1.27278 9.58139 0.76375 8.70584C0.254583 7.83042 0 6.87292 0 5.83333C0 4.20945 0.56625 2.83125 1.69875 1.69875C2.83125 0.56625 4.20944 0 5.83333 0C7.45722 0 8.83542 0.56625 9.96792 1.69875C11.1004 2.83125 11.6667 4.20945 11.6667 5.83333C11.6667 6.87292 11.4121 7.83042 10.9029 8.70584C10.3939 9.58139 9.70299 10.2906 8.83021 10.8333H2.83646Z" fill=""/>
              </svg>
          </button>
-         <button className="flex items-center gap-2 cursor-pointer group">
+         <button onClick={() => setisSidebarOpen(true)} className="flex items-center gap-2 cursor-pointer group">
              <MessageCircle className="size-[18px] text-black/60 group-hover:text-black transition-all duration-200 ease-in-out" />
              <span className='text-sm font-normal font-sans text-black/60'>{post?.comment_count}</span>
          </button>
@@ -373,6 +373,7 @@ const ArticlePage = () => {
 
         {/* Sidebar */}
         <CommentsSidebar isOpen={isSidebarOpen} closeSidebar={() => setisSidebarOpen(false)} post={post} />
+        <MobileComments isOpen={isSidebarOpen} closeSidebar={() => setisSidebarOpen(false)} post={post} />
         </>
     )}
     </section>
