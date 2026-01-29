@@ -238,3 +238,14 @@ export const fetchComments = async (postId: string) : Promise<PaginatedResponse<
 }
 }
 
+
+export const createComment = async (postId: string, comment: {content: string; parent_id?: number}) : Promise<CommentType> => {
+  try {
+    const response = await api.post(`/api/posts/${postId}/comments/`, comment)
+    console.log(response.data)
+    return response.data as CommentType
+} catch (error) {
+    console.error("error creating comment", error)
+    throw error
+}
+}
