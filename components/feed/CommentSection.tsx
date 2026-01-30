@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import {motion} from 'motion/react'
-import { Check, ChevronDown, X } from 'lucide-react';
+import { Check, ChevronDown, Shield, X } from 'lucide-react';
 import { PostType } from '@/lib/schemas/post';
 import { useFetchComments } from '@/lib/queries';
 import Image from 'next/image';
@@ -43,7 +43,7 @@ import { useCreatComment } from '@/lib/mutations';
 
 
 
-const MobileComments = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeSidebar: () => void; post: PostType}) => {
+const CommentSection = ({post} : {post: PostType}) => {
     const {mutate: createComment, isPending}  = useCreatComment()
     const {data: comments} = useFetchComments(String(post.id))
     const queryClient = useQueryClient();
@@ -67,21 +67,17 @@ const MobileComments = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeSi
     } 
 
   return (
-    <motion.div className={`w-full fixed bottom-0 right-0 h-dvh z-200 ${isOpen ? 'block' : 'hidden'} lg:hidden`}>
-        <div className="w-full h-full relative flex-col flex justify-end">
-        <div onClick={closeSidebar} className={`z-0 absolute top-0 left-0 size-full bg-black/25 duration-[1000] ease-in-out transition-all`}></div>
-
-        <motion.div className="w-full bg-white shadow-xl h-[90%] rounded-t-[35px] z-50 overflow-hidden" initial={{y:'100%'}} animate={{y: isOpen ? 0 : '100%', animationDuration: 1, transition: {type: 'tween'}}}>
+    <motion.div className='w-full bg-white'>
         {comments && (
             <div className="w-full h-full relative overflow-auto">
-                <div className="w-full py-5 px-5 border-b border-gray-100 sticky top-0 z-200 bg-white flex items-center justify-between">
+                <div className="w-full py-5 bg-white flex items-center justify-between">
                 <h2 className='font-sans text-xl text-black font-semibold leading-1'>Comments ({post.comment_count})</h2>
-                <button onClick={closeSidebar} className='p-2 bg-white rounded-full cursor-pointer'>
-                    <X className='size-[20px] text-black/70'/>
+                <button className='p-2 bg-white rounded-full cursor-pointer'>
+                    <Shield strokeWidth={1} className='size-[20px] text-black/70'/>
                 </button>
                 </div>
     
-                <div className="w-full mt-5 px-5 flex items-center gap-3">
+                <div className="w-full mt-5 flex items-center gap-3">
                     <Link href='#'>
                         <div className='size-[35px] rounded-full overflow-hidden cursor-pointer relative'>
                             <Image
@@ -99,7 +95,7 @@ const MobileComments = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeSi
                     <Link href='#' className='text-sm font-sans text-black hover:underline'>{user?.first_name} {user?.last_name}</Link>
                 </div>
 
-                <div className="w-full px-5 mt-3">
+                <div className="w-full mt-3">
                     <div className="w-full p-4 rounded-sm bg-gray-100/90">
                         <motion.textarea initial={{height:20}} animate={{height: isTextAreaOpen ? 100 : 20, animationDuration: 1.5, transition: {type: 'tween'}}} onFocus={() => setIsTextAreaOpen(true)} onChange={(e) => setCommentContent(e.target.value)} className={`w-full min-h-[20px] md:min-h-[20px] text-sm font-medium outline-0 stroke-0 border-0 placeholder:text-black/65`} placeholder='What are your thoughts?'></motion.textarea>
                         <div className={`w-full ${isTextAreaOpen ? 'flex' : 'hidden'} items-center gap-2 justify-end mt-3`}>
@@ -109,11 +105,11 @@ const MobileComments = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeSi
                     </div>
                 </div>
 
-                <div className="w-full px-5 mt-8" onClick={() => setIsTextAreaOpen(false)}>
+                <div className="w-full mt-8">
                     <div onClick={() => setIsSelectOpen(!isSelectOpen)} className="flex items-center gap-3 cursor-pointer relative">
                      <p className={`text-xs uppercase font-sans font-semibold ${isSelectOpen ? 'text-emerald-700' : 'text-black'}`}>{orderType.name}</p>
                      <ChevronDown className={`${isSelectOpen ? 'text-emerald-600' : 'text-black'} size-[18px]`} />
-                     <div className={`w-[150px] absolute -bottom-[85px] left-0 p-2 shadow-sm bg-white rounded-sm ${isSelectOpen ? 'block' : 'hidden'}`}>
+                     <div className={`w-[150px] absolute -bottom-[85px] left-0 p-2 shadow-sm z-100 bg-white rounded-sm ${isSelectOpen ? 'block' : 'hidden'}`}>
                         {orderTypes.map((ot) => (
                             <button onClick={() => setOrderType(ot)} className={`group text-xs font-sans font-medium p-2 w-full flex items-center gap-3 cursor-pointer ${ot.value == orderType.value ? 'text-emerald-700' : 'text-black'} hover:text-emerald-700`}>
                                 <Check className={`${ot.value == orderType.value ? 'visible text-emerald-700' : 'invisible text-black'} size-[18px] group-hover:text-emerald-700 group-hover:visible`}/>
@@ -124,7 +120,7 @@ const MobileComments = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeSi
                     </div>
                 </div>
 
-                <div className="w-full px-5 mt-5 border-t border-gray-100 py-8">
+                <div className="w-full mt-5 border-t border-gray-100 py-8">
                 {comments && comments.results.length > 0 && comments.results.map((comment) => (
                     <CommentCard comment={comment} />
                 ))}
@@ -135,10 +131,8 @@ const MobileComments = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeSi
             </div>
 
         )}
-        </motion.div>
-        </div>
     </motion.div>
   )
 }
 
-export default MobileComments
+export default CommentSection

@@ -22,6 +22,7 @@ import CommentCard from './CommentCard';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { createComment } from '@/lib/api';
+import { useCreatComment } from '@/lib/mutations';
 
   const orderTypes = [
     {
@@ -43,6 +44,7 @@ import { createComment } from '@/lib/api';
 
 
 const CommentsSidebar = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeSidebar: () => void; post: PostType}) => {
+    const {mutate: createComment, isPending}  = useCreatComment()
     const {data: comments} = useFetchComments(String(post.id))
     const queryClient = useQueryClient();
     const {user} = useAuth();
@@ -54,35 +56,15 @@ const CommentsSidebar = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeS
     const [commentContent, setCommentContent] = useState('')
     const [isTextAreaOpen, setIsTextAreaOpen] = useState(false)
 
-    const createCommentMutation = useMutation({
-        mutationFn: (comment: {content: string; parent_id?: number}) => createComment(String(post.id), comment),
-        onMutate: async (comment) => {     
-            await queryClient.cancelQueries({ queryKey: ['comments'] })
- 
-          const prevValue = queryClient.getQueryData(['comments']);
-          queryClient.setQueryData(['comments'], (old: any) => ({
-            ...old,
-            comment,
-          }));
-      
-          return { prevValue };
-        },
-      
-        onError: (_, __, context) => {
-          queryClient.setQueryData(['comments'], context?.prevValue);
-          toast.error("An error occured")
-        },
-
-        onSuccess: () => {
-            setCommentContent('')
-            setIsTextAreaOpen(false)
-            toast.error("Comment sent")
-        },
-
-        onSettled: () => {
-          queryClient.invalidateQueries({queryKey: ['comments']});
-        },
-    });
+    const handleCreateComment = (data: {postId: string; comment: {content: string; parent_id?: number}}) => {
+        createComment(data, {
+            onSuccess: () => {
+                setCommentContent('')
+                setIsTextAreaOpen(false)
+                toast.error("Reply sent")
+            }
+        })
+    } 
 
   return (
     <motion.div className='w-[400px] fixed top-0 right-0 bg-white shadow-xl h-dvh z-200 hidden md:block' initial={{x:'110%'}} animate={{x: isOpen ? 0 : '110%', animationDuration: 0.8, transition: {type: 'tween'}}}>
@@ -115,10 +97,10 @@ const CommentsSidebar = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeS
 
                 <div className="w-full px-5 mt-3">
                     <div className="w-full p-4 rounded-sm bg-gray-100/90">
-                        <motion.textarea initial={{height:20}} animate={{height: isTextAreaOpen ? '200px' : 20, animationDuration: 1.5, transition: {type: 'tween'}}} onFocus={() => setIsTextAreaOpen(true)} onChange={(e) => setCommentContent(e.target.value)} className={`w-full min-h-[20px] md:min-h-[20px] max-h-fit text-sm font-medium outline-0 stroke-0 border-0 placeholder:text-black/65`} placeholder='What are your thoughts?'></motion.textarea>
+                        <motion.textarea initial={{height:20}} animate={{height: isTextAreaOpen ? 100 : 20, animationDuration: 1.5, transition: {type: 'tween'}}} onFocus={() => setIsTextAreaOpen(true)} onChange={(e) => setCommentContent(e.target.value)} className={`w-full min-h-[20px] md:min-h-[20px] text-sm font-medium outline-0 stroke-0 border-0 placeholder:text-black/65`} placeholder='What are your thoughts?'></motion.textarea>
                         <div className={`w-full ${isTextAreaOpen ? 'flex' : 'hidden'} items-center gap-2 justify-end mt-3`}>
                             <Button onClick={() => setIsTextAreaOpen(false)} variant='secondary' className='cursor-pointer'>Cancel</Button>
-                            <Button onClick={() => createCommentMutation.mutate({content: commentContent})} variant='default' className='rounded-4xl cursor-pointer'>Respond</Button>
+                            <Button disabled={commentContent == '' || isPending} onClick={() => handleCreateComment({postId: String(post.id), comment:{content: commentContent}})} variant='default' className='rounded-4xl cursor-pointer'>Respond</Button>
                         </div>
                     </div>
                 </div>
@@ -127,7 +109,7 @@ const CommentsSidebar = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeS
                     <div onClick={() => setIsSelectOpen(!isSelectOpen)} className="flex items-center gap-3 cursor-pointer relative">
                      <p className={`text-xs uppercase font-sans font-semibold ${isSelectOpen ? 'text-emerald-700' : 'text-black'}`}>{orderType.name}</p>
                      <ChevronDown className={`${isSelectOpen ? 'text-emerald-600' : 'text-black'} size-[18px]`} />
-                     <div className={`w-[150px] absolute -bottom-[85px] left-0 p-2 shadow-sm bg-white rounded-sm ${isSelectOpen ? 'block' : 'hidden'}`}>
+                     <div className={`w-[150px] absolute -bottom-[85px] left-0 p-2 shadow-sm z-100 bg-white rounded-sm ${isSelectOpen ? 'block' : 'hidden'}`}>
                         {orderTypes.map((ot) => (
                             <button onClick={() => setOrderType(ot)} className={`group text-xs font-sans font-medium p-2 w-full flex items-center gap-3 cursor-pointer ${ot.value == orderType.value ? 'text-emerald-700' : 'text-black'} hover:text-emerald-700`}>
                                 <Check className={`${ot.value == orderType.value ? 'visible text-emerald-700' : 'invisible text-black'} size-[18px] group-hover:text-emerald-700 group-hover:visible`}/>
