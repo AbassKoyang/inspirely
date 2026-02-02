@@ -7,9 +7,13 @@ import Link from 'next/link'
 import { useAuth } from '@/lib/contexts/authContext'
 import { PostType } from '@/lib/schemas/post'
 import { truncateText } from '@/lib/utils'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { bookmarkPost } from '@/lib/api'
+import { toast } from 'sonner'
 
 
 const PostPreview = ({post}:{post: PostType}) => {
+    const queryClient = useQueryClient()
     const [isSelf, setIsSelf] = useState(false)
     const {user} = useAuth()
     const date = new Date(post.created_at)
@@ -29,18 +33,49 @@ const PostPreview = ({post}:{post: PostType}) => {
         setIsSelf(user?.id == post.author.id)
     }, [user])
 
+    const bookmarkMutation = useMutation({
+        mutationFn: () => bookmarkPost(String(post?.author.id) || ''),      
+        onMutate: async () => {     
+            await queryClient.cancelQueries({ queryKey: ['article'] })
+          const prevValue = queryClient.getQueryData(['article', String(post?.author.id)]);
+          queryClient.setQueryData(['article', String(post?.author.id)], (old: any) => ({
+            ...old,
+            is_bookmarked: !post?.is_bookmarked,
+            reaction_count: post?.is_bookmarked ? post?.bookmark_count - 1 : post?.bookmark_count! + 1
+          }));
+      
+          return { prevValue };
+        },
+
+        onSuccess: () => {
+            toast.success("Added to bookmark")
+        },
+      
+        onError: (_, __, context) => {
+          queryClient.setQueryData(['article', String(post?.author.id)], context?.prevValue);
+          toast.error("An error occured")
+        },
+      
+        onSettled: () => {
+          queryClient.invalidateQueries({queryKey: ['article']});
+        },
+      });
+
   return (
     <div className='w-full flex md:flex-row flex-col md:justify-between py-4 bg-white mb-5'>
         <div className="w-full md:w-[70%]">
         <div className="w-full flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
                 <Link href='#'>
-                    <div className='rounded-full overflow-hidden object-center object-cover cursor-pointer'>
-                        <Image
-                        className='size-full'
+                    <div className='size-[30px] relative rounded-full overflow-hidden object-center object-cover cursor-pointer'>
+                    <Image
+                        className='object-cover'
+                        fill
+                        sizes="(max-width: 768px) 100px, 100px"
                         src={post.author.profile_pic_url || defaultAvatar}
-                        width={30}
-                        height={30}
+                        loading='eager'
+                        placeholder='blur'
+                        blurDataURL='/assets/images/default-avatar.png'
                         alt='Profle Picture'
                         />
                     </div>
@@ -64,12 +99,14 @@ const PostPreview = ({post}:{post: PostType}) => {
                 </button>
             </div>
         </div>
-        <div className="w-full h-[200px] rounded-xl object-cover object-center overflow-hidden mt-2 md:hidden">
-            <Image
-            className='size-full'
+        <div className="w-full h-[200px] rounded-xl object-cover object-center overflow-hidden mt-2 md:hidden relative">
+         <Image
+            className='object-cover'
+            fill
             src={post.thumbnail || thumbnailPlaceholder}
-            width={50}
-            height={50}
+            loading='eager'
+            placeholder='blur'
+            blurDataURL='/assets/images/thumbnail-placeholder.png'
             alt='Profle Picture'
             />
         </div>
@@ -104,7 +141,7 @@ const PostPreview = ({post}:{post: PostType}) => {
                 </div>
             </div>
             <div className="items-center gap-3 hidden md:flex">
-                <button disabled={isSelf} className='p-2 group cursor-pointer disabled:cursor-not-allowed'>
+                <button onClick={() => bookmarkMutation.mutate()} disabled={isSelf} className='p-2 group cursor-pointer disabled:cursor-not-allowed'>
                     <svg className='fill-black/60 group-hover:fill-black transition-all duration-200 ease-in-out group-disabled:fill-black/30' width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6.5 13.9615L2.53075 15.6652C1.92825 15.9229 1.35583 15.8743 0.8135 15.5195C0.271167 15.1647 0 14.6627 0 14.0135V1.80775C0 1.30258 0.175 0.875 0.525 0.525C0.875 0.175 1.30258 0 1.80775 0H6.75C6.9625 0 7.14067 0.0719168 7.2845 0.21575C7.42817 0.359583 7.5 0.53775 7.5 0.75025C7.5 0.962917 7.42817 1.141 7.2845 1.2845C7.14067 1.42817 6.9625 1.5 6.75 1.5H1.80775C1.73075 1.5 1.66025 1.53208 1.59625 1.59625C1.53208 1.66025 1.5 1.73075 1.5 1.80775V13.9788C1.5 14.0878 1.5465 14.1743 1.6395 14.2385C1.73233 14.3025 1.83008 14.3121 1.93275 14.2673L6.5 12.3L11.0673 14.2673C11.1699 14.3121 11.2677 14.3025 11.3605 14.2385C11.4535 14.1743 11.5 14.0878 11.5 13.9788V8.25C11.5 8.0375 11.5719 7.85933 11.7158 7.7155C11.8596 7.57183 12.0378 7.5 12.2503 7.5C12.4629 7.5 12.641 7.57183 12.7845 7.7155C12.9282 7.85933 13 8.0375 13 8.25V14.0135C13 14.6627 12.7288 15.1647 12.1865 15.5195C11.6442 15.8743 11.0718 15.9229 10.4693 15.6652L6.5 13.9615ZM6.5 1.5H1.5H7.5H6.5ZM11.5 3.5H10.25C10.0375 3.5 9.85933 3.42808 9.7155 3.28425C9.57183 3.14042 9.5 2.96225 9.5 2.74975C9.5 2.53708 9.57183 2.359 9.7155 2.2155C9.85933 2.07183 10.0375 2 10.25 2H11.5V0.75C11.5 0.5375 11.5719 0.359417 11.7158 0.21575C11.8596 0.0719168 12.0378 0 12.2503 0C12.4629 0 12.641 0.0719168 12.7845 0.21575C12.9282 0.359417 13 0.5375 13 0.75V2H14.25C14.4625 2 14.6406 2.07192 14.7843 2.21575C14.9281 2.35958 15 2.53775 15 2.75025C15 2.96292 14.9281 3.141 14.7843 3.2845C14.6406 3.42817 14.4625 3.5 14.25 3.5H13V4.75C13 4.9625 12.9281 5.14067 12.7843 5.2845C12.6404 5.42817 12.4622 5.5 12.2498 5.5C12.0371 5.5 11.859 5.42817 11.7155 5.2845C11.5718 5.14067 11.5 4.9625 11.5 4.75V3.5Z" fill=""/>
                     </svg>
@@ -117,12 +154,14 @@ const PostPreview = ({post}:{post: PostType}) => {
             </div>
         </div>
         </div>
-        <div className="w-[150px] h-[100px] rounded-md object-cover object-center overflow-hidden mt-2 hidden md:block">
+        <div className="w-[150px] h-[100px] rounded-xs object-cover object-center overflow-hidden mt-2 hidden md:block relative">
             <Image
-            className='size-full'
+            className='object-cover'
+            fill
             src={post.thumbnail || thumbnailPlaceholder}
-            width={50}
-            height={50}
+            loading='eager'
+            placeholder='blur'
+            blurDataURL='/assets/images/thumbnail-placeholder.png'
             alt='Profle Picture'
             />
         </div>

@@ -1,7 +1,7 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {motion} from 'motion/react'
-import { Check, ChevronDown, Shield, X } from 'lucide-react';
+import { Check, ChevronDown, LoaderCircle, Shield, X } from 'lucide-react';
 import { PostType } from '@/lib/schemas/post';
 import { useFetchComments } from '@/lib/queries';
 import Image from 'next/image';
@@ -23,6 +23,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { createComment } from '@/lib/api';
 import { useCreatComment } from '@/lib/mutations';
+import { useInView } from 'react-intersection-observer';
 
   const orderTypes = [
     {
@@ -44,8 +45,16 @@ import { useCreatComment } from '@/lib/mutations';
 
 
 const CommentSection = ({post} : {post: PostType}) => {
-    const {mutate: createComment, isPending}  = useCreatComment()
-    const {data: comments} = useFetchComments(String(post.id))
+    const { ref, inView } = useInView();
+    const {mutate: createComment, isPending}  = useCreatComment(String(post.id))
+    const {
+        data: comments,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        isError,
+    } = useFetchComments(String(post.id))
     const queryClient = useQueryClient();
     const {user} = useAuth();
     const [orderType, setOrderType] = useState<orderType>({
@@ -56,9 +65,28 @@ const CommentSection = ({post} : {post: PostType}) => {
     const [commentContent, setCommentContent] = useState('')
     const [isTextAreaOpen, setIsTextAreaOpen] = useState(false)
 
+    useEffect(() => {
+        if (inView && hasNextPage) {
+          fetchNextPage();
+        }
+    }, [inView, hasNextPage, fetchNextPage]);
+
+    const allComments = useMemo(() => {
+        return comments?.pages.flatMap(page => page.results) ;
+      }, [comments]);
+
     const handleCreateComment = (data: {postId: string; comment: {content: string; parent_id?: number}}) => {
         createComment(data, {
-            onSuccess: () => {
+            onSuccess: async (createdComment) => {
+                queryClient.setQueryData(['comments', data.postId], (old: any) => ({
+                    ...old,
+                    pages: old.pages.map((page: any, i: number) =>
+                      i === 0
+                        ? { ...page, results: [createdComment, ...page.results] }
+                        : page
+                    ),
+                }))
+
                 setCommentContent('')
                 setIsTextAreaOpen(false)
                 toast.error("Reply sent")
@@ -121,15 +149,17 @@ const CommentSection = ({post} : {post: PostType}) => {
                 </div>
 
                 <div className="w-full mt-5 border-t border-gray-100 py-8">
-                {comments && comments.results.length > 0 && comments.results.map((comment) => (
+                {allComments && allComments.length > 0 && allComments.map((comment) => (
                     <CommentCard comment={comment} />
                 ))}
-                {comments && comments.results.length == 0 && (
+                 <div className='w-full flex items-center justify-center py-3' ref={ref}>
+                    {isFetchingNextPage ? <LoaderCircle className="animate-spin size-[26px] text-emerald-700" /> : null}
+                </div>
+                {allComments && allComments.length == 0 && (
                     <p>No comments for this post</p>
                 )}
                 </div>
             </div>
-
         )}
     </motion.div>
   )

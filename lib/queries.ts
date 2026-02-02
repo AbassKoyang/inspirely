@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import { fetchCategories, fetchCombinedPosts, fetchComments, fetchFollowing, fetchIsFollowing, fetchLatestPosts, fetchPersonalisedPosts, fetchPost, fetchReplies, fetchSessionUser, fetchTags, fetchTrendingPosts, fetchUser, fetchUserPost } from "./api"
 
 export const useFetchUserPosts = (userId: string) => {
@@ -81,16 +81,32 @@ export const useFetchPost = (postId:string) => {
     })
 }
 
-export const useFetchComments = (postId:string) => {
-    return useQuery({
-        queryFn: () => fetchComments(postId),
-        queryKey: ['comments']
+export const useFetchComments = (postId: string) => {
+    return useInfiniteQuery({
+      queryKey: ['comments', postId],
+      queryFn: ({pageParam=1}) => fetchComments(postId, pageParam),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) => {
+        if (!lastPage.next) return undefined
+  
+        const url = new URL(String(lastPage.next))
+        return Number(url.searchParams.get('page'))
+      },
+      enabled: !!postId,
     })
-}
+  }
 
 export const useFetchReplies = (commentId:string) => {
-    return useQuery({
-        queryFn: () => fetchReplies(commentId),
-        queryKey: [`replies-${commentId}`]
+    return useInfiniteQuery({
+        queryFn: ({pageParam = 1}) => fetchReplies(commentId, pageParam),
+        queryKey: [`replies-${commentId}`],
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.next) return undefined
+    
+            const url = new URL(String(lastPage.next))
+            return Number(url.searchParams.get('page'))
+        },
+        enabled: !!commentId,
     })
 }

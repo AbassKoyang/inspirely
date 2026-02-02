@@ -225,6 +225,15 @@ export const likeComment = async (commentId: string) => {
         throw error
     }
 }
+export const likeReply = async (commentId: string) => {
+      try {
+        const response = await api.post(`/api/comments/${commentId}/reactions/`, {reaction_type: 'upvote'}, {withCredentials: true})
+        console.log(response.data)
+    } catch (error) {
+        console.error("error liking reply", error)
+        throw error
+    }
+}
 
 export const bookmarkPost = async (postId: string) => {
       try {
@@ -236,9 +245,9 @@ export const bookmarkPost = async (postId: string) => {
     }
 }
 
-export const fetchComments = async (postId: string) : Promise<PaginatedResponse<CommentType>> => {
+export const fetchComments = async (postId:string, page: number) : Promise<PaginatedResponse<CommentType>> => {
   try {
-    const response =  await api.get(`/api/posts/${postId}/comments/`)
+    const response =  await api.get(`/api/posts/${postId}/comments/?page=${page}`)
     console.log(response.data)
     return response.data as PaginatedResponse<CommentType>
 } catch (error) {
@@ -246,9 +255,9 @@ export const fetchComments = async (postId: string) : Promise<PaginatedResponse<
     throw error
 }
 }
-export const fetchReplies = async (commentid: string) : Promise<PaginatedResponse<CommentType>> => {
+export const fetchReplies = async (commentid: string, page: number) : Promise<PaginatedResponse<CommentType>> => {
   try {
-    const response =  await api.get(`/api/comments/${commentid}/replies/`)
+    const response =  await api.get(`/api/comments/${commentid}/replies/?page=${page}`)
     console.log(response.data)
     return response.data as PaginatedResponse<CommentType>
 } catch (error) {
@@ -261,6 +270,16 @@ export const fetchReplies = async (commentid: string) : Promise<PaginatedRespons
 export const createComment = async ({postId, comment}:{postId: string; comment: {content: string; parent_id?: number}}) : Promise<CommentType> => {
   try {
     const response = await api.post(`/api/posts/${postId}/comments/`, comment)
+    console.log(response.data)
+    return response.data as CommentType
+} catch (error) {
+    console.error("error creating comment", error)
+    throw error
+}
+}
+export const createReply = async ({commentId, comment}:{commentId: string; comment: {content: string; parent_id?: number}}) : Promise<CommentType> => {
+  try {
+    const response = await api.post(`/api/comments/${commentId}/replies/`, comment)
     console.log(response.data)
     return response.data as CommentType
 } catch (error) {

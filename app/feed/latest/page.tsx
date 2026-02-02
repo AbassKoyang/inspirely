@@ -6,7 +6,7 @@ import React from 'react'
 const Page = () => {
     const {isLoading, isError, data} = useFetchLatestPosts()
   return (
-    <section className='w-full min-h-dvh mt-5 bg-white'>
+    <section className='w-full lg:w-[70%] min-h-dvh mt-5'>
         {isLoading && (<p>
             Loading...
         </p>)}
