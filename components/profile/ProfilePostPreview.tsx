@@ -46,7 +46,7 @@ const ProfilePostPreview = ({post}:{post: PostType}) => {
             />
         </div>
 
-        <Link href='' className='w-full'>
+        <Link href={`/articles/${post.slug}`} className='w-full'>
         <p className='text-sm font-normal font-sans text-black/60 mt-3 md:hidden'>{formattedDate}</p>
         <h4 className='text-lg md:text-2xl font-semibold md:font-bold font-sans text-black mt-1 md:mt-5'>{title}</h4>
         <h4 className='text-base font-normal font-sans text-black/60 mt-1'>{subtitle || content}</h4>

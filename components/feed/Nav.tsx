@@ -6,7 +6,7 @@ import React from 'react'
 const Nav = () => {
     const pathname = usePathname()
   return (
-    <nav className="w-full py-4 pt-6 md:pt-10 bg-white sticky top-10 border-b border-gray-100 overflow-hidden">
+    <nav className="w-full py-4 pt-6 md:pt-10 bg-white sticky top-10 border-b border-gray-100 overflow-hidden z-200">
         <div className='min-w-full flex items-center gap-4 lg:gap-8 bg-white overflow-x-auto'>
         <Link href='/feed'>
             <div className={`px-5 py-1 rounded-4xl min-w-[100px] border ${pathname == '/feed' ? 'bg-emerald-700/90 border-emerald-700/90' : 'bg-white border-black/60'} text-white flex items-center justify-center hover:bg-emerald-700 hover:border-emerald-700 group transition-all duration-300 ease-in-out`}>

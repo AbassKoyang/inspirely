@@ -120,6 +120,17 @@ export const fetchUser = async (userId: string) : Promise<User> => {
     }
 }
 
+export const fetchUsers = async () : Promise<PaginatedResponse<User>> => {
+      try {
+        const response =  await api.get(`/api/users/`)
+        console.log(response.data)
+        return response.data as PaginatedResponse<User>
+    } catch (error) {
+        console.error("error fetching users", error)
+        throw error
+    }
+}
+
 export const fetchSessionUser = async () : Promise<User> => {
       try {
         const response =  await api.get(`/api/auth/me/`, {withCredentials: true})

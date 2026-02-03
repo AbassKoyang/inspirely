@@ -69,7 +69,7 @@ const PostPreview = ({post}:{post: PostType}) => {
                 <Link href='#'>
                     <div className='size-[30px] relative rounded-full overflow-hidden object-center object-cover cursor-pointer'>
                     <Image
-                        className='object-cover'
+                        className='object-cover z-10'
                         fill
                         sizes="(max-width: 768px) 100px, 100px"
                         src={post.author.profile_pic_url || defaultAvatar}
@@ -99,21 +99,23 @@ const PostPreview = ({post}:{post: PostType}) => {
                 </button>
             </div>
         </div>
-        <div className="w-full h-[200px] rounded-xl object-cover object-center overflow-hidden mt-2 md:hidden relative">
-         <Image
-            className='object-cover'
-            fill
-            src={post.thumbnail || thumbnailPlaceholder}
-            loading='eager'
-            placeholder='blur'
-            blurDataURL='/assets/images/thumbnail-placeholder.png'
-            alt='Profle Picture'
-            />
-        </div>
 
-        <p className='text-sm font-normal font-sans text-black/60 mt-3 md:hidden'>{formattedDate}</p>
-        <h4 className='text-lg md:text-2xl font-semibold md:font-bold font-sans text-black mt-1 md:mt-5'>{title}</h4>
-        <h4 className='text-base font-normal font-sans text-black/60 mt-1'>{content}</h4>
+        <Link href={`/articles/${post.slug}`} className='w-full'>
+            <div className="w-full h-[200px] rounded-xl object-cover object-center overflow-hidden mt-2 md:hidden relative">
+            <Image
+                className='object-cover'
+                fill
+                src={post.thumbnail || thumbnailPlaceholder}
+                loading='eager'
+                placeholder='blur'
+                blurDataURL='/assets/images/thumbnail-placeholder.png'
+                alt='Profle Picture'
+                />
+            </div>
+            <p className='text-sm font-normal font-sans text-black/60 mt-3 md:hidden'>{formattedDate}</p>
+            <h4 className='text-lg md:text-2xl font-semibold md:font-bold font-sans text-black mt-1 md:mt-5'>{title}</h4>
+            <h4 className='text-base font-normal font-sans text-black/60 mt-1'>{content}</h4>
+        </Link>
 
         <div className="w-full flex items-center justify-between mt-5">
             <div className="flex items-center gap-4">
