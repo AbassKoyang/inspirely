@@ -9,6 +9,7 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 import defaultAvatar from '@/public/assets/images/default-avatar.png'
 import { truncateText } from '../lib/utils'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card'
 
 
 const SideBar = () => {
@@ -69,26 +70,36 @@ const SideBar = () => {
                 <Users strokeWidth={1} className='size-[24px] text-black/60' />
                 <h3 className='font-sans text-base font-normal text-black/60'>Following</h3>
             </div>
-            <div className="w-full mt-3">
+            <div className="w-full mt-3 pl-0.5">
             {following?.results.map((follow) => { 
-                    const followingName = truncateText(`${follow.following?.first_name} ${follow.following?.last_name}`, 15)
+                    const followingName = truncateText(`${follow.following?.first_name} ${follow.following?.last_name}`, 20)
 
                 return (
-                    <div className='w-full flex items-center justify-between mb-3'>
-                       <div className="flex items-center gap-4">
-                        <div className="w-[20px] h-[20px] rounded-full object-cover object-center overflow-hidden">
-                                <Image
-                                className=''
-                                src={follow.following?.profile_pic_url || defaultAvatar}
-                                width={20}
-                                height={20}
-                                alt='Profle Picture'
-                                />
+                    <HoverCard openDelay={700} closeDelay={100}>
+                     <HoverCardTrigger asChild>
+                        <Link href={`/${follow.following.id}/profile`} className='w-full flex items-center justify-between mb-3 cursor-pointer group'>
+                        <div className="flex items-center gap-4">
+                            <div className="w-[20px] h-[20px] rounded-full object-cover object-center overflow-hidden">
+                                    <Image
+                                    className=''
+                                    src={follow.following?.profile_pic_url || defaultAvatar}
+                                    width={20}
+                                    height={20}
+                                    alt='Profle Picture'
+                                    />
+                                </div>
+                                <p className='font-sans text-sm font-normal text-black/60 group-hover:text-black'>{followingName}</p>
                             </div>
-                            <p className='font-sans text-sm font-normal text-black/60'>{followingName}</p>
-                       </div>
-                        <button><Ellipsis className='text-black/60 size-4' /></button>
-                    </div>
+                            <div className='size-[5px] rounded-full bg-emerald-700'></div>
+                        </Link>
+                     </HoverCardTrigger>
+                     <HoverCardContent side='top' className="w-fit flex items-center justify-center p-0">
+                         <div className=" bg-black/95 relative p-2 flex items-center justify-center rounded-sm">
+                             <p className='text-sm font-sans text-white font-normal'>{follow.following?.first_name} {follow.following?.last_name}</p>
+                             <div className="size-5 bg-black/95 [clip-path:polygon(0_0,100%_0,50%_100%)] absolute left-[50%] translate-x-[-50%] bottom-[-7px]"></div>
+                         </div>
+                     </HoverCardContent>
+                    </HoverCard>
                 )})}
             </div>
         </div>

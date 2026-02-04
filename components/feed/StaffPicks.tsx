@@ -18,7 +18,7 @@ const StaffPicks = () => {
         </p>)}
         {data && (
             <div className="w-full flex flex-col gap-4">
-                {data.results.map((post) => (
+                {data.results.slice(0,3).map((post) => (
                     <StaffPickPostPreview post={post} />
                 ))}
              <Link href="#" className='text-xs text-black/60 font-normal font-sans hover:underline mt-1'>See the full list</Link>

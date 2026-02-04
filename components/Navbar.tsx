@@ -27,8 +27,9 @@ const Navbar = () => {
     }
     
   if (pathname == '/write') return null;
+  if (pathname.startsWith('/edit')) return null;
   return (
-    <nav className={`sticky top-0 z-50 md:border-b border-gray-100 ${pathname == '/' ? 'bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/40' : 'bg-white'}`}>
+    <nav className={`sticky top-0 z-50 md:border-b border-gray-100 ${pathname == '/' ? 'bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/40' : 'bg-white'} z-300`}>
       <div className="mx-auto flex max-w-full items-center justify-between px-4 py-2 md:px-6">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-4">

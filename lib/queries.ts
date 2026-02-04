@@ -81,9 +81,9 @@ export const useFetchTags = () => {
     })
 }
 
-export const useFetchPost = (postId:string) => {
+export const useFetchPost = (slug:string) => {
     return useQuery({
-        queryFn: () => fetchPost(postId),
+        queryFn: () => fetchPost(slug),
         queryKey: ['article']
     })
 }

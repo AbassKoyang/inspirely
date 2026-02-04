@@ -48,5 +48,12 @@ export const createPostSchema = z.object({
   category: z.string().min(1, 'Category cannot be empty').nonempty(),
   tags: z.array(z.string()),
 })
+export const updatePostSchema = z.object({
+  title: z.string().optional(),
+  subtitle: z.string().optional(),
+  content: z.string().optional(),
+  thumbnail: z.string().nullable(),
+})
 export type CreatePostInput = z.input<typeof createPostSchema>
+export type UpdatePostInput = z.input<typeof updatePostSchema>
 export type PostType = z.infer<typeof postSchema>
