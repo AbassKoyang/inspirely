@@ -94,7 +94,7 @@ const CommentsSidebar = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeS
     } 
 
   return (
-    <motion.div className='w-[400px] fixed top-0 right-0 bg-white shadow-xl h-dvh z-200 hidden md:block' initial={{x:'110%'}} animate={{x: isOpen ? 0 : '110%', animationDuration: 0.8, transition: {type: 'tween'}}}>
+    <motion.div className='w-[400px] fixed top-0 right-0 bg-white shadow-xl h-dvh z-300 hidden md:block' initial={{x:'110%'}} animate={{x: isOpen ? 0 : '110%', animationDuration: 0.8, transition: {type: 'tween'}}}>
         {allComments && (
             <div className="w-full h-full relative overflow-auto">
                 <div className="w-full py-5 px-5 border-b border-gray-100 sticky top-0 z-200 bg-white flex items-center justify-between">

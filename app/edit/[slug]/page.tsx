@@ -26,8 +26,8 @@ const EditPage = () => {
           <Link href="/" className="text-xl md:text-3xl font-bold text-emerald-700 transition-colors hover:text-emerald-700">
                 Inspirely
           </Link>
-          <div className="w-px h-6 bg-gray-300"></div>
-          <h3 className='font-sans font-semibold text-lg text-black'>{user?.first_name} {user?.last_name}</h3>
+          <div className="w-px h-6 bg-gray-300 hidden lg:block"></div>
+          <h3 className='font-sans font-semibold text-lg text-black hidden lg:block'>{user?.first_name} {user?.last_name}</h3>
         </div>
 
         <div className="flex items-center gap-7">

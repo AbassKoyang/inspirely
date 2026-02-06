@@ -139,7 +139,7 @@ const EditComponent = ({post,isSidebarOpen ,closeSidebar}:{post:PostType; isSide
             }, {withCredentials: true})
             console.log(response.data)
             toast.success("Article updated successfully")
-            // router.push('/feed')
+            router.push('/feed')
             return response.data
         } catch (error) {
             console.error("error creating article", error)

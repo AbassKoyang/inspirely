@@ -251,7 +251,26 @@ export const bookmarkPost = async (postId: string) => {
         const response = await api.post(`/api/posts/${postId}/bookmark/`,null, {withCredentials: true})
         console.log(response.data)
     } catch (error) {
-        console.error("error liking post", error)
+        console.error("error boookmarking post", error)
+        throw error
+    }
+}
+export const removeBookmark = async (postId: string) => {
+      try {
+        const response = await api.delete(`/api/posts/${postId}/bookmark/delete/`, {withCredentials: true})
+        console.log(response.data)
+    } catch (error) {
+        console.error("error deleting bookmark", error)
+        throw error
+    }
+}
+
+export const deletePost = async (postId: string) => {
+      try {
+        const response = await api.delete(`/api/posts/${postId}/delete/`, {withCredentials: true})
+        console.log(response.data)
+    } catch (error) {
+        console.error("error deleting post", error)
         throw error
     }
 }

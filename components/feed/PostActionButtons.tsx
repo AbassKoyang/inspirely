@@ -4,20 +4,28 @@ import {
     HoverCardContent,
     HoverCardTrigger,
   } from "@/components/ui/hover-card"
-import { bookmarkPost, likePost } from "@/lib/api";
+import { bookmarkPost, deletePost, likePost, removeBookmark } from "@/lib/api";
+import { useAuth } from "@/lib/contexts/authContext";
 import { PostType } from "@/lib/schemas/post";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Ellipsis, MessageCircle, Share } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const PostActionButtons = ({post, isSelf, openSidebar}:{post:PostType; isSelf: boolean; openSidebar: () => void}) => {
+    const {user} = useAuth()
+    const [isMoreOpen, setisMoreOpen] = useState(false)
     const queryClient = useQueryClient()
+    const router = useRouter()
+
     const likeMutation = useMutation({
-        mutationFn: () => likePost(String(post?.author.id) || ''),      
+        mutationFn: () => likePost(post.slug || ''),      
         onMutate: async () => {     
             await queryClient.cancelQueries({ queryKey: ['article'] })
-          const prevValue = queryClient.getQueryData(['article', String(post?.author.id)]);
-          queryClient.setQueryData(['article', String(post?.author.id)], (old: any) => ({
+          const prevValue = queryClient.getQueryData(['article', post.slug]);
+          queryClient.setQueryData(['article', post.slug], (old: any) => ({
             ...old,
             is_liked: !post?.is_liked,
             reaction_count: post?.is_liked ? post?.reaction_count - 1 : post?.reaction_count! + 1
@@ -27,7 +35,7 @@ const PostActionButtons = ({post, isSelf, openSidebar}:{post:PostType; isSelf: b
         },
       
         onError: (_, __, context) => {
-          queryClient.setQueryData(['article', String(post?.author.id)], context?.prevValue);
+          queryClient.setQueryData(['article', post.slug], context?.prevValue);
           toast.error("An error occured")
         },
       
@@ -37,11 +45,11 @@ const PostActionButtons = ({post, isSelf, openSidebar}:{post:PostType; isSelf: b
       });
 
       const bookmarkMutation = useMutation({
-        mutationFn: () => bookmarkPost(String(post?.author.id) || ''),      
+        mutationFn: () => bookmarkPost(String(post.id) || ''),      
         onMutate: async () => {     
-            await queryClient.cancelQueries({ queryKey: ['article'] })
-          const prevValue = queryClient.getQueryData(['article', String(post?.author.id)]);
-          queryClient.setQueryData(['article', String(post?.author.id)], (old: any) => ({
+            await queryClient.cancelQueries({ queryKey: ['article', post.slug] })
+          const prevValue = queryClient.getQueryData(['article', post.slug]);
+          queryClient.setQueryData(['article', post.slug], (old: any) => ({
             ...old,
             is_bookmarked: !post?.is_bookmarked,
             reaction_count: post?.is_bookmarked ? post?.bookmark_count - 1 : post?.bookmark_count! + 1
@@ -51,8 +59,53 @@ const PostActionButtons = ({post, isSelf, openSidebar}:{post:PostType; isSelf: b
         },
       
         onError: (_, __, context) => {
-          queryClient.setQueryData(['article', String(post?.author.id)], context?.prevValue);
+          queryClient.setQueryData(['article', post.slug], context?.prevValue);
           toast.error("An error occured")
+        },
+        onSuccess: () => {
+            toast.success("Article bookmarked.")
+        },
+      
+        onSettled: () => {
+          queryClient.invalidateQueries({queryKey: ['article', post.slug]});
+        },
+      });
+
+      const removeBookmarkMutation = useMutation({
+        mutationFn: () => removeBookmark(String(post.id) || ''),      
+        onMutate: async () => {     
+            await queryClient.cancelQueries({ queryKey: ['article', post.slug] })
+          const prevValue = queryClient.getQueryData(['article', post.slug]);
+          queryClient.setQueryData(['article', post.slug], (old: any) => ({
+            ...old,
+            is_bookmarked: !post?.is_bookmarked,
+            reaction_count: post?.is_bookmarked ? post?.bookmark_count + 1 : post?.bookmark_count! - 1
+          }));
+      
+          return { prevValue };
+        },
+      
+        onError: (_, __, context) => {
+          queryClient.setQueryData(['article', post.slug], context?.prevValue);
+          toast.error("An error occured")
+        },
+        onSuccess: () => {
+            toast.success("Article removed from bookmarks.")
+        },
+      
+        onSettled: () => {
+          queryClient.invalidateQueries({queryKey: ['article', post.slug]});
+        },
+      });
+
+      const deleteMutation = useMutation({
+        mutationFn: () => deletePost(String(post.id) || ''),      
+        onError: (_, __, context) => {
+          toast.error("An error occured")
+        },
+        onSuccess: () => {
+            toast.success("Article deleted.")
+            router.back()
         },
       
         onSettled: () => {
@@ -132,8 +185,14 @@ const PostActionButtons = ({post, isSelf, openSidebar}:{post:PostType; isSelf: b
              <div className="flex items-center gap-8 lg:gap-5">
                  <HoverCard openDelay={700} closeDelay={100}>
                          <HoverCardTrigger asChild>
-                             <button onClick={() => bookmarkMutation.mutate()} disabled={isSelf} className='py-2 px-4 group cursor-pointer disabled:cursor-not-allowed border lg:border-0 border-gray-100 rounded-4xl flex items-center gap-2'>
-                                 <svg className={`${post?.is_bookmarked ? 'fill-black' : 'fill-black/60'} group-hover:fill-black transition-all duration-200 ease-in-out group-disabled:fill-black/30`} width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                             <button onClick={() => {
+                                if(post.is_bookmarked){
+                                    removeBookmarkMutation.mutate()
+                                } else {
+                                    bookmarkMutation.mutate()
+                                }
+                             }} className='py-2 px-4 group cursor-pointer disabled:cursor-not-allowed border lg:border-0 border-gray-100 rounded-4xl flex items-center gap-2'>
+                                 <svg className={`${post?.is_bookmarked ? 'fill-emerald-700' : 'fill-black/60'} group-hover:fill-black transition-all duration-200 ease-in-out group-disabled:fill-black/30`} width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                  <path d="M6.5 13.9615L2.53075 15.6652C1.92825 15.9229 1.35583 15.8743 0.8135 15.5195C0.271167 15.1647 0 14.6627 0 14.0135V1.80775C0 1.30258 0.175 0.875 0.525 0.525C0.875 0.175 1.30258 0 1.80775 0H6.75C6.9625 0 7.14067 0.0719168 7.2845 0.21575C7.42817 0.359583 7.5 0.53775 7.5 0.75025C7.5 0.962917 7.42817 1.141 7.2845 1.2845C7.14067 1.42817 6.9625 1.5 6.75 1.5H1.80775C1.73075 1.5 1.66025 1.53208 1.59625 1.59625C1.53208 1.66025 1.5 1.73075 1.5 1.80775V13.9788C1.5 14.0878 1.5465 14.1743 1.6395 14.2385C1.73233 14.3025 1.83008 14.3121 1.93275 14.2673L6.5 12.3L11.0673 14.2673C11.1699 14.3121 11.2677 14.3025 11.3605 14.2385C11.4535 14.1743 11.5 14.0878 11.5 13.9788V8.25C11.5 8.0375 11.5719 7.85933 11.7158 7.7155C11.8596 7.57183 12.0378 7.5 12.2503 7.5C12.4629 7.5 12.641 7.57183 12.7845 7.7155C12.9282 7.85933 13 8.0375 13 8.25V14.0135C13 14.6627 12.7288 15.1647 12.1865 15.5195C11.6442 15.8743 11.0718 15.9229 10.4693 15.6652L6.5 13.9615ZM6.5 1.5H1.5H7.5H6.5ZM11.5 3.5H10.25C10.0375 3.5 9.85933 3.42808 9.7155 3.28425C9.57183 3.14042 9.5 2.96225 9.5 2.74975C9.5 2.53708 9.57183 2.359 9.7155 2.2155C9.85933 2.07183 10.0375 2 10.25 2H11.5V0.75C11.5 0.5375 11.5719 0.359417 11.7158 0.21575C11.8596 0.0719168 12.0378 0 12.2503 0C12.4629 0 12.641 0.0719168 12.7845 0.21575C12.9282 0.359417 13 0.5375 13 0.75V2H14.25C14.4625 2 14.6406 2.07192 14.7843 2.21575C14.9281 2.35958 15 2.53775 15 2.75025C15 2.96292 14.9281 3.141 14.7843 3.2845C14.6406 3.42817 14.4625 3.5 14.25 3.5H13V4.75C13 4.9625 12.9281 5.14067 12.7843 5.2845C12.6404 5.42817 12.4622 5.5 12.2498 5.5C12.0371 5.5 11.859 5.42817 11.7155 5.2845C11.5718 5.14067 11.5 4.9625 11.5 4.75V3.5Z" fill=""/>
                                  </svg>
                                  <p className='text-sm text-black/60 font-sans group-disabled:text-black/30 block lg:hidden'>Save</p>
@@ -164,10 +223,24 @@ const PostActionButtons = ({post, isSelf, openSidebar}:{post:PostType; isSelf: b
 
                  <HoverCard openDelay={700} closeDelay={100}>
                      <HoverCardTrigger asChild>
-                         <button className='py-2 px-4 group cursor-pointer disabled:cursor-not-allowed border lg:border-0 border-gray-100 rounded-4xl flex items-center gap-2'>
-                             <Ellipsis className="size-[18px] text-black/60 group-hover:text-black transition-all duration-200 ease-in-out" />
-                             <p className='text-sm text-black/60 font-sans group-disabled:text-black/30 group-hover:text-black block lg:hidden'>More</p>
-                         </button>
+                        <div className="relative">
+                            <button onClick={() => setisMoreOpen(!isMoreOpen)} className='py-2 px-4 group cursor-pointer disabled:cursor-not-allowed border lg:border-0 border-gray-100 rounded-4xl flex items-center gap-2'>
+                                <Ellipsis className="size-[18px] text-black/60 group-hover:text-black transition-all duration-200 ease-in-out" />
+                                <p className='text-sm text-black/60 font-sans group-disabled:text-black/30 group-hover:text-black block lg:hidden'>More</p>
+                            </button>
+                            <div  className={`${isMoreOpen ? 'block' : 'hidden'} absolute left-[50%] translate-x-[-50%] bottom-[-80px] z-200`}>
+                            <div className=" bg-white relative p-2 justify-center rounded-xs shadow-sm w-[160px]">
+                                {user?.id == post.author.id && (
+                                   <div className="w-full">
+                                     <Link href={`/edit/${post.slug}`} className="w-full py-1 text-black/60 hover:text-black cursor-pointer font-sans text-sm flex items-center justify-start px-2">Edit Story</Link>
+
+                                     <button onClick={() => deleteMutation.mutate()} className="w-full py-1 text-red-600 hover:text-red-700 cursor-pointer font-sans text-sm flex items-center justify-start px-2">Delete Story</button>
+                                   </div>
+                                )}
+                                <div className="size-4 bg-white absolute left-[50%] translate-x-[-50%] top-[-8px] rotate-45 border border-gray-200 z-[-1]"></div>
+                            </div>
+                            </div>
+                        </div>
                      </HoverCardTrigger>
                      <HoverCardContent side='top' className="w-fit flex items-center justify-center p-0">
                          <div className=" bg-black/95 relative p-2 flex items-center justify-center rounded-sm">

@@ -199,7 +199,7 @@ const ArticlePage = () => {
       }
 
   return (
-    <section className='w-full max-w-2xl bg-white min-h-dvh overflow-x-hidden'>
+    <section className='w-full max-w-2xl bg-white min-h-dvh'>
        {post && (
         <>
          <div className="w-full">

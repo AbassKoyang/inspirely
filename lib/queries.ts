@@ -84,7 +84,7 @@ export const useFetchTags = () => {
 export const useFetchPost = (slug:string) => {
     return useQuery({
         queryFn: () => fetchPost(slug),
-        queryKey: ['article']
+        queryKey: ['article', slug]
     })
 }
 
