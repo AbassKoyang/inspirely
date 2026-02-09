@@ -27,6 +27,13 @@ export type PaginatedResponse<T> = {
     slug: string;
     created_at: string
   }
+
+  export type CategoryType = {
+    id: number;
+    name: string;
+    slug: string;
+    created_at: string
+  }
   export type CommentType = {
     id: number;
     post: PostType;

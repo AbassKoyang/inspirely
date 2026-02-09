@@ -101,14 +101,16 @@ const PostActionButtons = ({post, isSelf, openSidebar}:{post:PostType; isSelf: b
       const deleteMutation = useMutation({
         mutationFn: () => deletePost(String(post.id) || ''),      
         onError: (_, __, context) => {
+            setisMoreOpen(false)
           toast.error("An error occured")
         },
         onSuccess: () => {
-            toast.success("Article deleted.")
             router.back()
+            toast.success("Article deleted.")
         },
       
         onSettled: () => {
+            setisMoreOpen(false)
           queryClient.invalidateQueries({queryKey: ['article']});
         },
       });

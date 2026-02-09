@@ -22,7 +22,7 @@ import { useCreatComment, useCreateReply, useLikeComment } from '@/lib/mutations
 
 const CommentCard = ({comment}:{comment: CommentType}) => {
     const {mutate: createReply, isPending}  = useCreateReply(String(comment.id))
-    const {mutate: likeComment}  = useLikeComment(String(comment.id))
+    const {mutate: likeComment}  = useLikeComment(String(comment.post.id))
     const [formattedDate, setFormattedDate] = useState('')
     const [showReplies, setShowReplies] = useState(false)
     const [showReplyInput, setShowReplyInput] = useState(false)

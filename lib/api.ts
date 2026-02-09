@@ -1,6 +1,6 @@
 import axios from "axios";
 import { PostType } from "./schemas/post";
-import { CommentType, Follow, PaginatedResponse, PostResponseType, TagType } from "./types";
+import { CategoryType, CommentType, Follow, PaginatedResponse, PostResponseType, TagType } from "./types";
 import { User } from "./schemas/user";
 
 export const api = axios.create({
@@ -164,7 +164,7 @@ export const fetchIsFollowing = async (userId: string) : Promise<{is_following: 
     }
 }
 
-export const fetchCategories = async () : Promise<TagType[]> => {
+export const fetchCategories = async () : Promise<CategoryType[]> => {
       try {
         const response =  await api.get(`/api/categories/`)
         console.log(response.data)
