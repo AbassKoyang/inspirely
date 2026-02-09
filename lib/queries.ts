@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
-import { fetchCategories, fetchCombinedPosts, fetchComments, fetchFollowing, fetchIsFollowing, fetchLatestPosts, fetchPersonalisedPosts, fetchPost, fetchReplies, fetchSessionUser, fetchTags, fetchTrendingPosts, fetchUser, fetchUserPost, fetchUsers } from "./api"
+import { fetchCategories, fetchCombinedPosts, fetchComments, fetchFollowing, fetchIsFollowing, fetchLatestPosts, fetchPersonalisedPosts, fetchPost, fetchReplies, fetchSessionUser, fetchTags, fetchTrendingPosts, fetchUser, fetchUserPost, fetchUsers, searchCategories, searchPosts } from "./api"
 
 export const useFetchUserPosts = (userId: string) => {
     return useQuery({
@@ -115,5 +115,33 @@ export const useFetchReplies = (commentId:string) => {
             return Number(url.searchParams.get('page'))
         },
         enabled: !!commentId,
+    })
+}
+export const useSearchPosts = (query: string) => {
+    return useInfiniteQuery({
+        queryFn: ({pageParam = 1}) => searchPosts({query, page: pageParam}),
+        queryKey: [`post-search-${query}`],
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.next) return undefined
+    
+            const url = new URL(String(lastPage.next))
+            return Number(url.searchParams.get('page'))
+        },
+        enabled: !!query,
+    })
+}
+export const useSearchCategories = (query: string) => {
+    return useInfiniteQuery({
+        queryFn: ({pageParam = 1}) => searchCategories({query, page: pageParam}),
+        queryKey: [`category-search-${query}`],
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.next) return undefined
+    
+            const url = new URL(String(lastPage.next))
+            return Number(url.searchParams.get('page'))
+        },
+        enabled: !!query,
     })
 }

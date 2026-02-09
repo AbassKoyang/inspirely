@@ -7,8 +7,8 @@ const layout = ({children}: {children: React.ReactNode}) => {
   return (
     <ProtectedRoute>
         <LayoutWrapper>
-        <section className="w-full min-h-full px-4 bg-white flex">
-        <div className="w-full">
+        <section className="w-full min-h-full px-6 bg-white flex">
+        <div className="w-full bg-white">
             <Nav/>
             {children}
         </div>

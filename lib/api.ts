@@ -317,3 +317,24 @@ export const createReply = async ({commentId, comment}:{commentId: string; comme
     throw error
 }
 }
+
+export const searchPosts = async ({query, page}:{query: string, page: number}) : Promise<PaginatedResponse<PostType>> => {
+    try {
+        const response = await api.get(`/api/search/posts/?q=${query}&page=${page}`)
+        console.log(response.data)
+        return response.data as PaginatedResponse<PostType>
+    } catch (error) {
+        console.error("error gettin search results", error)
+        throw error
+    }
+}
+export const searchCategories = async ({query, page}:{query: string, page: number}) : Promise<PaginatedResponse<CategoryType>> => {
+    try {
+        const response = await api.get(`/api/search/categories/?q=${query}&page=${page}`)
+        console.log(response.data)
+        return response.data as PaginatedResponse<CategoryType>
+    } catch (error) {
+        console.error("error getting category search results", error)
+        throw error
+    }
+}
