@@ -47,4 +47,10 @@ export type PaginatedResponse<T> = {
     created_at: string;
     updated_at: string
   }
+  export type BookmarkType = {
+    id: number;
+    post: PostType;
+    user: User;
+    created_at: string;
+  }
   

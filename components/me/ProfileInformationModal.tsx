@@ -118,7 +118,7 @@ const updateProfileMutation = useMutation({
   }
 
   return (
-    <div className={`${isModalOpen ? 'block' : 'hidden'} fixed top-0 left-0 w-screen h-dvh flex justify-center z-100`}>
+    <div className={`${isModalOpen ? 'block' : 'hidden'} fixed top-0 left-0 w-screen h-dvh flex justify-center z-300`}>
         <div className="size-full overflow-y-auto flex justify-center z-100 py-30">
             <div onClick={closeModal} className="z-10 absolute top-0 left-0 size-full bg-black/25"></div>
             <div className="w-full h-fit  max-w-xl bg-white p-6 py-8 rounded-md z-30">

@@ -23,7 +23,7 @@ const SettingsPage = () => {
   const instagram = truncateText(user?.instagram || '', 15)
 
   return (
-    <div className="w-full h-dvh bg-white">
+    <div className="w-full h-dvh bg-white pt-0 md:pt-20">
         <div className="w-full flex items-center justify-between pt-4 py-2 md:py-6 border-b border-gray-100">
             <h1 className='font-sans text-2xl md:text-5xl font-semibold text-black'>Settings</h1>
         </div>

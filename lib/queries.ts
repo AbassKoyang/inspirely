@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
-import { fetchCategories, fetchCombinedPosts, fetchComments, fetchFollowing, fetchIsFollowing, fetchLatestPosts, fetchPersonalisedPosts, fetchPost, fetchReplies, fetchSessionUser, fetchTags, fetchTrendingPosts, fetchUser, fetchUserPost, fetchUsers, searchCategories, searchPosts, searchUsers } from "./api"
+import { fetchCategories, fetchCombinedPosts, fetchComments, fetchFollowing, fetchIsFollowing, fetchLatestPosts, fetchPersonalisedPosts, fetchPost, fetchReplies, fetchSessionUser, fetchTags, fetchTrendingPosts, fetchUser, fetchUserComments, fetchUserPost, fetchUsers, searchCategories, searchPosts, searchUsers } from "./api"
 
 export const useFetchUserPosts = (userId: string) => {
     return useQuery({
@@ -117,6 +117,37 @@ export const useFetchReplies = (commentId:string) => {
         enabled: !!commentId,
     })
 }
+
+export const useFetchBookmarks = (userId:string) => {
+    return useInfiniteQuery({
+        queryFn: ({pageParam = 1}) => fetchReplies(userId, pageParam),
+        queryKey: [`bookmarks-${userId}`],
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.next) return undefined
+    
+            const url = new URL(String(lastPage.next))
+            return Number(url.searchParams.get('page'))
+        },
+        enabled: !!userId,
+    })
+}
+
+export const useFetchUserComments = (userId:string) => {
+    return useInfiniteQuery({
+        queryFn: ({pageParam = 1}) => fetchUserComments(userId, pageParam),
+        queryKey: [`user-comments-${userId}`],
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.next) return undefined
+    
+            const url = new URL(String(lastPage.next))
+            return Number(url.searchParams.get('page'))
+        },
+        enabled: !!userId,
+    })
+}
+
 export const useSearchPosts = (query: string) => {
     return useInfiniteQuery({
         queryFn: ({pageParam = 1}) => searchPosts({query, page: pageParam}),

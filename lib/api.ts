@@ -1,6 +1,6 @@
 import axios from "axios";
 import { PostType } from "./schemas/post";
-import { CategoryType, CommentType, Follow, PaginatedResponse, PostResponseType, TagType } from "./types";
+import { BookmarkType, CategoryType, CommentType, Follow, PaginatedResponse, PostResponseType, TagType } from "./types";
 import { User } from "./schemas/user";
 
 export const api = axios.create({
@@ -293,8 +293,27 @@ export const fetchReplies = async (commentid: string, page: number) : Promise<Pa
 } catch (error) {
     console.error("error fetching replies", error)
     throw error
-}
-}
+}}
+
+export const fetchBookmarks = async (userId: string, page: number) : Promise<PaginatedResponse<BookmarkType>> => {
+  try {
+    const response =  await api.get(`/api/users/${userId}/bookmarks/?page=${page}`)
+    console.log(response.data)
+    return response.data as PaginatedResponse<BookmarkType>
+} catch (error) {
+    console.error("error fetching bookmarks", error)
+    throw error
+}}
+
+export const fetchUserComments = async (userId: string, page: number) : Promise<PaginatedResponse<CommentType>> => {
+  try {
+    const response =  await api.get(`/api/users/${userId}/comments/?page=${page}`)
+    console.log(response.data)
+    return response.data as PaginatedResponse<CommentType>
+} catch (error) {
+    console.error("error fetching user comments", error)
+    throw error
+}}
 
 
 export const createComment = async ({postId, comment}:{postId: string; comment: {content: string; parent_id?: number}}) : Promise<CommentType> => {
