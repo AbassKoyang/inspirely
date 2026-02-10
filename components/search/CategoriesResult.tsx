@@ -1,12 +1,13 @@
 'use client'
 import React, { useMemo } from 'react'
-import { useFetchLatestPosts, useSearchPosts } from "@/lib/queries"
+import { useFetchLatestPosts, useSearchCategories, useSearchPosts } from "@/lib/queries"
 import Link from 'next/link'
 import PostPreview from '../feed/PostPreview'
 import { useSearchParams } from 'next/navigation'
 import { ChevronDown } from 'lucide-react'
+import CategoryLink from '../explore/CategoryLink'
 
-const PostsResult = () => {
+const CategoriesResult = () => {
     const query = useSearchParams().get('q')
     const {data,
         fetchNextPage,
@@ -14,9 +15,9 @@ const PostsResult = () => {
         isFetchingNextPage,
         isLoading,
         isError,
-    } = useSearchPosts(query || '')
+    } = useSearchCategories(query || '')
 
-    const allPosts = useMemo(() => {
+    const allCatgeories = useMemo(() => {
         return data?.pages.flatMap(page => page.results) ;
       }, [data]);
   return (
@@ -27,15 +28,15 @@ const PostsResult = () => {
         {isError && (<p>
             error occured...
         </p>)}
-        {allPosts && (
-            <div className="w-full flex flex-col gap-4">
-                {allPosts.map((post) => (
-                    <PostPreview post={post} />
+        {allCatgeories && (
+            <div className="w-full flex flex-wrap gap-4 mt-6">
+                {allCatgeories.map((cat) => (
+                    <CategoryLink category={cat} />
                 ))}
             </div>
         )}
 
-        {allPosts && allPosts.length == 0 && (
+        {allCatgeories && allCatgeories.length == 0 && (
               <div className="w-full mt-4">
                   <p className='font-sans  text-base text-black mb-2'>Oops! No result for this search.</p>
                   <p className='font-sans  text-sm text-black/60 mb-1'>Make sure all words are spelled correctly.</p>
@@ -54,4 +55,4 @@ const PostsResult = () => {
   )
 }
 
-export default PostsResult
+export default CategoriesResult

@@ -11,13 +11,12 @@ import { useFetchUser } from '@/lib/queries'
 import { toast } from 'sonner'
 import { useAuth } from '@/lib/contexts/authContext'
 
-const SideBarUserInfo = ({user}: {user: User}) => {
+const PeopleResultProfilePreview = ({user}: {user: User}) => {
     const {user: sessionUser} = useAuth();
     const queryClient = useQueryClient();
     const [isSelf, setIsSelf] = useState(false)
     const followersCount = formatFollowersCount(user?.followers_count || 0);
     const followingCount = formatFollowersCount(user?.following_count || 0);
-    const bio = truncateText(user.bio || '', 30)
 
 
     useEffect(() => {
@@ -76,11 +75,11 @@ const SideBarUserInfo = ({user}: {user: User}) => {
   return (
     <div className="w-full">
         {user && (
-            <div className='w-full'>
-            <div className="w-full flex justify-between items-start">
-                <div className="w-full flex gap-5">
+            <div className='w-full border-y border-gray-100 py-6 first:border-t-0'>
+            <div className="w-full flex justify-between items-center">
+                <div className="w-full flex gap-5 items-center">
                     <Link href='#'>
-                        <div className='size-[30px] rounded-full overflow-hidden cursor-pointer relative'>
+                        <div className='size-[45px] lg:size-[50px] rounded-full overflow-hidden cursor-pointer relative'>
                             <Image
                             className='object-cover'
                             fill
@@ -93,17 +92,18 @@ const SideBarUserInfo = ({user}: {user: User}) => {
                             />
                         </div>
                     </Link>
-                    <div className="w-full hidden lg:block">
-                        <p className='text-sm font-medium text-black font-sans max-w-[140px]'>{user?.first_name} {user?.last_name}</p>
-                        <p className='font-sans text-xs font-normal text-black/80 mt-2 max-w-[150px]'>{bio}</p>
+                    <div className="w-full">
+                        <p className='text-sm lg:text-base font-medium text-black font-sans w-full max-w-full lg:max-w-lg'>{user?.first_name} {user?.last_name}</p>
+                        {user.bio && <p className='font-sans text-xs font-normal text-black/80 mt-2 w-full max-w-full lg:max-w-lg'>{user.bio}</p>
+                    }
                     </div>
                 </div>
                 {isSelf ? null : (
                         <>
                             {user?.is_following ? (
-                                <button onClick={() => unfollowMutation.mutate()} className='bg-white text-black border border-black px-3 py-1 rounded-4xl cursor-pointer text-xs'>Unfollow</button>
+                                <button onClick={() => unfollowMutation.mutate()} className='bg-white text-black border border-black px-3 lg:px-3.5 py-1 lg:py-2 rounded-4xl cursor-pointer text-xs lg:text-sm'>Unfollow</button>
                             ) : (
-                                <button onClick={() => followMutation.mutate()} className='bg-emerald-700 border border-emerald-700 text-white px-3 py-1 rounded-4xl cursor-pointer text-xs'>Follow</button>
+                                <button onClick={() => followMutation.mutate()} className='bg-emerald-700 border border-emerald-700 text-white px-3 lg:px-3.5 py-1 lg:py-2 rounded-4xl cursor-pointer text-xs lg:text-sm'>Follow</button>
                             )}
                         </>
                     )}
@@ -114,4 +114,4 @@ const SideBarUserInfo = ({user}: {user: User}) => {
   )
 }
 
-export default SideBarUserInfo
+export default PeopleResultProfilePreview

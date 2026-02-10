@@ -6,7 +6,7 @@ import { FormEvent, useState } from 'react'
 import { useAuth } from '@/lib/contexts/authContext'
 import Image from 'next/image'
 import defaultAvatar from '@/public/assets/images/default-avatar.png'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { addRecentSearch } from '@/lib/utils'
 import { useSideBarActive } from '@/lib/contexts/sidebardContext'
 
@@ -17,11 +17,12 @@ const Navbar = () => {
   const {isActive, setIsActive} = useSideBarActive() 
   const router = useRouter();
   const pathname = usePathname()
+  const q = useSearchParams().get('q');
 
     const handleFormSubmit = (e: FormEvent) => {
       e.preventDefault();
         if(query !== ''){
-            router.push(`/search/search-results/${query}`)
+            router.push(`/search/?q=${query}`)
             addRecentSearch(query);
         }
     }
@@ -45,7 +46,7 @@ const Navbar = () => {
                 <Search strokeWidth={1} className="size-[19px] text-emerald-700" />
             </button>
             <input 
-              onChange={(e) => setQuery(e.target.value)} type="text" placeholder="Search" className="h-full w-[85%] bg-transparent placeholder:text-foreground placeholder:font-light outline-0 stroke-0 border-0" />
+              onChange={(e) => setQuery(e.target.value)} type="text" placeholder="Search" className="h-full w-[85%] bg-transparent placeholder:text-foreground placeholder:font-light outline-0 stroke-0 border-0" defaultValue={q || ''} />
           </form>
         </div>
 

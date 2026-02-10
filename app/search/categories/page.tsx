@@ -1,20 +1,21 @@
+import CategoriesResult from '@/components/search/CategoriesResult'
 import Nav from '@/components/search/Nav'
 import PostsResult from '@/components/search/PostsResult'
-import SearchPostSidebar from '@/components/search/SearchPostsSidebar'
+import SearchCategoriesSidebar from '@/components/search/SearchCategoriesSidebar'
 import React from 'react'
 
-const SearchResultPage = () => {
+const CategorySearchResultPage = () => {
   return (
     <div className='w-full bg-white'>
         <div className="w-full flex items-start">
             <div className="w-full lg:w-[70%] lg:pr-10">
                 <Nav/>
-                <PostsResult />
+                <CategoriesResult />
             </div>
-            <SearchPostSidebar />
+            <SearchCategoriesSidebar />
         </div>
     </div>
   )
 }
 
-export default SearchResultPage
+export default CategorySearchResultPage

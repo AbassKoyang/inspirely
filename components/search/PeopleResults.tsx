@@ -1,12 +1,14 @@
 'use client'
 import React, { useMemo } from 'react'
-import { useFetchLatestPosts, useSearchPosts } from "@/lib/queries"
+import { useFetchLatestPosts, useSearchPosts, useSearchUsers } from "@/lib/queries"
 import Link from 'next/link'
 import PostPreview from '../feed/PostPreview'
 import { useSearchParams } from 'next/navigation'
 import { ChevronDown } from 'lucide-react'
+import SideBarUserInfo from '../feed/SidebarUserInfo'
+import PeopleResultProfilePreview from './PeopleResultsProfilePreview'
 
-const PostsResult = () => {
+const PeopleResults = () => {
     const query = useSearchParams().get('q')
     const {data,
         fetchNextPage,
@@ -14,9 +16,9 @@ const PostsResult = () => {
         isFetchingNextPage,
         isLoading,
         isError,
-    } = useSearchPosts(query || '')
+    } = useSearchUsers(query || '')
 
-    const allPosts = useMemo(() => {
+    const allPeople = useMemo(() => {
         return data?.pages.flatMap(page => page.results) ;
       }, [data]);
   return (
@@ -27,15 +29,15 @@ const PostsResult = () => {
         {isError && (<p>
             error occured...
         </p>)}
-        {allPosts && (
+        {allPeople && (
             <div className="w-full flex flex-col gap-4">
-                {allPosts.map((post) => (
-                    <PostPreview post={post} />
+                {allPeople.map((user) => (
+                    <PeopleResultProfilePreview user={user} />
                 ))}
             </div>
         )}
 
-        {allPosts && allPosts.length == 0 && (
+        {allPeople && allPeople.length == 0 && (
               <div className="w-full mt-4">
                   <p className='font-sans  text-base text-black mb-2'>Oops! No result for this search.</p>
                   <p className='font-sans  text-sm text-black/60 mb-1'>Make sure all words are spelled correctly.</p>
@@ -54,4 +56,4 @@ const PostsResult = () => {
   )
 }
 
-export default PostsResult
+export default PeopleResults

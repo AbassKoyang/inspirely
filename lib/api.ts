@@ -338,3 +338,14 @@ export const searchCategories = async ({query, page}:{query: string, page: numbe
         throw error
     }
 }
+
+export const searchUsers = async ({query, page}:{query: string, page: number}) : Promise<PaginatedResponse<User>> => {
+    try {
+        const response = await api.get(`/api/search/users/?q=${query}&page=${page}`)
+        console.log(response.data)
+        return response.data as PaginatedResponse<User>
+    } catch (error) {
+        console.error("error getting users search results", error)
+        throw error
+    }
+}
