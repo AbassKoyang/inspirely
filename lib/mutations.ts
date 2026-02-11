@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createComment, createReply, likeComment, likeReply } from "./api";
+import { createComment, createReply, likeComment, likeReply, markNotificationAsRead } from "./api";
 import { toast } from "sonner";
 import { PostType } from "./schemas/post";
 
@@ -118,6 +118,45 @@ export const useLikeReply = (commentId: string) => {
       
         onSettled: () => {
           queryClient.invalidateQueries({queryKey: [`replies-${commentId}`]});
+        },
+    });
+}
+
+export const useMarkNotificationAsRead = () => {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: ({ id, page }: { id: number; page: number }) => markNotificationAsRead(id, page),
+        onMutate: async ({ id }) => {
+            await queryClient.cancelQueries({ queryKey: ['user-notifications'] })
+            const oldPagesArray: any = queryClient.getQueryData(['user-notifications']);
+            
+            const newPagesArray = oldPagesArray?.pages.map((page: any) => {
+                const newResults = page.results.map((notification: any) => {
+                    return notification.id === id ? {
+                        ...notification,
+                        is_read: true
+                    } : notification
+                })
+                return {
+                    ...page,
+                    results: newResults
+                }
+            })
+
+            queryClient.setQueryData(['user-notifications'], (data: any) => ({
+                pages: newPagesArray,
+                pageParams: data.pageParams,
+            }))
+
+            return { oldPagesArray };
+        },
+        onError: (error, __, context) => {
+            queryClient.setQueryData(['user-notifications'], context?.oldPagesArray);
+            console.log(error)
+            toast.error("An error occurred while marking notification as read")
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ['user-notifications'] });
         },
     });
 }

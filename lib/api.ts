@@ -1,6 +1,6 @@
 import axios from "axios";
 import { PostType } from "./schemas/post";
-import { BookmarkType, CategoryType, CommentType, Follow, PaginatedResponse, PostResponseType, TagType } from "./types";
+import { BookmarkType, CategoryType, CommentType, Follow, NotificationType, PaginatedResponse, PostResponseType, TagType } from "./types";
 import { User } from "./schemas/user";
 
 export const api = axios.create({
@@ -275,6 +275,16 @@ export const deletePost = async (postId: string) => {
     }
 }
 
+export const deleteComment = async (commentId: string) => {
+      try {
+        const response = await api.delete(`/api/comments/${commentId}/delete/`, {withCredentials: true})
+        console.log(response.data)
+    } catch (error) {
+        console.error("error deleting comment", error)
+        throw error
+    }
+}
+
 export const fetchComments = async (postId:string, page: number) : Promise<PaginatedResponse<CommentType>> => {
   try {
     const response =  await api.get(`/api/posts/${postId}/comments/?page=${page}`)
@@ -312,6 +322,25 @@ export const fetchUserComments = async (userId: string, page: number) : Promise<
     return response.data as PaginatedResponse<CommentType>
 } catch (error) {
     console.error("error fetching user comments", error)
+    throw error
+}}
+export const fetchUserNotifications = async (page: number) : Promise<PaginatedResponse<NotificationType>> => {
+  try {
+    const response =  await api.get(`/api/notifications/?page=${page}`)
+    console.log(response.data)
+    return response.data as PaginatedResponse<NotificationType>
+} catch (error) {
+    console.error("error fetching user notifications", error)
+    throw error
+}}
+
+export const markNotificationAsRead = async (id: number, page: number) : Promise<PaginatedResponse<NotificationType>> => {
+  try {
+    const response =  await api.post(`/api/notifications/${id}/read/?page=${page}`)
+    console.log(response.data)
+    return response.data as PaginatedResponse<NotificationType>
+} catch (error) {
+    console.error("error marking notification as read", error)
     throw error
 }}
 

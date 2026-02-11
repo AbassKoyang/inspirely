@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { toast } from 'sonner';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deletePost } from '@/lib/api';
+import { deleteComment, deletePost } from '@/lib/api';
 import { Ellipsis, Share } from 'lucide-react';
 import { useAuth } from '@/lib/contexts/authContext';
 
@@ -36,7 +36,7 @@ const Response = ({comment}:{comment: CommentType}) => {
     }
 
     const deleteMutation = useMutation({
-        mutationFn: () => deletePost(String(comment.id) || ''),      
+        mutationFn: () => deleteComment(String(comment.id) || ''),      
         onError: (_, __, context) => {
             setisMoreOpen(false)
           toast.error("An error occured")
@@ -47,14 +47,14 @@ const Response = ({comment}:{comment: CommentType}) => {
       
         onSettled: () => {
             setisMoreOpen(false)
-          queryClient.invalidateQueries({queryKey: ['article']});
+            queryClient.invalidateQueries({queryKey: [`user-comments-${comment.user.id}`]});
         },
       });
 
   return (
     <div className='w-full mb-3 last:mb-0'>
         <p className='text-base font-medium font-sans'>{comment.content}</p>
-        <div className="w-full flex items-center gap-5 justify-between lg:justify-start text-black">
+        <div className="w-full flex items-center gap-10 justify-between lg:justify-start text-black">
             <p className='text-sm fonts-sans text-black/60'>Published on {month}</p>
             <div className="flex items-center gap-1">
                 <HoverCard openDelay={700} closeDelay={100}>

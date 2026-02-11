@@ -9,6 +9,7 @@ import defaultAvatar from '@/public/assets/images/default-avatar.png'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { addRecentSearch } from '@/lib/utils'
 import { useSideBarActive } from '@/lib/contexts/sidebardContext'
+import ProfileDropdown from './ProfileDropdown'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -18,6 +19,7 @@ const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname()
   const q = useSearchParams().get('q');
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
 
     const handleFormSubmit = (e: FormEvent) => {
       e.preventDefault();
@@ -52,27 +54,30 @@ const Navbar = () => {
 
         {user ? (
             <div className='flex items-center gap-5 md:gap-8'>
-              <Link href='#' className='hidden md:block'>
+              <Link href='/write' className='hidden md:block'>
                 <div className="flex gap-2 items-center group">
                   <SquarePen strokeWidth={1} className='size-5.5 text-black/75 group-hover:text-black transition-all duration-200 ease-in-out' />
                   <p className='text-[16px] font-light text-black/75 group-hover:text-black transition-all duration-200 ease-in-out'>Write</p>
                 </div>
               </Link>
-              <Link href='#'>
+              <Link href='/me/notifications'>
                 <Bell strokeWidth={1} className='size-5.5 text-black/70 hover:text-black transition-all duration-200 ease-in-out' />
               </Link>
-              <button className='size-[30px] rounded-full overflow-hidden cursor-pointer relative'>
-                <Image
-                className='object-cover'
-                fill
-                sizes="(max-width: 768px) 100px, 100px"
-                src={user.profile_pic_url || defaultAvatar}
-                loading='eager'
-                placeholder='blur'
-                blurDataURL='/assets/images/default-avatar.png'
-                alt='Profle Picture'
-                />
-              </button>
+              <div className="relative">
+                <button onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)} className={`size-[33px] rounded-full overflow-hidden cursor-pointer relative ${isProfileDropdownOpen ? 'outline-2 outline-offset-1 outline-emerald-700' : 'outline-0'}`}>
+                  <Image
+                  className='object-cover'
+                  fill
+                  sizes="(max-width: 768px) 100px, 100px"
+                  src={user.profile_pic_url || defaultAvatar}
+                  loading='eager'
+                  placeholder='blur'
+                  blurDataURL='/assets/images/default-avatar.png'
+                  alt='Profle Picture'
+                  />
+                </button>
+                <ProfileDropdown user={user} isOpen={isProfileDropdownOpen} />
+              </div>
             </div>
           ):(
         <div className="hidden items-center gap-8 md:flex">

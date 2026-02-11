@@ -47,6 +47,30 @@ export type PaginatedResponse<T> = {
     created_at: string;
     updated_at: string
   }
+
+  export type NotificationActionType = 
+  | 'follow' 
+  | 'comment' 
+  | 'reply' 
+  | 'reaction' 
+  | 'bookmark' 
+  | 'sign_up' 
+  | 'log_in'
+
+export type NotificationType = {
+  id: number;
+  user: User;
+  actor: User;
+  action_type: NotificationActionType;
+  content_type: number | null;
+  object_id: number | null;
+  target_object: any | null;
+  is_read: boolean;
+  email_sent: boolean;
+  push_sent: boolean;
+  created_at: string;
+};
+
   export type BookmarkType = {
     id: number;
     post: PostType;
