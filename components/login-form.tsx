@@ -49,7 +49,7 @@ export function LoginForm({
       const res = await api.post(`/api/auth/google_login/`, formData, {withCredentials: true})
 
       toast.success("Logged in with Google");
-      router.push("/");
+      window.location.replace("/feed");
     } catch (error) {
       console.error(error)
       toast.error("Google authentication failed")
@@ -85,7 +85,7 @@ export function LoginForm({
   useEffect(() => {
     if (user) {
       window.google?.accounts.id.cancel();
-      router.push('/')
+      window.location.replace('/feed')
     }
   }, [user]);
 
@@ -117,7 +117,7 @@ const handleLogin = async (data: z.infer<typeof loginFormSchema>) => {
     console.log(result)
 
     toast.success("Logged in successfully")
-    router.push("/")
+    window.location.replace("/feed")
 
   } catch (err: any) {
     if (err.response) {

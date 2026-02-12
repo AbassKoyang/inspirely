@@ -13,6 +13,7 @@ const categorySchema = z.object({
   name: z.string(),
   slug: z.string(),
   created_at: z.date(),
+  posts_count: z.number(),
 });
 
 const postSchema = z.object({

@@ -58,7 +58,7 @@ export function SignupForm({
       const res = await api.post(`/api/auth/google_login/`, formData, {withCredentials: true})
 
       toast.success("Logged in with Google");
-      router.push("/");
+      window.location.replace("/feed");
     } catch (error) {
       console.error(error)
       toast.error("Google authentication failed")
@@ -94,7 +94,7 @@ export function SignupForm({
   useEffect(() => {
     if (user) {
       window.google?.accounts.id.cancel();
-      router.push('/')
+      window.location.replace('/feed')
     }
   }, [user]);
     
@@ -124,7 +124,7 @@ export function SignupForm({
         );
         console.log(res.data);
         toast.success("Account created successfully");
-        router.push("/");
+        window.location.replace("/feed");
     
       } catch (err: any) {
         if (err.response) {

@@ -1,12 +1,13 @@
 'use client'
 import { useFetchUser } from '@/lib/queries'
-import { Ellipsis } from 'lucide-react'
+import { Ellipsis, Share2 } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, usePathname } from 'next/navigation'
 import React from 'react'
 import defaultAvatar from '@/public/assets/images/default-avatar.png'
 import Image from 'next/image'
 import { formatFollowersCount } from '@/lib/utils'
+import { toast } from 'sonner'
 
 
 const Nav = () => {
@@ -15,6 +16,21 @@ const Nav = () => {
     const {data:user, isLoading, isError} = useFetchUser(userId);
     const followersCount = formatFollowersCount(user?.followers_count || 0);
 
+
+    const handleShare = () => {
+        if (navigator.share) {
+          navigator.share({
+            title: user?.first_name,
+            text: user?.last_name,
+            url: `https://inspirely.vercel.app/${user?.id}/profile`,
+          })
+          .then(() => toast.success('Thanks for sharing!'))
+          .catch((err) => toast.error('Error sharing:', err));
+        } else {
+          navigator.clipboard.writeText(`https://inspirely.vercel.app/${user?.id}/profile`);
+          toast.success('Profile link copied to clipboard');
+        }
+    }
 
 
     if(pathname.includes('/profile/settings')) return null
@@ -41,7 +57,7 @@ const Nav = () => {
                             <p className='font-sans text-base font-normal text-black/60 mt-1 block lg:hidden'><span className='font-medium text-black/60'>{followersCount}</span> followers</p>
                         </div>
                     </div>         
-                    <button><Ellipsis className='text-black/60' /></button>
+                    <button className='group cursor-pointer' onClick={handleShare}><Share2 className='text-black/60 group-hover:text-black' /></button>
                 </div>
             )
         }

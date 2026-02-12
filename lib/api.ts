@@ -168,7 +168,7 @@ export const fetchCategories = async () : Promise<CategoryType[]> => {
       try {
         const response =  await api.get(`/api/categories/`)
         console.log(response.data)
-        return response.data as TagType[]
+        return response.data as CategoryType[]
     } catch (error) {
         console.error("error fetching categories", error)
         throw error
@@ -324,6 +324,16 @@ export const fetchUserComments = async (userId: string, page: number) : Promise<
     console.error("error fetching user comments", error)
     throw error
 }}
+
+export const fetchCategoryPosts = async (slug: string, page: number) : Promise<PaginatedResponse<PostType>> => {
+  try {
+    const response =  await api.get(`/api/posts/categories/${slug}/?page=${page}`)
+    console.log(response.data)
+    return response.data as PaginatedResponse<PostType>
+} catch (error) {
+    console.error("error fetching catgeory posts", error)
+    throw error
+}}
 export const fetchUserNotifications = async (page: number) : Promise<PaginatedResponse<NotificationType>> => {
   try {
     const response =  await api.get(`/api/notifications/?page=${page}`)
@@ -394,6 +404,17 @@ export const searchUsers = async ({query, page}:{query: string, page: number}) :
         return response.data as PaginatedResponse<User>
     } catch (error) {
         console.error("error getting users search results", error)
+        throw error
+    }
+}
+
+export const fetchCategory = async (slug: string) : Promise<CategoryType> => {
+    try {
+        const response = await api.get(`/api/categories/${slug}/`)
+        console.log(response.data)
+        return response.data as CategoryType
+    } catch (error) {
+        console.error("error retrieving category", error)
         throw error
     }
 }

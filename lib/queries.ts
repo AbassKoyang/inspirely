@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
-import { fetchCategories, fetchCombinedPosts, fetchComments, fetchFollowing, fetchIsFollowing, fetchLatestPosts, fetchPersonalisedPosts, fetchPost, fetchReplies, fetchSessionUser, fetchTags, fetchTrendingPosts, fetchUser, fetchUserComments, fetchUserNotifications, fetchUserPost, fetchUsers, searchCategories, searchPosts, searchUsers } from "./api"
+import { fetchCategories, fetchCategory, fetchCategoryPosts, fetchCombinedPosts, fetchComments, fetchFollowing, fetchIsFollowing, fetchLatestPosts, fetchPersonalisedPosts, fetchPost, fetchReplies, fetchSessionUser, fetchTags, fetchTrendingPosts, fetchUser, fetchUserComments, fetchUserNotifications, fetchUserPost, fetchUsers, searchCategories, searchPosts, searchUsers } from "./api"
 
 export const useFetchUserPosts = (userId: string) => {
     return useQuery({
@@ -37,6 +37,12 @@ export const useFetchUser = (userId:string) => {
     return useQuery({
         queryFn: () => fetchUser(userId),
         queryKey: [`user-${userId}`]
+    })
+}
+export const useFetchCategory = (slug:string) => {
+    return useQuery({
+        queryFn: () => fetchCategory(slug),
+        queryKey: [`category`, slug]
     })
 }
 
@@ -145,6 +151,21 @@ export const useFetchUserComments = (userId:string) => {
             return Number(url.searchParams.get('page'))
         },
         enabled: !!userId,
+    })
+}
+
+export const useFetchCategoryPosts = (slug:string) => {
+    return useInfiniteQuery({
+        queryFn: ({pageParam = 1}) => fetchCategoryPosts(slug, pageParam),
+        queryKey: [`category-posts-${slug}`],
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.next) return undefined
+    
+            const url = new URL(String(lastPage.next))
+            return Number(url.searchParams.get('page'))
+        },
+        enabled: !!slug,
     })
 }
 
