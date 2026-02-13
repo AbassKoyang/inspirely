@@ -9,28 +9,56 @@ export const useFetchUserPosts = (userId: string) => {
 }
 
 export const useFetchPersonalisedPosts = () => {
-    return useQuery({
-        queryFn: fetchPersonalisedPosts,
-        queryKey: ['personalised-posts']
-    })
+        return useInfiniteQuery({
+            queryFn: ({pageParam = 1}) => fetchPersonalisedPosts(pageParam),
+            queryKey: ['personalised-posts'],
+            initialPageParam: 1,
+            getNextPageParam: (lastPage) => {
+                if (!lastPage.next) return undefined
+        
+                const url = new URL(String(lastPage.next))
+                return Number(url.searchParams.get('page'))
+            },
+        })
 }
 
 export const useFetchTrendingPosts = () => {
-    return useQuery({
-        queryFn: fetchTrendingPosts,
-        queryKey: ['trending-posts']
+    return useInfiniteQuery({
+        queryFn: ({pageParam = 1}) => fetchTrendingPosts(pageParam),
+        queryKey: ['trending-posts'],
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.next) return undefined
+    
+            const url = new URL(String(lastPage.next))
+            return Number(url.searchParams.get('page'))
+        },
     })
 }
 export const useFetchLatestPosts = () => {
-    return useQuery({
-        queryFn: fetchLatestPosts,
-        queryKey: ['latest-posts']
+    return useInfiniteQuery({
+        queryFn: ({pageParam = 1}) => fetchLatestPosts(pageParam),
+        queryKey: ['latest-posts'],
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.next) return undefined
+    
+            const url = new URL(String(lastPage.next))
+            return Number(url.searchParams.get('page'))
+        },
     })
 }
 export const useFetchCombinedPosts = () => {
-    return useQuery({
-        queryFn: fetchCombinedPosts,
-        queryKey: ['combined-posts']
+    return useInfiniteQuery({
+        queryFn: ({pageParam = 1}) => fetchCombinedPosts(pageParam),
+        queryKey: ['cmobined-posts'],
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.next) return undefined
+    
+            const url = new URL(String(lastPage.next))
+            return Number(url.searchParams.get('page'))
+        },
     })
 }
 export const useFetchUser = (userId:string) => {

@@ -10,7 +10,7 @@ const layout = ({children} :{children: React.ReactNode}) => {
     <ProtectedRoute>
       <LayoutWrapper>
        <section className="w-full min-h-full px-4 md:pl-10 bg-white flex">
-        <div className="w-full lg:w-[70%] pr-10 border-r border-gray-100">
+        <div className="w-full lg:w-[70%] md:pr-10 md:border-r md:border-gray-100">
           <Nav/>
           {children}
         </div>

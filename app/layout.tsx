@@ -10,6 +10,7 @@ import QueryProvider from "@/components/tanstackConfig";
 import SideBar from "@/components/SideBar";
 import { SidebarProvider, useSideBarActive } from "@/lib/contexts/sidebardContext";
 import LayoutWrapper from "@/components/LayoutWrapper";
+import MobileNavBar from "@/components/MobileNavBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,6 +43,7 @@ export default function RootLayout({
               <main className="w-full min-h-dvh relative">
               <Navbar />
                 {children}
+              <MobileNavBar />
               <Footer />
               <Toaster />
               </main>

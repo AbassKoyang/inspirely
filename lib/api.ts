@@ -67,29 +67,31 @@ export const fetchUserPost = async (userId: string) : Promise<PaginatedResponse<
     }
 }
 
-export const fetchPersonalisedPosts = async () => {
+export const fetchPersonalisedPosts = async (page: number) : Promise<PostResponseType> => {
     try {
-        const response =  await api.get("/api/feeds/personalized/")
+        const response =  await api.get(`/api/feeds/personalized/?page=${page}`)
         console.log(response.data)
-        return response.data
+        return response.data as PostResponseType
     } catch (error) {
         console.error("error fetching posts", error)
+        throw error
     }
 }
 
-export const fetchTrendingPosts = async () => {
+export const fetchTrendingPosts = async (page: number) : Promise<PostResponseType> => {
     try {
-        const response =  await api.get("/api/feeds/trending/")
+        const response =  await api.get(`/api/feeds/trending/?page=${page}`)
         console.log(response.data)
-        return response.data
+        return response.data as PostResponseType
     } catch (error) {
         console.error("error fetching trending posts", error)
+        throw error
     }
 }
 
-export const fetchLatestPosts = async () : Promise<PostResponseType> => {
+export const fetchLatestPosts = async (page: number) : Promise<PostResponseType> => {
     try {
-        const response =  await api.get("/api/feeds/recent/")
+        const response =  await api.get(`/api/feeds/recent/?page=${page}`)
         console.log(response.data)
         return response.data as PostResponseType
     } catch (error) {
@@ -98,9 +100,9 @@ export const fetchLatestPosts = async () : Promise<PostResponseType> => {
     }
 }
 
-export const fetchCombinedPosts = async () : Promise<PostResponseType> => {
+export const fetchCombinedPosts = async (page: number) : Promise<PostResponseType> => {
     try {
-        const response =  await api.get("/api/feeds/combined/")
+        const response =  await api.get(`/api/feeds/combined/?page=${page}`)
         console.log(response.data)
         return response.data as PostResponseType
     } catch (error) {
