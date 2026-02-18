@@ -28,7 +28,7 @@ const ArticlePage = () => {
     const [isSelf, setIsSelf] = useState(false)
     const {user: sessionUser} = useAuth();
     const slug = useParams<{slug: string}>().slug
-    const {data:post} = useFetchPost(slug)
+    const {data:post, isLoading, isError} = useFetchPost(slug)
     const {data:isFollowing} = useFetchIsFollowing(String(post?.author.id) || '')
     const queryClient = useQueryClient();
     const [formattedMonth, setformattedMonth] = useState('');
@@ -298,8 +298,8 @@ const ArticlePage = () => {
         </div>
 
         {/* Sidebar */}
-        <CommentsSidebar isOpen={isSidebarOpen} closeSidebar={() => setisSidebarOpen(false)} post={post} />
-        <MobileComments isOpen={isSidebarOpen} closeSidebar={() => setisSidebarOpen(false)} post={post} />
+        {isSidebarOpen && (<CommentsSidebar isOpen={isSidebarOpen} closeSidebar={() => setisSidebarOpen(false)} post={post} />)}
+        {isSidebarOpen && (<MobileComments isOpen={isSidebarOpen} closeSidebar={() => setisSidebarOpen(false)} post={post} />)}
         </>
     )}
     </section>

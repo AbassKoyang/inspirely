@@ -8,6 +8,7 @@ import defaultAvatar from '@/public/assets/images/default-avatar.png'
 import Image from 'next/image'
 import { formatFollowersCount } from '@/lib/utils'
 import { toast } from 'sonner'
+import { ProfileNavSkeleton } from '@/components/skeletons/ProfileNavSkeleton'
 
 
 const Nav = () => {
@@ -34,6 +35,11 @@ const Nav = () => {
 
 
     if(pathname.includes('/profile/settings')) return null
+    
+    if(isLoading) {
+        return <ProfileNavSkeleton />
+    }
+    
   return (
     <div className="w-full mt-4">
         {

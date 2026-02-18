@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Bell, Menu, Search, SquarePen, X } from 'lucide-react'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 import { useAuth } from '@/lib/contexts/authContext'
 import Image from 'next/image'
 import defaultAvatar from '@/public/assets/images/default-avatar.png'
@@ -11,6 +11,8 @@ import { addRecentSearch } from '@/lib/utils'
 import { useSideBarActive } from '@/lib/contexts/sidebardContext'
 import ProfileDropdown from './ProfileDropdown'
 import { GoBellFill } from "react-icons/go";
+import {motion} from 'motion/react'
+
 
 
 const Navbar = () => {
@@ -22,6 +24,53 @@ const Navbar = () => {
   const pathname = usePathname()
   const q = useSearchParams().get('q');
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
+  const [visible, setVisible] = useState(true);
+  const lastScrollY = useRef(0)
+  const [isMobile, setIsMobile] = useState(false)
+
+useEffect(() => {
+  const checkScreen = () => {
+    setIsMobile(window.innerWidth < 768)
+  }
+
+  checkScreen()
+  window.addEventListener('resize', checkScreen)
+
+  return () => window.removeEventListener('resize', checkScreen)
+}, [])
+
+
+  useEffect(() => {
+      if (!isMobile) return
+      const handleScroll = () => {
+        const currentScrollY = window.scrollY
+  
+        if (currentScrollY <= 0) {
+          setVisible(true)
+          lastScrollY.current = currentScrollY
+          return
+        }
+  
+        if (Math.abs(currentScrollY - lastScrollY.current) < 15) {
+          return
+        }
+  
+        if (currentScrollY < lastScrollY.current) {
+          setVisible(true)
+        } 
+        else {
+          setVisible(false)
+        }
+  
+        lastScrollY.current = currentScrollY
+      }
+  
+      window.addEventListener('scroll', handleScroll, { passive: true })
+  
+      return () => {
+        window.removeEventListener('scroll', handleScroll)
+      }
+    }, [isMobile])
 
     const handleFormSubmit = (e: FormEvent) => {
       e.preventDefault();
@@ -34,7 +83,7 @@ const Navbar = () => {
   if (pathname == '/write') return null;
   if (pathname.startsWith('/edit')) return null;
   return (
-    <nav className={`sticky top-0 z-50 md:border-b border-gray-100 ${pathname == '/' ? 'bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/40' : 'bg-white'} z-300`}>
+    <motion.nav initial={{y:0}} animate={{y: visible ? 0 : '-100%', animationDuration: 1, transition: {type: 'tween'}}} className={`sticky top-0 z-50 md:border-b border-gray-100 ${pathname == '/' ? 'bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/40' : 'bg-white'} z-300`}>
       <div className="mx-auto flex max-w-full items-center justify-between px-4 py-2 md:px-6">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2 lg:gap-4">
@@ -62,14 +111,14 @@ const Navbar = () => {
         </div>
 
         {user ? (
-            <div className='flex items-center gap-4 md:gap-8'>
+            <div className='flex items-center gap-4 md:gap-8 py-2'>
               <Link href='/write' className='hidden md:block'>
                 <div className="flex gap-2 items-center group">
                   <SquarePen strokeWidth={1} className='size-5.5 text-black/75 group-hover:text-black transition-all duration-200 ease-in-out' />
                   <p className='text-[16px] font-light text-black/75 group-hover:text-black transition-all duration-200 ease-in-out'>Write</p>
                 </div>
               </Link>
-              <Link href='/me/notifications'>
+              <Link href='/me/notifications' className='flex items-center justify-center'>
               {pathname == '/me/notifications' ? (
                   <GoBellFill className='size-5.5 text-black hover:text-black transition-all duration-200 ease-in-out hidden lg:block' />
               ) : (
@@ -187,7 +236,7 @@ const Navbar = () => {
           </div>
         </div>
       )}
-    </nav>
+    </motion.nav>
   )
 }
 

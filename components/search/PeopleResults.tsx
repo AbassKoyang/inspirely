@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation'
 import { ChevronDown } from 'lucide-react'
 import SideBarUserInfo from '../feed/SidebarUserInfo'
 import PeopleResultProfilePreview from './PeopleResultsProfilePreview'
+import { UserProfileSkeleton } from '@/components/skeletons/UserProfileSkeleton'
 
 const PeopleResults = () => {
     const query = useSearchParams().get('q')
@@ -23,16 +24,22 @@ const PeopleResults = () => {
       }, [data]);
   return (
     <div className='w-full relative'>
-        {isLoading && (<p>
-            Loading...
-        </p>)}
-        {isError && (<p>
-            error occured...
-        </p>)}
+        {isLoading && (
+            <div className="w-full flex flex-col gap-4">
+                {Array.from({ length: 3 }).map((_, i) => (
+                    <UserProfileSkeleton key={i} />
+                ))}
+            </div>
+        )}
+        {isError && (
+            <div className="w-full flex items-center justify-center py-10">
+                <p className='font-sans text-base text-red-600'>An error occurred while loading results.</p>
+            </div>
+        )}
         {allPeople && (
             <div className="w-full flex flex-col gap-4">
                 {allPeople.map((user) => (
-                    <PeopleResultProfilePreview user={user} />
+                    <PeopleResultProfilePreview key={user.id} user={user} />
                 ))}
             </div>
         )}

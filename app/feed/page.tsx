@@ -4,6 +4,7 @@ import { useFetchCombinedPosts, useFetchPersonalisedPosts } from '@/lib/queries'
 import { LoaderCircle } from 'lucide-react';
 import React, { useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer';
+import { PostPreviewSkeleton } from '@/components/skeletons/PostPreviewSkeleton';
 
 const Page = () => {
     const { ref, inView } = useInView();
@@ -27,17 +28,23 @@ const Page = () => {
 
 return (
     <section className='w-full min-h-dvh mt-5'>
-        {isLoading && (<p>
-            Loading...
-        </p>)}
-        {isError && (<p>
-            error occured...
-        </p>)}
+        {isLoading && (
+            <div className="w-full">
+                {Array.from({ length: 3 }).map((_, i) => (
+                    <PostPreviewSkeleton key={i} />
+                ))}
+            </div>
+        )}
+        {isError && (
+            <div className="w-full flex items-center justify-center py-10">
+                <p className='font-sans text-base text-red-600'>An error occurred while loading posts.</p>
+            </div>
+        )}
         {allPosts && allPosts.map((post) => (
-            <PostPreview post={post} />
+            <PostPreview key={post.id} post={post} />
         ))}
         <div className='w-full flex items-center justify-center py-3' ref={ref}>
-            {isFetchingNextPage ? <LoaderCircle className="animate-spin size-[26px] text-emerald-700" /> : null}
+            {isFetchingNextPage ? <PostPreviewSkeleton /> : null}
         </div>
     </section>
   )

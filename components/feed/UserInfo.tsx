@@ -10,6 +10,7 @@ import { followUser, unfollowUser } from '@/lib/api'
 import { useFetchUser } from '@/lib/queries'
 import { toast } from 'sonner'
 import { useAuth } from '@/lib/contexts/authContext'
+import { UserInfoSkeleton } from '@/components/skeletons/UserInfoSkeleton'
 
 const UserInfo = ({userId}: {userId: string}) => {
     const {data:user, isLoading} = useFetchUser(String(userId) || '')
@@ -72,11 +73,12 @@ const UserInfo = ({userId}: {userId: string}) => {
         },
       });
 
+  if (isLoading) {
+    return <UserInfoSkeleton />
+  }
+
   return (
     <div className="w-full mb-20 mt-16">
-        {isLoading && (
-            <p className="">Loading...</p>
-        )}
         {user && (
             <div className='w-full'>
             <div className="w-full flex justify-between items-start">

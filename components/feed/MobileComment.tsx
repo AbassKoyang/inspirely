@@ -24,6 +24,8 @@ import { toast } from 'sonner';
 import { createComment } from '@/lib/api';
 import { useCreatComment } from '@/lib/mutations';
 import { useInView } from 'react-intersection-observer';
+import { CommentSkeleton } from '../skeletons/CommentSkeleton';
+import { Skeleton } from '../ui/skeleton';
 
   const orderTypes = [
     {
@@ -98,6 +100,26 @@ const MobileComments = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeSi
         <div onClick={closeSidebar} className={`z-0 absolute top-0 left-0 size-full bg-black/25 duration-[1000] ease-in-out transition-all`}></div>
 
         <motion.div className="w-full bg-white shadow-xl h-[90%] rounded-t-[35px] z-50 overflow-hidden" initial={{y:'100%'}} animate={{y: isOpen ? 0 : '100%', animationDuration: 1, transition: {type: 'tween'}}}>
+        {isLoading && (
+            <div className="w-full h-full relative overflow-auto">
+                <div className="w-full py-5 px-5 border-b border-gray-100 sticky top-0 z-200 bg-white flex items-center justify-between">
+                    <Skeleton className="h-6 w-32" />
+                    <Skeleton className="size-6 rounded-full" />
+                </div>
+                <div className="w-full mt-5 px-5 flex items-center gap-3">
+                    <Skeleton className="size-[35px] rounded-full" />
+                    <Skeleton className="h-4 w-32" />
+                </div>
+                <div className="w-full px-5 mt-3">
+                    <Skeleton className="w-full h-20 rounded-sm" />
+                </div>
+                <div className="w-full px-5 mt-8 border-t border-gray-100 py-8">
+                    {Array.from({ length: 3 }).map((_, i) => (
+                        <CommentSkeleton key={i} />
+                    ))}
+                </div>
+            </div>
+        )}
         {comments && (
             <div className="w-full h-full relative overflow-auto">
                 <div className="w-full py-5 px-5 border-b border-gray-100 sticky top-0 z-200 bg-white flex items-center justify-between">
@@ -155,8 +177,8 @@ const MobileComments = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeSi
                     <CommentCard comment={comment} />
                 ))}
                  <div className='w-full flex items-center justify-center py-3' ref={ref}>
-                    {isFetchingNextPage ? <LoaderCircle className="animate-spin size-[26px] text-emerald-700" /> : null}
-                </div>
+                 {isFetchingNextPage ? <CommentSkeleton /> : null}
+                 </div>
                 {allComments && allComments.length == 0 && (
                     <p>No comments for this post</p>
                 )}

@@ -7,6 +7,7 @@ import { ChevronDown } from 'lucide-react'
 import Image from 'next/image'
 import defaultAvatar from '@/public/assets/images/default-avatar.png'
 import { NotificationType } from '@/lib/types'
+import { NotificationSkeleton } from '@/components/skeletons/NotificationSkeleton'
 
 const getActionText = (actionType: string) => {
   const actionMap: Record<string, string> = {
@@ -132,8 +133,10 @@ const ResponsesPage = () => {
   return (
     <div className='w-full relative pt-6'>
       {isLoading && (
-        <div className="w-full flex items-center justify-center py-10">
-          <p className='font-sans text-base text-black/60'>Loading...</p>
+        <div className="w-full flex flex-col">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <NotificationSkeleton key={i} />
+          ))}
         </div>
       )}
       {isError && (

@@ -6,6 +6,7 @@ import PostPreview from '../feed/PostPreview'
 import { useSearchParams } from 'next/navigation'
 import { ChevronDown } from 'lucide-react'
 import CategoryLink from '../explore/CategoryLink'
+import { CategorySkeleton } from '@/components/skeletons/CategorySkeleton'
 
 const CategoriesResult = () => {
     const query = useSearchParams().get('q')
@@ -22,16 +23,20 @@ const CategoriesResult = () => {
       }, [data]);
   return (
     <div className='w-full relative'>
-        {isLoading && (<p>
-            Loading...
-        </p>)}
-        {isError && (<p>
-            error occured...
-        </p>)}
+        {isLoading && (
+            <div className="w-full flex flex-wrap gap-4 mt-6">
+                <CategorySkeleton />
+            </div>
+        )}
+        {isError && (
+            <div className="w-full flex items-center justify-center py-10">
+                <p className='font-sans text-base text-red-600'>An error occurred while loading categories.</p>
+            </div>
+        )}
         {allCatgeories && (
             <div className="w-full flex flex-wrap gap-4 mt-6">
                 {allCatgeories.map((cat) => (
-                    <CategoryLink category={cat} />
+                    <CategoryLink key={cat.id} category={cat} />
                 ))}
             </div>
         )}

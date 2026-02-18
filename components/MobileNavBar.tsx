@@ -3,6 +3,8 @@ import { useAuth } from '@/lib/contexts/authContext'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
+import {motion} from 'motion/react'
+
 
 const MobileNavBar = () => {
     const pathname = usePathname() 
@@ -21,7 +23,7 @@ const MobileNavBar = () => {
             return
           }
     
-          if (Math.abs(currentScrollY - lastScrollY.current) < 10) {
+          if (Math.abs(currentScrollY - lastScrollY.current) < 15) {
             return
           }
     
@@ -46,7 +48,7 @@ const MobileNavBar = () => {
       if (pathname.startsWith('/edit')) return null;
       
   return (
-    <div className={`w-full bg-white px-6 py-4.5 flex items-center justify-between fixed bottom-0 left-0 ${visible ? 'translate-y-0' : 'translate-y-full'} transition-all duration-300 ease-in-out`}>
+    <motion.div initial={{y:0}} animate={{y: visible ? 0 : '100%', animationDuration: 1, transition: {type: 'tween'}}} className={`w-full bg-white px-6 py-4.5 flex items-center justify-between fixed bottom-0 left-0 lg:hidden`}>
         <div className="flex items-center gap-8">
             <Link className='w-fit group' href='/feed'>
                     <div className="w-full flex flex-col items-center justify-center gap-2">
@@ -88,7 +90,7 @@ const MobileNavBar = () => {
                     </div>
             </Link>
         </div>
-    </div>
+    </motion.div>
   )
 }
 
