@@ -5,13 +5,14 @@ import React, { use } from 'react'
 import defaultAvatar from '@/public/assets/images/default-avatar.png'
 import Link from 'next/link'
 import { truncateText } from '@/lib/utils'
-import { HelpCircle, Info, Settings } from 'lucide-react'
+import { Bell, HelpCircle, Info, Settings } from 'lucide-react'
 import { api } from '@/lib/api'
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 
 const ProfileDropdown = ({user, isOpen}:{user:User, isOpen:boolean}) => {
     const name = truncateText(`${user.first_name} ${user.last_name}`, 12)
+    const pathname = usePathname()
     const router = useRouter()
     const handleSignout = async () => {
         try {
@@ -45,13 +46,17 @@ const ProfileDropdown = ({user, isOpen}:{user:User, isOpen:boolean}) => {
         </Link>
        
             <div className="w-full py-2 mt-5">
-                <Link href={`/me/settings`} className='flex items-center gap-3 py-2 group'>
-                    <Settings strokeWidth={1} className='text-black/60 size-[24px] group-hover:text-black' />
-                    <p className='text-sm font-sans text-black/60 group-hover:text-black'>Settings</p>
+                <Link href={`/me/notifications`} className='flex items-center gap-3 py-2 group'>
+                    <Bell strokeWidth={1} className={` size-[24px] group-hover:text-black ${pathname == '/me/notifications' ? 'text-black' : 'text-black/60'}`} />
+                    <p className={`text-sm font-sans  group-hover:text-black ${pathname == '/me/notifications' ? 'text-black' : 'text-black/60'}`}>Notifications</p>
                 </Link>
                 <Link href={`/me/settings`} className='flex items-center gap-3 py-2 group'>
-                    <HelpCircle strokeWidth={1} className='text-black/60 size-[24px] group-hover:text-black' />
-                    <p className='text-sm font-sans text-black/60 group-hover:text-black'>Help</p>
+                    <Settings strokeWidth={1} className={` size-[24px] group-hover:text-black ${pathname == '/me/settings' ? 'text-black' : 'text-black/60'}`} />
+                    <p className={`text-sm font-sans  group-hover:text-black ${pathname == '/me/settings' ? 'text-black' : 'text-black/60'}`}>Settings</p>
+                </Link>
+                <Link href={`/me/settings`} className='flex items-center gap-3 py-2 group'>
+                    <HelpCircle strokeWidth={1} className={` size-[24px] group-hover:text-black ${pathname == '/me/settings' ? 'text-black' : 'text-black/60'}`} />
+                    <p className={`text-sm font-sans  group-hover:text-black ${pathname == '/me/settings' ? 'text-black' : 'text-black/60'}`}>Help</p>
                 </Link>
             </div>
 

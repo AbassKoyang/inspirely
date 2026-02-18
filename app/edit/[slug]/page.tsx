@@ -9,6 +9,7 @@ import EditComponent from '@/components/feed/EditComponent';
 import { useParams, useRouter } from 'next/navigation';
 import { useFetchPost } from '@/lib/queries';
 import { useState } from 'react';
+import ProfileDropdown from '@/components/ProfileDropdown';
 
 const EditPage = () => {
    const [isSidebarOpen, setisSidebarOpen] = useState(false)
@@ -17,13 +18,15 @@ const EditPage = () => {
     const {data: post, isLoading, isError} = useFetchPost(slug)
     const {user} = useAuth()
     const router = useRouter()
+    const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
+
   
 
   return (
     <section className='w-full min-h-dvh flex items-center flex-col bg-white'>
       <div className="w-full max-w-5xl flex items-center justify-between py-4">
         <div className="flex items-center gap-3">
-          <Link href="/" className="text-xl md:text-3xl font-bold text-emerald-700 transition-colors hover:text-emerald-700">
+          <Link href="/feed" className="text-xl md:text-3xl font-bold text-emerald-700 transition-colors hover:text-emerald-700">
                 Inspirely
           </Link>
           <div className="w-px h-6 bg-gray-300 hidden lg:block"></div>
@@ -56,15 +59,21 @@ const EditPage = () => {
                 <Bell strokeWidth={1} className='size-5.5 text-black/70 hover:text-black transition-all duration-200 ease-in-out' />
               </Link>
 
-              <button className='size-[35px] rounded-full overflow-hidden object-center object-cover cursor-pointer'>
-                <Image
-                className=''
-                src={user?.profile_pic_url? user.profile_pic_url : defaultAvatar}
-                width={35}
-                height={35}
-                alt='Profle Picture'
-                />
-              </button>
+              <div className="relative">
+                <button onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)} className={`size-[33px] rounded-full overflow-hidden cursor-pointer relative ${isProfileDropdownOpen ? 'outline-2 outline-offset-1 outline-emerald-700' : 'outline-0'}`}>
+                  <Image
+                  className='object-cover'
+                  fill
+                  sizes="(max-width: 768px) 100px, 100px"
+                  src={user?.profile_pic_url || defaultAvatar}
+                  loading='eager'
+                  placeholder='blur'
+                  blurDataURL='/assets/images/default-avatar.png'
+                  alt='Profle Picture'
+                  />
+                </button>
+                {user && <ProfileDropdown user={user} isOpen={isProfileDropdownOpen} />}
+              </div>
             </div>
         </div>
         </div>

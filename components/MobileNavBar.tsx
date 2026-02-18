@@ -42,7 +42,9 @@ const MobileNavBar = () => {
         }
       }, [])
 
-
+      if (pathname == '/write') return null;
+      if (pathname.startsWith('/edit')) return null;
+      
   return (
     <div className={`w-full bg-white px-6 py-4.5 flex items-center justify-between fixed bottom-0 left-0 ${visible ? 'translate-y-0' : 'translate-y-full'} transition-all duration-300 ease-in-out`}>
         <div className="flex items-center gap-8">

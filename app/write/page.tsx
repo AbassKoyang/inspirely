@@ -32,6 +32,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
+import ProfileDropdown from '@/components/ProfileDropdown';
 
 const WritePage = () => {
   const {user} = useAuth()
@@ -46,7 +47,7 @@ const WritePage = () => {
   const [wordCount, setwordCount] = useState(0)
   const [paragraphCount, setParagraphCount] = useState(0)
   const [readTime, setreadTime] = useState(0)
-  const router = useRouter();
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
 
 
   const form = useForm<CreatePostInput>({
@@ -209,7 +210,7 @@ const calculateReadtime = (content: string) => {
   return (
     <section className='w-full min-h-dvh flex items-center flex-col bg-white'>
       <div className="w-full max-w-5xl flex items-center justify-between py-4">
-        <Link href="/" className="text-xl md:text-3xl font-bold text-emerald-700 transition-colors hover:text-emerald-700">
+        <Link href="/feed" className="text-xl md:text-3xl font-bold text-emerald-700 transition-colors hover:text-emerald-700">
               Inspirely
         </Link>
 
@@ -223,19 +224,25 @@ const calculateReadtime = (content: string) => {
                 <Ellipsis strokeWidth={1} className='size-5.5 text-black/70 hover:text-black transition-all duration-200 ease-in-out' />
               </button>
 
-              <Link href='#'>
+              <Link href='/me/notifications'>
                 <Bell strokeWidth={1} className='size-5.5 text-black/70 hover:text-black transition-all duration-200 ease-in-out' />
               </Link>
 
-              <button className='size-[35px] rounded-full overflow-hidden object-center object-cover cursor-pointer'>
-                <Image
-                className=''
-                src={user?.profile_pic_url? user.profile_pic_url : defaultAvatar}
-                width={35}
-                height={35}
-                alt='Profle Picture'
-                />
-              </button>
+              <div className="relative">
+                <button onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)} className={`size-[33px] rounded-full overflow-hidden cursor-pointer relative ${isProfileDropdownOpen ? 'outline-2 outline-offset-1 outline-emerald-700' : 'outline-0'}`}>
+                  <Image
+                  className='object-cover'
+                  fill
+                  sizes="(max-width: 768px) 100px, 100px"
+                  src={user?.profile_pic_url || defaultAvatar}
+                  loading='eager'
+                  placeholder='blur'
+                  blurDataURL='/assets/images/default-avatar.png'
+                  alt='Profle Picture'
+                  />
+                </button>
+                {user && <ProfileDropdown user={user} isOpen={isProfileDropdownOpen} />}
+            </div>
             </div>
         </div>
       </div>
@@ -286,7 +293,7 @@ const calculateReadtime = (content: string) => {
           <SimpleEditor  editor={editor}/>
       </div>
 
-      <motion.div className='w-[450px] fixed top-0 right-0 bg-white shadow-xl h-dvh z-200' initial={{x:'110%'}} animate={{x: isSidebarOpen ? 0 : '110%', animationDuration: 0.5, transition: {type: 'tween'}}}>
+      <motion.div className='w-full lg:w-[450px] fixed top-0 right-0 bg-white shadow-xl h-dvh z-200' initial={{x:'110%'}} animate={{x: isSidebarOpen ? 0 : '110%', animationDuration: 0.5, transition: {type: 'tween'}}}>
         <div className="w-full h-full relative overflow-auto">
           <div className="w-full py-8 px-8 border-b border-gray-100 sticky top-0 bg-white flex items-center justify-between">
             <h2 className='font-sans text-xl text-black font-semibold leading-1'>Draft Settings</h2>

@@ -213,7 +213,7 @@ const EditComponent = ({post,isSidebarOpen ,closeSidebar}:{post:PostType; isSide
           <SimpleEditor  editor={editor}/>
       </div>
 
-      <motion.div className='w-[450px] fixed top-0 right-0 bg-white shadow-xl h-dvh z-200' initial={{x:'110%'}} animate={{x: isSidebarOpen ? 0 : '110%', animationDuration: 0.5, transition: {type: 'tween'}}}>
+      <motion.div className='w-full lg:w-[450px] fixed top-0 right-0 bg-white shadow-xl h-dvh z-200' initial={{x:'110%'}} animate={{x: isSidebarOpen ? 0 : '110%', animationDuration: 0.5, transition: {type: 'tween'}}}>
         <div className="w-full h-full relative overflow-auto">
           <div className="w-full py-8 px-8 border-b border-gray-100 sticky top-0 bg-white flex items-center justify-between">
             <h2 className='font-sans text-xl text-black font-semibold leading-1'>Draft Settings</h2>

@@ -53,7 +53,7 @@ const Nav = () => {
                             />
                         </div>
                         <div className="">
-                            <h1 className='font-sans text-2xl lg:text-5xl font-semibold text-black'>{user?.first_name} {user?.last_name}</h1> 
+                            <h1 className='font-sans text-2xl lg:text-5xl font-semibold text-black max-w-[200px] lg:max-w-full'>{user?.first_name} {user?.last_name}</h1> 
                             <p className='font-sans text-base font-normal text-black/60 mt-1 block lg:hidden'><span className='font-medium text-black/60'>{followersCount}</span> followers</p>
                         </div>
                     </div>         

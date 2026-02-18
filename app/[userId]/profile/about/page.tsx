@@ -31,7 +31,7 @@ const {user:sessionUser} = useAuth();
                     {isSelf ? (
                         <div className='w-full flex flex-col justify-center items-center'>
                             <h4 className='font-sans text-black font-semibold text-lg'>Tell the world about yourself</h4>
-                            <p className='mt-5 max-w-[350px] text-center font-sans text-black/60 text-sm'>Here’s where you can share more about yourself: your history, work experience, accomplishments, interests, dreams, and more. You can even add images and use rich text to personalize your bio.</p>
+                            <p className='mt-5 lg:max-w-[350px] text-center font-sans text-black/60 text-sm p-4'>Here’s where you can share more about yourself: your history, work experience, accomplishments, interests, dreams, and more. You can even add images and use rich text to personalize your bio.</p>
                             <button className='mt-5 bg-gray-100/90 text-black border border-black px-4.5 py-1 rounded-4xl cursor-pointer'>Get started</button>
                         </div>
                     ): null}

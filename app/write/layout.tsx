@@ -7,7 +7,7 @@ import React from 'react'
 const layout = ({children} :{children: React.ReactNode}) => {
   return (
     <ProtectedRoute>
-       <section className="w-full min-h-dvh px-4 md:px-6">
+       <section className="w-full min-h-dvh px-4 md:px-6 overflow-x-hidden">
           {children}
         </section>
     </ProtectedRoute>
