@@ -5,6 +5,7 @@ import Link from 'next/link'
 import PostPreview from '../feed/PostPreview'
 import { useSearchParams } from 'next/navigation'
 import { ChevronDown } from 'lucide-react'
+import { PostPreviewSkeleton } from '../skeletons/PostPreviewSkeleton'
 
 const PostsResult = () => {
     const query = useSearchParams().get('q')
@@ -21,12 +22,18 @@ const PostsResult = () => {
       }, [data]);
   return (
     <div className='w-full relative'>
-        {isLoading && (<p>
-            Loading...
-        </p>)}
-        {isError && (<p>
-            error occured...
-        </p>)}
+        {isLoading && (
+            <div className="w-full">
+                {Array.from({ length: 3 }).map((_, i) => (
+                    <PostPreviewSkeleton key={i} />
+                ))}
+            </div>
+        )}
+        {isError && (
+            <div className="w-full h-[60vh] flex items-center justify-center">
+                <p className='text-base font-sans text-black/60'>Oops! Failed to load results.</p>
+            </div>
+        )}
         {allPosts && (
             <div className="w-full flex flex-col gap-4">
                 {allPosts.map((post) => (

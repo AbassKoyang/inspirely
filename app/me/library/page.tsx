@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { ChevronDown } from 'lucide-react'
 import PostPreview from '@/components/feed/PostPreview'
 import { useAuth } from '@/lib/contexts/authContext'
+import { PostPreviewSkeleton } from '@/components/skeletons/PostPreviewSkeleton'
 
 const BookmarksPage = () => {
     const {user} = useAuth()
@@ -22,12 +23,13 @@ const BookmarksPage = () => {
       }, [data]);
   return (
     <div className='w-full relative'>
-        {isLoading && (<p>
-            Loading...
-        </p>)}
-        {isError && (<p>
-            error occured...
-        </p>)}
+        {isLoading && (
+            <PostPreviewSkeleton />
+        )}
+        {isError && (
+            <div className="w-full h-[60vh] flex items-center justify-center">
+                <p className='text-base font-sans text-black/60'>Oops! Failed to load bookmarks.</p>
+            </div>        )}
         {allBookmarks && (
             <div className="w-full flex flex-col gap-4">
                 {allBookmarks.map((bm) => (
@@ -38,7 +40,7 @@ const BookmarksPage = () => {
 
         {allBookmarks && allBookmarks.length == 0 && (
               <div className="w-full flex items-center justify-center h-[60vh]">
-                  <p className='font-sans  text-base text-black mb-2'>Oops! No bookmarks yet.</p>
+                  <p className='font-sans text-base text-black/60'>Oops! No bookmarks yet.</p>
               </div>
           )}
 

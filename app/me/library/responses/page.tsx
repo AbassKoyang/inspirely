@@ -8,6 +8,7 @@ import PostPreview from '@/components/feed/PostPreview'
 import { useAuth } from '@/lib/contexts/authContext'
 import CommentCard from '@/components/feed/CommentCard'
 import Response from '@/components/me/Response'
+import ResponseSkeleton from '@/components/skeletons/ResponseSkeleton'
 
 const ResponsesPage = () => {
     const {user} = useAuth()
@@ -24,12 +25,18 @@ const ResponsesPage = () => {
       }, [data]);
   return (
     <div className='w-full relative'>
-        {isLoading && (<p>
-            Loading...
-        </p>)}
-        {isError && (<p>
-            error occured...
-        </p>)}
+        {isLoading && (
+            <div className="w-full flex flex-col gap-4  pt-6">
+                {Array.from({length: 5}).map((_, i) => (
+                    <ResponseSkeleton key={i} />
+                ))}
+            </div>
+        )}
+        {isError && (
+            <div className="w-full h-[60vh] flex items-center justify-center">
+            <p className='text-base font-sans text-black/60'>Oops! Failed to load responses.</p>
+            </div>
+        )}
         {allComments && (
             <div className="w-full flex flex-col gap-4  pt-6">
                 {allComments.map((comment) => (

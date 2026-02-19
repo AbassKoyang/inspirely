@@ -29,8 +29,8 @@ const CategoriesResult = () => {
             </div>
         )}
         {isError && (
-            <div className="w-full flex items-center justify-center py-10">
-                <p className='font-sans text-base text-red-600'>An error occurred while loading categories.</p>
+            <div className="w-full h-[60vh] flex items-center justify-center">
+                <p className='text-base font-sans text-black/60'>Oops! Failed to load results.</p>
             </div>
         )}
         {allCatgeories && (

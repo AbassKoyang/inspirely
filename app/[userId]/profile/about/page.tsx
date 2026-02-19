@@ -1,5 +1,7 @@
 'use client';
 import ProfilePostPreview from '@/components/profile/ProfilePostPreview';
+import { ProfilePostPreviewSkeleton } from '@/components/skeletons/ProfilePostPreviewSkeleton';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/lib/contexts/authContext'
 import { useFetchUser } from '@/lib/queries'
 import { useParams } from 'next/navigation';
@@ -17,12 +19,14 @@ const {user:sessionUser} = useAuth();
 
   return (
     <section className='w-full min-h-dvh overflow-x-hidden bg-white py-10'>
-      {isLoading && (<p>
-            Loading...
-        </p>)}
-        {isError && (<p>
-            error occured...
-        </p>)}
+      {isLoading && (
+        <Skeleton className="w-full h-[500px]" />
+      )}
+        {isError && (
+            <div className="w-full h-[60vh] flex items-center justify-center">
+            <p className='text-base font-sans text-black/60'>Oops! Failed to load about.</p>
+            </div>
+        )}
         {user &&  (
             <div className="w-full">
                 <div className="w-full min-h-[350px] bg-gray-100/90 flex items-center justify-center">

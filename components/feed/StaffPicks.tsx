@@ -4,6 +4,8 @@ import PostPreview from "./PostPreview"
 import StaffPickPostPreview from "./StaffPickPostPreview"
 import Link from 'next/link'
 import { useInView } from 'react-intersection-observer'
+import { Skeleton } from '../ui/skeleton'
+import { StaffPicksPostPreviewSkeleton } from '../skeletons/StaffPicksPostPreviewSkeleton'
 
 const StaffPicks = () => {
     const { ref, inView } = useInView();
@@ -28,12 +30,14 @@ const StaffPicks = () => {
   return (
     <div className='w-full'>
         <h5 className="font-sans font-bold text-base text-black/90 mb-5">Staff Picks</h5>
-        {isLoading && (<p>
-            Loading...
-        </p>)}
-        {isError && (<p>
-            error occured...
-        </p>)}
+        {isLoading && (
+            <StaffPicksPostPreviewSkeleton />
+        )}
+        {isError && (
+            <div className="w-full h-[300px] flex items-center justify-center">
+                <p className='text-xs font-sans text-black/60'>Oops! Failed to load articles.</p>
+            </div>
+        )}
         {allPosts && (
             <div className="w-full flex flex-col gap-4">
                 {allPosts.slice(0,3).map((post) => (

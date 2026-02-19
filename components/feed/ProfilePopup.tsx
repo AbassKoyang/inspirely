@@ -10,9 +10,10 @@ import { followUser, unfollowUser } from '@/lib/api'
 import { useFetchUser } from '@/lib/queries'
 import { toast } from 'sonner'
 import { useAuth } from '@/lib/contexts/authContext'
+import ProfilePopupSkeleton from '../skeletons/ProfilePopupSkeleton'
 
 const ProfilePopup = ({userId}: {userId: string}) => {
-    const {data:user, isLoading} = useFetchUser(String(userId) || '')
+    const {data:user, isLoading, isError} = useFetchUser(String(userId) || '')
     const {user: sessionUser} = useAuth();
     const queryClient = useQueryClient();
     const [isSelf, setIsSelf] = useState(false)
@@ -74,12 +75,17 @@ const ProfilePopup = ({userId}: {userId: string}) => {
   return (
     <div className="w-full">
         {isLoading && (
-            <p className="">Loading...</p>
+          <ProfilePopupSkeleton />
+        )}
+        {isError && (
+          <div className="w-full h-[300px] flex items-center justify-center">
+                <p className='text-xs font-sans text-black/60'>Oops! Failed to load user profile.</p>
+            </div>
         )}
         {user && (
             <div className="w-full">
             <div className="w-full flex items-end">
-                <Link href='#'>
+                <Link href={`/${userId}/profile`}>
                     <div className='size-[65px] rounded-full overflow-hidden cursor-pointer relative'>
                         <Image
                         className='object-cover'

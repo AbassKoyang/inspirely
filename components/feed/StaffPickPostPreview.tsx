@@ -23,7 +23,7 @@ const StaffPickPostPreview = ({post}:{post:PostType}) => {
        <div className="w-full flex items-center gap-3">
             <HoverCard openDelay={700} closeDelay={100}>
                 <HoverCardTrigger asChild>
-                    <Link href='#'>
+                    <Link href={`/${post.author.id}/profile`}>
                         <div className='size-[25px] relative rounded-xs overflow-hidden object-center object-cover cursor-pointer'>
                         <Image
                             className='object-cover z-10'
@@ -44,7 +44,7 @@ const StaffPickPostPreview = ({post}:{post:PostType}) => {
             </HoverCard>
             <HoverCard openDelay={700} closeDelay={100}>
                 <HoverCardTrigger asChild>
-                    <Link href='#' className='hover:underline'>
+                    <Link href={`/${post.author.id}/profile`} className='hover:underline'>
                         <p className='font-sans text-xs text-black/60 font-normal'>{name}</p>
                     </Link>
                 </HoverCardTrigger>

@@ -10,12 +10,13 @@ import React from 'react'
 import defaultAvatar from '@/public/assets/images/default-avatar.png'
 import { truncateText } from '../lib/utils'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card'
+import { Skeleton } from './ui/skeleton'
 
 
 const SideBar = () => {
     const {user} = useAuth();
     const {isActive} = useSideBarActive()
-    const {data:following} = useFetchFollowing(String(user?.id ) || '')
+    const {data:following, isLoading, isError} = useFetchFollowing(String(user?.id ) || '')
     const pathname = usePathname() 
 
   return (
@@ -71,7 +72,24 @@ const SideBar = () => {
                 <h3 className='font-sans text-base font-normal text-black/60'>Following</h3>
             </div>
             <div className="w-full mt-3 pl-0.5">
-            {following?.results.map((follow) => { 
+            {isLoading && (
+                <div className="w-full">
+                    {Array.from({length: 10}).map((_, i) => (
+                        <div key={i} className="w-full flex items-center justify-between mb-3">
+                            <Skeleton className='size-[20px] rounded-full' />
+                            <Skeleton className='h-[10px] w-[100px] rounded-sm' />
+                            <Skeleton className='size-[5px] rounded-full' />
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {isError && (
+                <div className="w-full h-[300px] flex items-center justify-center">
+                    <p className='text-xs font-sans text-black/60'>Oops! Failed to load following.</p>
+                </div>
+            )}
+            {following && following.results.map((follow) => { 
                     const followingName = truncateText(`${follow.following?.first_name} ${follow.following?.last_name}`, 20)
 
                 return (

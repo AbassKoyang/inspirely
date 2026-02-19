@@ -48,7 +48,7 @@ const MobileNavBar = () => {
       if (pathname.startsWith('/edit')) return null;
       
   return (
-    <motion.div initial={{y:0}} animate={{y: visible ? 0 : '100%', animationDuration: 1, transition: {type: 'tween'}}} className={`w-full bg-white px-6 py-4.5 flex items-center justify-between fixed bottom-0 left-0 lg:hidden`}>
+    <motion.div initial={{y:0}} animate={{y: visible ? 0 : '100%', animationDuration: 1, transition: {type: 'tween'}}} className={`w-full bg-white px-6 py-4.5 flex items-center justify-between fixed bottom-0 left-0 lg:hidden z-[1000]`}>
         <div className="flex items-center gap-8">
             <Link className='w-fit group' href='/feed'>
                     <div className="w-full flex flex-col items-center justify-center gap-2">
