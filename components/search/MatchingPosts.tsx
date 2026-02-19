@@ -1,3 +1,4 @@
+'use client'
 import Link from 'next/link'
 import React, { useMemo } from 'react'
 import SideBarUserInfo from '../feed/SidebarUserInfo'
