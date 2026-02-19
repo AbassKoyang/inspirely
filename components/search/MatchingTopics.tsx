@@ -4,6 +4,7 @@ import Link from 'next/link'
 import React, { useMemo } from 'react'
 import { Button } from '../ui/button'
 import { useSearchParams } from 'next/navigation'
+import { CategorySkeleton } from '../skeletons/CategorySkeleton'
 
 const MatchingCategories = () => {
     const query = useSearchParams().get('q')
@@ -23,12 +24,12 @@ const MatchingCategories = () => {
     <div className='w-full my-10 '>
         <h5 className="font-sans font-semibold text-base tracking-tighter text-black/90 mb-5">Categories matching {query}
         </h5>
-        {isLoading && (<p>
-            Loading...
-        </p>)}
-        {isError && (<p>
-            error occured...
-        </p>)}
+        {isLoading && (
+            <CategorySkeleton />
+        )}
+        {isError && (
+            <p className='font-sans text-sm text-red-600'>An error occurred while loading categories.</p>
+        )}
         {allCatgeories && (
             <div className="w-full flex flex-wrap gap-3 mb-4">
                 {allCatgeories.map((cat) => (

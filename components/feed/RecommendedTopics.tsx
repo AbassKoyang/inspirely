@@ -17,7 +17,7 @@ const RecommendedTopics = () => {
         )}
         {categories && (
             <div className="w-full flex flex-wrap gap-3">
-                {categories.map((cat) => (
+                {categories.slice(0,7).map((cat) => (
                     <Link key={cat.id} href='#' className='text-base text-black/80 font-normal font-sans bg-gray-100/90 rounded-4xl px-5 py-1.5'>{cat.name}</Link>
                 ))}
              <Link href="#" className='text-xs text-black/60 font-normal font-sans hover:underline mt-2'>See more topics</Link>

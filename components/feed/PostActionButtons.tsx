@@ -187,7 +187,7 @@ const PostActionButtons = ({post, isSelf, openSidebar}:{post:PostType; isSelf: b
              <div className="flex items-center gap-8 lg:gap-5">
                  <HoverCard openDelay={700} closeDelay={100}>
                          <HoverCardTrigger asChild>
-                             <button onClick={() => {
+                             <button disabled={isSelf} onClick={() => {
                                 if(post.is_bookmarked){
                                     removeBookmarkMutation.mutate()
                                 } else {

@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import SideBarUserInfo from '../feed/SidebarUserInfo'
 import { useSearchParams } from 'next/navigation'
 import { useSearchUsers } from '@/lib/queries'
+import { UserProfileSkeleton } from '../skeletons/UserProfileSkeleton'
 
 const MatchingPeople = () => {
     const query = useSearchParams().get('q')
@@ -21,12 +22,16 @@ const MatchingPeople = () => {
     return (
       <div className='w-full pt-10 border-t border-gray-100'>
           <h5 className="font-sans font-semibold text-base tracking-tighter text-black/90 mb-6">People matching {query}</h5>
-          {isLoading && (<p>
-              Loading...
-          </p>)}
-          {isError && (<p>
-              error occured...
-          </p>)}
+          {isLoading && (
+              <div className="w-full flex flex-col gap-4">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <UserProfileSkeleton key={i} size="sm" />
+                  ))}
+              </div>
+          )}
+          {isError && (
+              <p className='font-sans text-sm text-red-600'>An error occurred while loading users.</p>
+          )}
           {allPeople && (
               <div className="w-full flex flex-wrap gap-5 mb-4">
                   {allPeople.map((user) => (

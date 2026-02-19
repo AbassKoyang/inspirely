@@ -25,7 +25,7 @@ const ProfileDropdown = ({user, isOpen}:{user:User, isOpen:boolean}) => {
     }
 
   return (
-    <div className={`p-6 shadow-md rounded-md bg-white absolute right-0 bottom-[-320px] w-[260px] ${isOpen ? 'block' : 'hidden'} z-500`}>
+    <div className={`p-6 shadow-md rounded-md bg-white absolute right-0 bottom-[-360px] w-[260px] ${isOpen ? 'block' : 'hidden'} z-500`}>
         <Link href={`/${user.id}/profile`} className="w-full flex items-center gap-6 group">
             <div className='size-[45px] rounded-full overflow-hidden cursor-pointer relative'>
                 <Image

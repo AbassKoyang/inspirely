@@ -9,18 +9,24 @@ import { useParams, usePathname } from 'next/navigation'
 import React, { useState } from 'react'
 import { truncateText } from '@/lib/utils'
 import ProfileInformationModal from '@/components/me/ProfileInformationModal'
+import AddSocialForm from '@/components/me/AddSocialForm'
 
 const SettingsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isWebsiteModalOpen, setisWebsiteModalOpen] = useState(false);
+  const [isGithubModalOPen, setisGithubModalOPen] = useState(false);
+  const [isInstagramModalOPen, setisInstagramModalOPen] = useState(false);
+  const [isTwitterModalOPen, setisTwitterModalOPen] = useState(false);
+  const [isLinkedInModalOPen, setisLinkedInModalOPen] = useState(false);
   const pathname = usePathname()
   const {user} = useAuth()
   const name = truncateText(`${user?.first_name} ${user?.last_name}`, 15)
-  const email = truncateText(user?.email || '', 15)
-  const website = truncateText(user?.website || '', 15)
-  const github = truncateText(user?.github || '', 15)
-  const linkedin = truncateText(user?.linkedin || '', 15)
-  const twitter = truncateText(user?.twitter || '', 15)
-  const instagram = truncateText(user?.instagram || '', 15)
+  const email = truncateText(user?.email || '', 30)
+  const website = truncateText(user?.website || '', 30)
+  const github = truncateText(user?.github || '', 30)
+  const linkedin = truncateText(user?.linkedin || '', 30)
+  const twitter = truncateText(user?.twitter || '', 30)
+  const instagram = truncateText(user?.instagram || '', 30)
 
   return (
     <div className="w-full h-dvh bg-white pt-0 md:pt-20">
@@ -52,7 +58,7 @@ const SettingsPage = () => {
             </div>
           </button>
           <h3 className='font-sans text-base font-semibold text-black mb-5'>Socials</h3>
-          <button className="w-full flex items-center justify-between mb-8 group cursor-pointer">
+          <button onClick={() => setisWebsiteModalOpen(true)} className="w-full flex items-center justify-between mb-8 group cursor-pointer">
             <div className="flex items-center gap-2">
               <Globe  className='text-black size-4.5' />
               <p className='font-sans text-sm font-normal text-black'>Website</p>
@@ -63,7 +69,7 @@ const SettingsPage = () => {
                 <p className='font-sans text-sm font-normal text-emerald-700'>Add website</p>
               )}
           </button>
-          <button className="w-full flex items-center justify-between mb-8 group cursor-pointer">
+          <button onClick={() => setisGithubModalOPen(true)} className="w-full flex items-center justify-between mb-8 group cursor-pointer">
             <div className="flex items-center gap-2">
               <Github className='text-black size-4.5' />
               <p className='font-sans text-sm font-normal text-black'>Github account</p>
@@ -74,7 +80,7 @@ const SettingsPage = () => {
                 <p className='font-sans text-sm font-normal text-emerald-700'>Add github</p>
               )}
           </button>
-          <button className="w-full flex items-center justify-between mb-8 group cursor-pointer">
+          <button onClick={() => setisLinkedInModalOPen(true)} className="w-full flex items-center justify-between mb-8 group cursor-pointer">
             <div className="flex items-center gap-2">
               <Linkedin className='text-black size-4.5' />
               <p className='font-sans text-sm font-normal text-black'>LinkedIn account</p>
@@ -85,7 +91,7 @@ const SettingsPage = () => {
                 <p className='font-sans text-sm font-normal text-emerald-700'>Add LinkedIn</p>
               )}
           </button>
-          <button className="w-full flex items-center justify-between mb-8 group cursor-pointer">
+          <button onClick={() => setisTwitterModalOPen(true)} className="w-full flex items-center justify-between mb-8 group cursor-pointer">
             <div className="flex items-center gap-2">
               <Twitter className='text-black size-4.5' />
               <p className='font-sans text-sm font-normal text-black'>Twitter account</p>
@@ -96,7 +102,7 @@ const SettingsPage = () => {
                 <p className='font-sans text-sm font-normal text-emerald-700'>Add Twitter</p>
               )}
           </button>
-          <button className="w-full flex items-center justify-between mb-8 group cursor-pointer">
+          <button onClick={() => setisInstagramModalOPen(true)} className="w-full flex items-center justify-between mb-8 group cursor-pointer">
             <div className="flex items-center gap-2">
               <Instagram className='text-black size-4.5' />
               <p className='font-sans text-sm font-normal text-black'>Instagram account</p>
@@ -109,6 +115,11 @@ const SettingsPage = () => {
           </button>
         </div>
         <ProfileInformationModal isModalOpen={isModalOpen} closeModal={() => setIsModalOpen(false)} />
+        <AddSocialForm social='website' isModalOpen={isWebsiteModalOpen} closeModal={() => setisWebsiteModalOpen(false)} />
+        <AddSocialForm social='github' isModalOpen={isGithubModalOPen} closeModal={() => setisGithubModalOPen(false)} />
+        <AddSocialForm social='linkedin' isModalOpen={isLinkedInModalOPen} closeModal={() => setisLinkedInModalOPen(false)} />
+        <AddSocialForm social='twitter' isModalOpen={isTwitterModalOPen} closeModal={() => setisTwitterModalOPen(false)} />
+        <AddSocialForm social='instagram' isModalOpen={isInstagramModalOPen} closeModal={() => setisInstagramModalOPen(false)} />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { useSearchPosts, useSearchUsers } from '@/lib/queries'
 import StaffPickPostPreview from '../feed/StaffPickPostPreview'
 import { Skeleton } from '@/components/ui/skeleton'
+import { StaffPicksPostPreviewSkeleton } from '../skeletons/StaffPicksPostPreviewSkeleton'
 
 const MatchingPosts = () => {
     const query = useSearchParams().get('q')
@@ -24,16 +25,13 @@ const MatchingPosts = () => {
       <div className='w-full pt-10 border-t border-gray-100'>
           <h5 className="font-sans font-semibold text-base tracking-tighter text-black/90 mb-6">Posts matching {query}</h5>
           {isLoading && (
-              <div className="w-full flex flex-wrap gap-5 mb-4">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)]">
-                      <Skeleton className="w-full h-[200px] rounded-xl mb-2" />
-                      <Skeleton className="h-5 w-full mb-1" />
-                      <Skeleton className="h-4 w-3/4" />
-                    </div>
-                  ))}
-              </div>
-          )}
+            <StaffPicksPostPreviewSkeleton />
+            )}
+        {isError && (
+            <div className="w-full h-[300px] flex items-center justify-center">
+                <p className='text-xs font-sans text-black/60'>Oops! Failed to load articles.</p>
+            </div>
+        )}
           {isError && (
               <div className="w-full flex items-center justify-center py-10">
                   <p className='font-sans text-base text-red-600'>An error occurred while loading posts.</p>

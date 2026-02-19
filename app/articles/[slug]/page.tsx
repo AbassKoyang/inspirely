@@ -23,6 +23,7 @@ import MobileComments from '@/components/feed/MobileComment';
 import CommentSection from '@/components/feed/CommentSection';
 import PostActionButtons from '@/components/feed/PostActionButtons';
 import UserInfo from '@/components/feed/UserInfo';
+import PostSkeleton from '@/components/skeletons/PostSkeleton';
 
 const ArticlePage = () => {
     const [isSelf, setIsSelf] = useState(false)
@@ -200,6 +201,14 @@ const ArticlePage = () => {
 
   return (
     <section className='w-full max-w-2xl bg-white min-h-dvh'>
+        {isLoading && (
+          <PostSkeleton />
+        )}
+        {isError && (
+          <div className="w-full h-full flex items-center justify-center">
+              <p className='text-base lg:text-lg font-sans text-black/60'>Oops! Failed to load article.</p>
+          </div>
+        )}
        {post && (
         <>
          <div className="w-full">

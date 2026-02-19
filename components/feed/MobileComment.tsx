@@ -99,7 +99,7 @@ const MobileComments = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeSi
         <div className="w-full h-full relative flex-col flex justify-end">
         <div onClick={closeSidebar} className={`z-0 absolute top-0 left-0 size-full bg-black/25 duration-[1000] ease-in-out transition-all`}></div>
 
-        <motion.div className="w-full bg-white shadow-xl h-[90%] rounded-t-[35px] z-50 overflow-hidden" initial={{y:'100%'}} animate={{y: isOpen ? 0 : '100%', animationDuration: 1, transition: {type: 'tween'}}}>
+        <motion.div className="w-full bg-white shadow-xl h-[85%] rounded-t-[35px] z-50 overflow-hidden" initial={{y:'100%'}} animate={{y: isOpen ? 0 : '100%', animationDuration: 1, transition: {type: 'tween'}}}>
         {isLoading && (
             <div className="w-full h-full relative overflow-auto">
                 <div className="w-full py-5 px-5 border-b border-gray-100 sticky top-0 z-200 bg-white flex items-center justify-between">

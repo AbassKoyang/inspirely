@@ -45,7 +45,14 @@ const MobileNavBar = () => {
       }, [])
 
       if (pathname == '/write') return null;
+      if (pathname == '/me/settings') return null;
+      if (pathname == '/me/library') return null;
+      if (pathname == '/me/library/responses') return null;
+      if (pathname == '/me/notifications') return null;
+      if (pathname == '/me/notifications/responses') return null;
       if (pathname.startsWith('/edit')) return null;
+      if (pathname.startsWith('/articles')) return null;
+      if (pathname.endsWith('/profile')) return null;
       
   return (
     <motion.div initial={{y:0}} animate={{y: visible ? 0 : '100%', animationDuration: 1, transition: {type: 'tween'}}} className={`w-full bg-white px-6 py-4.5 flex items-center justify-between fixed bottom-0 left-0 lg:hidden z-[1000]`}>
