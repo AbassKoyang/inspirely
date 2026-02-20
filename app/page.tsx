@@ -132,24 +132,24 @@ const Home = () => {
     {
       title: "The Future of Writing in the Digital Age",
       excerpt: "Exploring how technology is reshaping the way we write, read, and share stories.",
-      author: "Sarah Chen",
-      date: "Mar 15, 2024",
+      author: "Koyang Abass",
+      date: "Jan 15, 2026",
       readTime: "5 min read",
       category: "Technology"
     },
     {
       title: "Finding Your Voice as a Writer",
       excerpt: "A guide to discovering and developing your unique writing style that resonates with readers.",
-      author: "Michael Torres",
-      date: "Mar 12, 2024",
+      author: "Kehinde Lawal",
+      date: "Jan 12, 2026",
       readTime: "7 min read",
       category: "Writing"
     },
     {
       title: "Building a Community Through Stories",
       excerpt: "How storytelling connects people and creates meaningful communities in our digital world.",
-      author: "Emily Johnson",
-      date: "Mar 10, 2024",
+      author: "Adebayo Johnson",
+      date: "Jan 10, 2026",
       readTime: "6 min read",
       category: "Community"
     }
@@ -201,7 +201,7 @@ const Home = () => {
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/signup"
-              className="group inline-flex items-center gap-2 rounded-full bg-emerald-600 px-8 py-4 text-base font-medium text-white transition-all hover:scale-105 hover:bg-emerald-700 hover:shadow-lg hover:shadow-emerald-500/50"
+              className="group inline-flex items-center gap-2 rounded-full bg-emarald-700 px-8 py-4 text-base font-medium text-white transition-all hover:scale-105 hover:bg-emerald-700 hover:shadow-lg hover:shadow-emerald-500/50"
             >
               Get started
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -323,7 +323,7 @@ const Home = () => {
           </p>
           <Link
             href="/signup"
-            className="group inline-flex items-center gap-2 rounded-full bg-emerald-600 px-8 py-4 text-base font-medium text-white transition-all hover:scale-105 hover:bg-emerald-700 hover:shadow-lg hover:shadow-emerald-500/50"
+            className="group inline-flex items-center gap-2 rounded-full bg-emarald-700 px-8 py-4 text-base font-medium text-white transition-all hover:scale-105 hover:bg-emerald-700 hover:shadow-lg hover:shadow-emerald-500/50"
           >
             Create your account
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

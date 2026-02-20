@@ -87,7 +87,7 @@ useEffect(() => {
       <div className="mx-auto flex max-w-full items-center justify-between px-4 py-2 md:px-6">
         <div className="flex items-center gap-8">
           <div className="flex items-center gap-2 lg:gap-4">
-            <button className={`${pathname !== '/' ? 'hidden md:block' : 'hidden'}`} onClick={() => setIsActive(!isActive)}>
+            <button className={`${pathname !== '/' && pathname !== '/login' && pathname !== '/signup' && pathname !== '/forgot-password' && pathname !== '/reset-password' ? 'hidden md:block' : 'hidden'}`} onClick={() => setIsActive(!isActive)}>
               <Menu strokeWidth={1} className='size-6 text-black' />
             </button>
             <Link href="/feed" className="flex items-center justify-center font-medium md:hidden">
@@ -101,13 +101,15 @@ useEffect(() => {
               Inspirely
             </Link>
           </div>
-          <form onSubmit={handleFormSubmit} className="focus-within:border focus-within:border-emerald-700 hidden md:flex w-[240px] h-[40px] rounded-4xl bg-gray-100/90 items-center justify-between overflow-hidden pl-3">
+          {user && (
+            <form onSubmit={handleFormSubmit} className="focus-within:border focus-within:border-emerald-700 hidden md:flex w-[240px] h-[40px] rounded-4xl bg-gray-100/90 items-center justify-between overflow-hidden pl-3">
             <button type='submit' className="flex items-center justify-center mr-2 cursor-pointer">
                 <Search strokeWidth={1} className="size-[19px] text-emerald-700" />
             </button>
             <input 
               onChange={(e) => setQuery(e.target.value)} type="text" placeholder="Search" className="h-full w-[85%] bg-transparent placeholder:text-foreground placeholder:font-light outline-0 stroke-0 border-0" defaultValue={q || ''} />
-          </form>
+            </form>
+          )}
         </div>
 
         {user ? (
@@ -147,19 +149,13 @@ useEffect(() => {
           ):(
         <div className="hidden items-center gap-8 md:flex">
           <Link
-            href="/write"
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Write
-          </Link>
-          <Link
-            href="/stories"
+            href="#"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Stories
           </Link>
           <Link
-            href="/about"
+            href="#"
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             About

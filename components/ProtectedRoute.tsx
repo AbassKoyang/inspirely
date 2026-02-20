@@ -25,7 +25,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center gap-4">
-        <div className="animate-bounce animate-pulse h-8 w-8 rounded-full bg-emerald-700"></div>
+        <div className="animate-bounce h-8 w-8 rounded-full bg-emerald-700"></div>
         </div>
       </div>
     );
