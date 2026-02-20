@@ -72,7 +72,7 @@ const EditPage = () => {
                   alt='Profle Picture'
                   />
                 </button>
-                {user && <ProfileDropdown user={user} isOpen={isProfileDropdownOpen} />}
+                {user && <ProfileDropdown user={user} isOpen={isProfileDropdownOpen} closeDropdown={() => setIsProfileDropdownOpen(false)} />}
               </div>
             </div>
         </div>

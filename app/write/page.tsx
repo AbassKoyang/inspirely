@@ -240,8 +240,8 @@ const calculateReadtime = (content: string) => {
                   blurDataURL='/assets/images/default-avatar.png'
                   alt='Profle Picture'
                   />
-                </button>
-                {user && <ProfileDropdown user={user} isOpen={isProfileDropdownOpen} />}
+                </button> 
+                {user && <ProfileDropdown user={user} isOpen={isProfileDropdownOpen} closeDropdown={() => setIsProfileDropdownOpen(false)} />}
             </div>
             </div>
         </div>
