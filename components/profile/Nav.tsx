@@ -23,12 +23,12 @@ const Nav = () => {
           navigator.share({
             title: user?.first_name,
             text: user?.last_name,
-            url: `https://inspirely.vercel.app/${user?.id}/profile`,
+            url: `https://useinspirely.vercel.app/${user?.id}/profile`,
           })
           .then(() => toast.success('Profile link copied to clipboard'))
           .catch((err) => toast.error('Error sharing:', err));
         } else {
-          navigator.clipboard.writeText(`https://inspirely.vercel.app/${user?.id}/profile`);
+          navigator.clipboard.writeText(`https://useinspirely.vercel.app/${user?.id}/profile`);
           toast.success('Profile link copied to clipboard');
         }
     }

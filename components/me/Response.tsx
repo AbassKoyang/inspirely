@@ -25,12 +25,12 @@ const Response = ({comment}:{comment: CommentType}) => {
           navigator.share({
             title: comment.post?.title,
             text: comment.content,
-            url: `https://inspirely.vercel.app/articles/${comment.id}`,
+            url: `https://useinspirely.vercel.app/articles/${comment.id}`,
           })
           .then(() => toast.success('Thanks for sharing!'))
           .catch((err) => toast.error('Error sharing:', err));
         } else {
-          navigator.clipboard.writeText(`https://inspirely.vercel.app/articles/${comment.id}`);
+          navigator.clipboard.writeText(`https://useinspirely.vercel.app/articles/${comment.id}`);
           toast.success('Product link copied to clipboard');
         }
     }

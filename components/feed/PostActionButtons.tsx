@@ -120,12 +120,12 @@ const PostActionButtons = ({post, isSelf, openSidebar}:{post:PostType; isSelf: b
           navigator.share({
             title: post?.title,
             text: post?.subtitle,
-            url: `https://inspirely.vercel.app/articles/${post?.slug}`,
+            url: `https://useinspirely.vercel.app/articles/${post?.slug}`,
           })
           .then(() => toast.success('Thanks for sharing!'))
           .catch((err) => toast.error('Error sharing:', err));
         } else {
-          navigator.clipboard.writeText(`https://inspirely.vercel.app/articles/${post?.slug}`);
+          navigator.clipboard.writeText(`https://useinspirely.vercel.app/articles/${post?.slug}`);
           toast.success('Product link copied to clipboard');
         }
       }

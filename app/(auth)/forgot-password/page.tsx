@@ -1,4 +1,4 @@
-import { GalleryVerticalEnd } from "lucide-react"
+'use client'
 
 import { ForgotPasswordForm } from "@/components/ForgotPasswordForm"
 import Link from "next/link"

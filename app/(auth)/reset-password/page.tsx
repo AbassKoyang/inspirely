@@ -1,6 +1,7 @@
-
+'use client'
 import { ResetPasswordForm } from "@/components/ResetPasswordForm"
 import Link from "next/link"
+import { Suspense } from "react"
 
 export default function ResetPasswordPage() {
   return (
@@ -14,7 +15,9 @@ export default function ResetPasswordPage() {
           </div>
           Inspirely
         </Link>
-        <ResetPasswordForm />
+        <Suspense fallback={null}>
+          <ResetPasswordForm />
+        </Suspense>
       </div>
     </div>
   )

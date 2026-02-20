@@ -11,6 +11,7 @@ import SideBar from "@/components/SideBar";
 import { SidebarProvider, useSideBarActive } from "@/lib/contexts/sidebardContext";
 import LayoutWrapper from "@/components/LayoutWrapper";
 import MobileNavBar from "@/components/MobileNavBar";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,7 +42,9 @@ export default function RootLayout({
         <AuthProvider>
             <SidebarProvider>
               <main className="w-full min-h-dvh relative">
-              <Navbar />
+              <Suspense fallback={null}>
+                <Navbar />
+              </Suspense>
                 {children}
               <MobileNavBar />
               <Footer />
