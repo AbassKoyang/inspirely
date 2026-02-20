@@ -17,7 +17,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   useEffect(() => {
     if (!loading && !user) {
       console.log('ProtectedRoute: Redirecting to auth');
-      router.push('/auth');
+      router.push('/login');
     }
   }, [user, loading, router]);
 
@@ -25,8 +25,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="flex flex-col items-center gap-4">
-        <div className="animate-bounce h-8 w-8 rounded-full bg-emerald-600"></div>
-        <p className="text-gray-600">Loading...</p>
+        <div className="animate-bounce animate-pulse h-8 w-8 rounded-full bg-emerald-700"></div>
         </div>
       </div>
     );

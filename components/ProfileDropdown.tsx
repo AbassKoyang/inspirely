@@ -1,7 +1,7 @@
 'use client';
 import { User } from '@/lib/schemas/user'
 import Image from 'next/image'
-import React, { use } from 'react'
+import React, { use, useEffect, useRef } from 'react'
 import defaultAvatar from '@/public/assets/images/default-avatar.png'
 import Link from 'next/link'
 import { truncateText } from '@/lib/utils'
@@ -10,12 +10,33 @@ import { api } from '@/lib/api'
 import { usePathname, useRouter } from 'next/navigation';
 
 
-const ProfileDropdown = ({user, isOpen}:{user:User, isOpen:boolean}) => {
+const ProfileDropdown = ({user, isOpen, closeDropdown}:{user:User, isOpen:boolean, closeDropdown: () => void}) => {
     const name = truncateText(`${user.first_name} ${user.last_name}`, 12)
     const pathname = usePathname()
-    const router = useRouter()
+    const dropdownRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(event.target as Node)
+        ) {
+            closeDropdown()
+        }
+      }
+    
+      if (isOpen) {
+        document.addEventListener('mousedown', handleClickOutside)
+      }
+    
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside)
+      }
+    }, [isOpen, closeDropdown])    
+    
     const handleSignout = async () => {
         try {
+            closeDropdown()
             const response = await api.post('/api/auth/logout/')
             console.log(response.data)
             window.location.replace('/login')
@@ -25,7 +46,7 @@ const ProfileDropdown = ({user, isOpen}:{user:User, isOpen:boolean}) => {
     }
 
   return (
-    <div className={`p-6 shadow-md rounded-md bg-white absolute right-0 bottom-[-360px] w-[260px] ${isOpen ? 'block' : 'hidden'} z-500`}>
+    <div ref={dropdownRef} className={`p-6 shadow-md rounded-md bg-white absolute right-0 bottom-[-360px] w-[260px] ${isOpen ? 'block' : 'hidden'} z-500`}>
         <Link href={`/${user.id}/profile`} className="w-full flex items-center gap-6 group">
             <div className='size-[45px] rounded-full overflow-hidden cursor-pointer relative'>
                 <Image
@@ -46,15 +67,15 @@ const ProfileDropdown = ({user, isOpen}:{user:User, isOpen:boolean}) => {
         </Link>
        
             <div className="w-full py-2 mt-5">
-                <Link href={`/me/notifications`} className='flex items-center gap-3 py-2 group'>
+                <Link onClick={closeDropdown} href={`/me/notifications`} className='flex items-center gap-3 py-2 group'>
                     <Bell strokeWidth={1} className={` size-[24px] group-hover:text-black ${pathname == '/me/notifications' ? 'text-black' : 'text-black/60'}`} />
                     <p className={`text-sm font-sans  group-hover:text-black ${pathname == '/me/notifications' ? 'text-black' : 'text-black/60'}`}>Notifications</p>
                 </Link>
-                <Link href={`/me/settings`} className='flex items-center gap-3 py-2 group'>
+                <Link onClick={closeDropdown} href={`/me/settings`} className='flex items-center gap-3 py-2 group'>
                     <Settings strokeWidth={1} className={` size-[24px] group-hover:text-black ${pathname == '/me/settings' ? 'text-black' : 'text-black/60'}`} />
                     <p className={`text-sm font-sans  group-hover:text-black ${pathname == '/me/settings' ? 'text-black' : 'text-black/60'}`}>Settings</p>
                 </Link>
-                <Link href={`/me/settings`} className='flex items-center gap-3 py-2 group'>
+                <Link onClick={closeDropdown} href={`/me/settings`} className='flex items-center gap-3 py-2 group'>
                     <HelpCircle strokeWidth={1} className={` size-[24px] group-hover:text-black ${pathname == '/me/settings' ? 'text-black' : 'text-black/60'}`} />
                     <p className={`text-sm font-sans  group-hover:text-black ${pathname == '/me/settings' ? 'text-black' : 'text-black/60'}`}>Help</p>
                 </Link>

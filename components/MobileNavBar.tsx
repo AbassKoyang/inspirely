@@ -44,19 +44,24 @@ const MobileNavBar = () => {
         }
       }, [])
 
+      if (pathname == '/') return null;
       if (pathname == '/write') return null;
       if (pathname == '/me/settings') return null;
       if (pathname == '/me/library') return null;
       if (pathname == '/me/library/responses') return null;
       if (pathname == '/me/notifications') return null;
       if (pathname == '/me/notifications/responses') return null;
+      if (pathname == '/login') return null;
+      if (pathname == '/signup') return null;
+      if (pathname == '/forgot-password') return null;
+      if (pathname == '/reset-password') return null;
       if (pathname.startsWith('/edit')) return null;
       if (pathname.startsWith('/articles')) return null;
       if (pathname.endsWith('/profile')) return null;
       
   return (
     <motion.div initial={{y:0}} animate={{y: visible ? 0 : '100%', animationDuration: 1, transition: {type: 'tween'}}} className={`w-full bg-white px-6 py-4.5 flex items-center justify-between fixed bottom-0 left-0 lg:hidden z-[1000]`}>
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-5">
             <Link className='w-fit group' href='/feed'>
                     <div className="w-full flex flex-col items-center justify-center gap-2">
                         <svg className={`${pathname.includes('/feed') ? 'stroke-emerald-600' : 'stroke-black/60'} group-hover:stroke-emerald-600 transition-all duration-200 ease-in-out size-[20px]`} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.9998 18V15M10.0698 2.81997L3.13978 8.36997C2.35978 8.98997 1.85978 10.3 2.02978 11.28L3.35978 19.24C3.59978 20.66 4.95978 21.81 6.39978 21.81H17.5998C19.0298 21.81 20.3998 20.65 20.6398 19.24L21.9698 11.28C22.1298 10.3 21.6298 8.98997 20.8598 8.36997L13.9298 2.82997C12.8598 1.96997 11.1298 1.96997 10.0698 2.81997Z" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -79,7 +84,7 @@ const MobileNavBar = () => {
                 </svg>
                 </div>
         </Link>
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-5">
         <Link className='w-full group' href='/me/library'>
                 <div className="w-full flex items-center flex-col justify-center gap-2">
                 <svg className=' size-[20px] fil'  width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

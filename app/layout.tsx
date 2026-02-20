@@ -26,6 +26,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Inspirely - Ideas worth sharing",
   description: "Discover stories, insights, and perspectives from writers around the world. Join a community where meaningful ideas flourish.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Inspirely",
+  }
 };
 
 export default function RootLayout({

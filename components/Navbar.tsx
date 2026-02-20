@@ -141,7 +141,7 @@ useEffect(() => {
                   alt='Profle Picture'
                   />
                 </button>
-                <ProfileDropdown user={user} isOpen={isProfileDropdownOpen} />
+                <ProfileDropdown user={user} isOpen={isProfileDropdownOpen} closeDropdown={() => setIsProfileDropdownOpen(false)} />
               </div>
             </div>
           ):(
@@ -196,13 +196,6 @@ useEffect(() => {
       {isMenuOpen && (
         <div className="border-border bg-background md:hidden pt-14 fixed left-0 top-0 z-[-1] w-full">
           <div className="px-6 py-4 space-y-4">
-            <Link
-              href="#"
-              className="block text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Write
-            </Link>
             <Link
               href="#"
               className="block text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
