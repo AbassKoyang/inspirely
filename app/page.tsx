@@ -127,6 +127,19 @@ const IconBox = ({icon}:{icon: any}) => {
   )
 }
 
+
+function KineticText() {
+  const text = "HOVER ME";
+
+  return (
+    <h1 className="kinetic">
+      {text.split("").map((letter, index) => (
+        <span key={index}>{letter}</span>
+      ))}
+    </h1>
+  );
+}
+
 const Home = () => {
   const featuredPosts = [
     {

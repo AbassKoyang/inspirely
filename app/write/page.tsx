@@ -162,13 +162,15 @@ const WritePage = () => {
 const onSubmit = async (data: CreatePostInput) => {
   console.log("Submitted data:", data)
   setIsSubmmitting(true)
-  console.log(slugify(data.title))
+  console.log(slugify(data.title, {lower: true, strict: true}).slice(0, 50))
+  const content = editor?.getHTML() || ''
+  const slug = slugify(data.title, {lower: true, strict: true}).slice(0, 50);
     try {
         const response =  await api.post(`/api/posts/`, {
           ...data,
-          slug: slugify(data.title, {lower: true, strict: true}).slice(0, 50),
+          slug,
           tags: selectedTags,
-          content: editor?.getHTML() || '',
+          content,
           category_id: Number(data.category),
           read_time: readTime,
           word_count: wordCount,

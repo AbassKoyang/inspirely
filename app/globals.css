@@ -102,3 +102,27 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none; 
 }
+
+.kinetic span {
+  display: inline-block;
+  transition: transform 0.3s ease;
+  background-color: blue;
+}
+
+.kinetic:hover span {
+  transform: translateY(-10px) rotate(10deg);
+}
+
+.kinetic:hover span:nth-child(odd) {
+  transform: translateY(10px) rotate(-10deg);
+}
+
+.kinetic span {
+  display: inline-block;
+  transition: transform 0.4s ease;
+}
+
+.kinetic span:nth-child(1) { transition-delay: 0s; }
+.kinetic span:nth-child(2) { transition-delay: 0.05s; }
+.kinetic span:nth-child(3) { transition-delay: 0.1s; }
+.kinetic span:nth-child(4) { transition-delay: 0.15s; }
