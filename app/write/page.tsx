@@ -33,6 +33,7 @@ import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import slugify from 'slugify';
 
 const WritePage = () => {
   const {user} = useAuth()
@@ -161,11 +162,11 @@ const WritePage = () => {
 const onSubmit = async (data: CreatePostInput) => {
   console.log("Submitted data:", data)
   setIsSubmmitting(true)
-  console.log(generateArticleSlug(data.title))
+  console.log(slugify(data.title))
     try {
         const response =  await api.post(`/api/posts/`, {
           ...data,
-          slug: generateArticleSlug(data.title),
+          slug: slugify(data.title, {lower: true, strict: true}).slice(0, 50),
           tags: selectedTags,
           content: editor?.getHTML() || '',
           category_id: Number(data.category),
@@ -175,10 +176,9 @@ const onSubmit = async (data: CreatePostInput) => {
         }, {withCredentials: true})
         console.log(response.data)
         toast.success("Article posted successfully")
-        // router.push('/feed')
         return response.data
     } catch (error) {
-        console.error("error creating article categories", error)
+        console.error("error creating post", error)
         toast.error("Failed to create post")
     }finally{
       setIsSubmmitting(false)
@@ -195,11 +195,6 @@ const calculateWordCount = (content:string) => {
 const calculateParagraphCount = (content:string) => {
   const count = content.split(/\n\s*\n+/).length
   setParagraphCount(count)
-}
-
-const generateArticleSlug = (title:string) => {
-  const truncatedTitle = title.length > 50 ? title.slice(0, 50) : title
-  return truncatedTitle.toLowerCase().replaceAll(' ', '-').replaceAll(".", '')
 }
 
 const calculateReadtime = (content: string) => {
