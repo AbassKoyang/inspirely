@@ -30,17 +30,19 @@ const ExplorePage = () => {
           </button>
           <input onChange={(e) => setQuery(e.target.value)} defaultValue={q||''} type="text" placeholder="Search anything..." className="h-full w-[95%] placeholder:text-gray-600 placeholder:font-normal outline-0 stroke-0 border-0 text-sm lg:text-base" />
         </form>
-        <div className="flex items-center gap-3 mt-5">
+        <div className="flex items-center flex-col lg:flex-row gap-3 mt-5">
           <p className='font-sans text-gray-600 text-xs lg:text-sm'>Recommended:</p>
-          <Link href='/explore/self-improvement' className='font-sans text-black text-xs lg:text-sm hover:underline'>Self Improvement</Link>
-          <Link href='/explore/politics' className='font-sans text-black text-xs lg:text-sm hover:underline'>Politics</Link>
-          <Link href='/explore/technology' className='font-sans text-black text-xs lg:text-sm hover:underline'>Technology</Link>
+          <div className="flex items-center gap-3">
+            <Link href='/explore/self-improvement' className='font-sans text-black text-xs lg:text-sm hover:underline'>Self Improvement</Link>
+            <Link href='/explore/politics' className='font-sans text-black text-xs lg:text-sm hover:underline'>Politics</Link>
+            <Link href='/explore/technology' className='font-sans text-black text-xs lg:text-sm hover:underline'>Technology</Link>
+          </div>
         </div>
       </div>
 
       <CategoriesContainer />
 
-      <div className="my-14 w-full flex flex-col md:flex-row items-center justify-center gap-3 py-3.5 bg-gray-100/90 rounded-sm lg:rounded-xs">
+      <div className="mt-14 mb-20 w-full flex flex-col md:flex-row items-center justify-center gap-3 p-3.5 bg-gray-100/90 rounded-sm lg:rounded-xs">
         <p className='font-sans text-black/90 text-sm'>See a topic you think should be added or removed here?</p>
         <Link href='#' className='font-sans text-black text-sm underline'>Suggest an edit</Link>
       </div>

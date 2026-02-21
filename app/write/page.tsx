@@ -356,6 +356,15 @@ const calculateReadtime = (content: string) => {
                             </button>
                           </div>
                         ))}
+                        {
+                          tagField !== '' && tags?.filter((tag) => tag.name.includes(tagField) || tag.slug.includes(tagField)).length == 0 && (
+                            <div className='w-full'>
+                              <button type="button" onClick={() => {addTagToSelectedTags(tagField); settagField('')}} className='w-full flex items-center justify-start p-3 hover:bg-gray-100 text-sm text-black/70 cursor-pointer'> 
+                                <p>{tagField}</p>
+                              </button>
+                            </div>
+                          )
+                        }
                       </div>
                       </div>
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

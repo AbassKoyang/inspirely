@@ -58,7 +58,7 @@ const Nav = () => {
 
   return (
     <motion.nav  initial={{y:0}} animate={{y: visible ? 0 : '-85%', animationDuration: 1, transition: {type: 'tween'}}} className="w-full py-4 pt-6 md:pt-10 bg-white sticky top-12 border-b border-gray-100 overflow-hidden z-200">
-        <div className='min-w-full flex items-center gap-4 lg:gap-8 bg-white overflow-x-auto'>
+        <div className='min-w-full flex items-center gap-4 lg:gap-8 bg-white overflow-x-auto scrollbar-hide'>
         <Link href='/feed'>
             <div className={`px-5 py-1 rounded-4xl min-w-[100px] border ${pathname == '/feed' ? 'bg-emerald-700/90 border-emerald-700/90' : 'bg-white border-black/60'} text-white flex items-center justify-center hover:bg-emerald-700 hover:border-emerald-700 group transition-all duration-300 ease-in-out`}>
                 <p className={`text-sm md:text-[16px] font-sans group-hover:text-white ${pathname == '/feed' ? 'text-white' : 'text-black/60'} transition-all duration-300 ease-in-out`}>For you</p>
