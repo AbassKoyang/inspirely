@@ -41,7 +41,7 @@ return (
             </div>
         )}
         {allPosts && allPosts.map((post) => (
-            <PostPreview key={post.id} post={post} />
+            <PostPreview key={post.id} post={post} queryKey='combined-posts' />
         ))}
         <div className='w-full flex items-center justify-center py-3' ref={ref}>
             {isFetchingNextPage ? <PostPreviewSkeleton /> : null}

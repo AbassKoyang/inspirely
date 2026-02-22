@@ -6,6 +6,7 @@ const authorSchema = z.object({
   first_name: z.string(),
   last_name: z.string(),
   profile_pic_url: z.string().optional(), 
+  is_following: z.boolean()
 });
 
 const categorySchema = z.object({

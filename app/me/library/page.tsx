@@ -21,6 +21,7 @@ const BookmarksPage = () => {
     const allBookmarks = useMemo(() => {
         return data?.pages.flatMap(page => page.results) ;
       }, [data]);
+      console.log(allBookmarks)
   return (
     <div className='w-full relative'>
         {isLoading && (
@@ -33,7 +34,7 @@ const BookmarksPage = () => {
         {allBookmarks && (
             <div className="w-full flex flex-col gap-4">
                 {allBookmarks.map((bm) => (
-                    <PostPreview post={bm.post} />
+                    <PostPreview post={bm.post} queryKey='bookmarks' />
                 ))}
             </div>
         )}

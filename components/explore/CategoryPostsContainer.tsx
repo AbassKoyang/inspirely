@@ -7,6 +7,7 @@ import { ChevronDown } from 'lucide-react'
 import { useAuth } from '@/lib/contexts/authContext'
 import { CategoryType } from '@/lib/types'
 import PostPreview from './PostPreview'
+import { PostPreviewSkeleton } from '../skeletons/PostPreviewSkeleton'
 
 const CategoryPostsContainer = ({category}:{category: CategoryType}) => {
     const {data,
@@ -23,22 +24,24 @@ const CategoryPostsContainer = ({category}:{category: CategoryType}) => {
   return (
     <div className="w-full border-y border-gray-100 py-10 mt-20 relative">
         <h3 className='text-xl lg:text-2xl font-semibold font-sans mb-5 lg:mb-0'>Recommended Articles</h3>
-        {isLoading && (<p>
-            Loading...
-        </p>)}
-        {isError && (<p>
-            error occured...
-        </p>)}
+        {isLoading && (
+            <PostPreviewSkeleton />
+        )}
+        {isError && (
+            <div className="w-full h-[60vh] flex items-center justify-center">
+                <p className='text-xs font-sans text-black/60'>Oops! Failed to load articles.</p>
+            </div>
+        )}
         {allPosts && (
             <div className="w-full flex flex-wrap lg:gap-4">
                 {allPosts.map((post) => (
-                    <PostPreview post={post} />
+                    <PostPreview post={post} queryKey={`category-posts-${category.slug}`} />
                 ))}
             </div>
         )}
 
         {allPosts && allPosts.length == 0 && (
-              <div className="w-full flex items-center justify-center h-[60vh]">
+              <div className="w-full flex items-center justify-center h-[30vh]">
                   <p className='font-sans  text-base text-black mb-2'>Oops! No posts yet.</p>
               </div>
           )}

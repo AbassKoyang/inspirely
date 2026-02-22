@@ -1,10 +1,17 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
-import { fetchCategories, fetchCategory, fetchCategoryPosts, fetchCombinedPosts, fetchComments, fetchFollowing, fetchIsFollowing, fetchLatestPosts, fetchPersonalisedPosts, fetchPost, fetchReplies, fetchSessionUser, fetchTags, fetchTrendingPosts, fetchUser, fetchUserComments, fetchUserNotifications, fetchUserPost, fetchUsers, searchCategories, searchPosts, searchUsers } from "./api"
+import { fetchBookmarks, fetchCategories, fetchCategory, fetchCategoryPosts, fetchCombinedPosts, fetchComments, fetchFollowing, fetchIsFollowing, fetchLatestPosts, fetchPersonalisedPosts, fetchPost, fetchReplies, fetchSessionUser, fetchTags, fetchTrendingPosts, fetchUser, fetchUserComments, fetchUserNotifications, fetchUserPost, fetchUsers, searchCategories, searchPosts, searchUsers } from "./api"
 
 export const useFetchUserPosts = (userId: string) => {
-    return useQuery({
-        queryFn: () => fetchUserPost(userId),
-        queryKey: ['user-posts']
+    return useInfiniteQuery({
+        queryFn: ({pageParam = 1}) => fetchUserPost({userId, page: pageParam}),
+        queryKey: ['user-posts'],
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) => {
+            if (!lastPage.next) return undefined
+    
+            const url = new URL(String(lastPage.next))
+            return Number(url.searchParams.get('page'))
+        }
     })
 }
 
@@ -51,7 +58,7 @@ export const useFetchLatestPosts = () => {
 export const useFetchCombinedPosts = () => {
     return useInfiniteQuery({
         queryFn: ({pageParam = 1}) => fetchCombinedPosts(pageParam),
-        queryKey: ['cmobined-posts'],
+        queryKey: ['combined-posts'],
         initialPageParam: 1,
         getNextPageParam: (lastPage) => {
             if (!lastPage.next) return undefined
@@ -154,8 +161,8 @@ export const useFetchReplies = (commentId:string) => {
 
 export const useFetchBookmarks = (userId:string) => {
     return useInfiniteQuery({
-        queryFn: ({pageParam = 1}) => fetchReplies(userId, pageParam),
-        queryKey: [`bookmarks-${userId}`],
+        queryFn: ({pageParam = 1}) => fetchBookmarks(userId, pageParam),
+        queryKey: [`bookmarks`],
         initialPageParam: 1,
         getNextPageParam: (lastPage) => {
             if (!lastPage.next) return undefined

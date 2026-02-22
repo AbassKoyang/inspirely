@@ -61,7 +61,7 @@ const CommentCard = ({comment}:{comment: CommentType}) => {
                 }})
             setreplyContent('')
             setShowReplyInput(false)
-            toast.error("Reply sent")
+            toast.success("Reply sent")
         }
     })}
 

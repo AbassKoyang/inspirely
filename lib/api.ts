@@ -56,9 +56,9 @@ api.interceptors.response.use(
 );
 
 
-export const fetchUserPost = async (userId: string) : Promise<PaginatedResponse<PostType>> => {
+export const fetchUserPost = async ({userId, page}: {userId: string; page: number}) : Promise<PaginatedResponse<PostType>> => {
     try {
-        const response =  await api.get(`/api/users/${userId}/posts/`)
+        const response =  await api.get(`/api/users/${userId}/posts/?page=${page}`)
         console.log(response.data)
         return response.data as PaginatedResponse<PostType>
     } catch (error) {

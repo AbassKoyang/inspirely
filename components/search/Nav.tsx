@@ -31,7 +31,7 @@ const Nav = () => {
         </form>
         <h1 className='text-black/60 text-2xl lg:text-4xl font-semibold font-sans tracking-tight'>Results for <span className='text-black'>{q}</span></h1>
          <nav className="w-full py-4 pt-6 md:pt-10 bg-white sticky top-10 border-b border-gray-100 overflow-hidden z-200">
-            <div className='min-w-full flex items-center gap-4 lg:gap-8 bg-white overflow-x-auto'>
+            <div className='min-w-full flex items-center gap-4 lg:gap-8 bg-white overflow-x-auto scrollbar-hide'>
             <Link href={`/search/?q=${q}`}>
                 <div className={`px-5 py-1 rounded-4xl min-w-[100px] border ${pathname == '/search' ? 'bg-emerald-700/90 border-emerald-700/90' : 'bg-white border-black/60'} text-white flex items-center justify-center hover:bg-emerald-700 hover:border-emerald-700 group transition-all duration-300 ease-in-out`}>
                     <p className={`text-sm md:text-[16px] font-sans group-hover:text-white ${pathname == '/search' ? 'text-white' : 'text-black/60'} transition-all duration-300 ease-in-out`}>Articles</p>

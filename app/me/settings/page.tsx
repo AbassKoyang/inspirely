@@ -20,7 +20,7 @@ const SettingsPage = () => {
   const [isLinkedInModalOPen, setisLinkedInModalOPen] = useState(false);
   const pathname = usePathname()
   const {user} = useAuth()
-  const name = truncateText(`${user?.first_name} ${user?.last_name}`, 15)
+  const name = truncateText(`${user?.first_name} ${user?.last_name}`, 10)
   const email = truncateText(user?.email || '', 30)
   const website = truncateText(user?.website || '', 30)
   const github = truncateText(user?.github || '', 30)
@@ -40,9 +40,9 @@ const SettingsPage = () => {
           </div>
 
           <button onClick={() => setIsModalOpen(true)} className="w-full flex items-center justify-between mb-8 group cursor-pointer">
-            <div className="flex flex-col items-start max-w-[200px] md:max-w-fit">
+            <div className="flex flex-col items-start max-w-[160px] md:max-w-fit">
               <p className='font-sans text-sm font-normal text-black'>Profile Information</p>
-              <p className='font-sans text-xs font-normal text-black/60'>Edit your photo, name, short bio, etc.</p>
+              <p className='font-sans text-xs font-normal text-black/60 text-left'>Edit your photo, name, short bio, etc.</p>
             </div>
             <div className="flex items-center gap-3">
               <p className='font-sans text-sm font-normal text-black/60 group-hover:text-black transition-all duration-300'>{name}</p>
@@ -64,7 +64,7 @@ const SettingsPage = () => {
               <p className='font-sans text-sm font-normal text-black'>Website</p>
             </div>
               {user?.website ? (
-                <p className='font-sans text-sm font-normal text-black/60'>{website}</p>
+                <p className='font-sans text-sm font-normal text-black/60 max-w-[150px] lg:max-w-fit text-left'>{website}</p>
               ) : (
                 <p className='font-sans text-sm font-normal text-emerald-700'>Add website</p>
               )}
@@ -75,7 +75,7 @@ const SettingsPage = () => {
               <p className='font-sans text-sm font-normal text-black'>Github account</p>
             </div>
               {user?.github ? (
-                <p className='font-sans text-sm font-normal text-black/60'>{github}</p>
+                <p className='font-sans text-sm font-normal text-black/60 max-w-[150px] lg:max-w-fit text-left'>{github}</p>
               ) : (
                 <p className='font-sans text-sm font-normal text-emerald-700'>Add github</p>
               )}
@@ -86,7 +86,7 @@ const SettingsPage = () => {
               <p className='font-sans text-sm font-normal text-black'>LinkedIn account</p>
             </div>
               {user?.linkedin ? (
-                <p className='font-sans text-sm font-normal text-black/60'>{linkedin}</p>
+                <p className='font-sans text-sm font-normal text-black/60 max-w-[150px] lg:max-w-fit text-left'>{linkedin}</p>
               ) : (
                 <p className='font-sans text-sm font-normal text-emerald-700'>Add LinkedIn</p>
               )}
@@ -97,7 +97,7 @@ const SettingsPage = () => {
               <p className='font-sans text-sm font-normal text-black'>Twitter account</p>
             </div>
               {user?.twitter ? (
-                <p className='font-sans text-sm font-normal text-black/60'>{twitter}</p>
+                <p className='font-sans text-sm font-normal text-black/60 max-w-[150px] lg:max-w-fit text-left'>{twitter}</p>
               ) : (
                 <p className='font-sans text-sm font-normal text-emerald-700'>Add Twitter</p>
               )}
@@ -108,7 +108,7 @@ const SettingsPage = () => {
               <p className='font-sans text-sm font-normal text-black'>Instagram account</p>
             </div>
               {user?.instagram ? (
-                <p className='font-sans text-sm font-normal text-black/60'>{instagram}</p>
+                <p className='font-sans text-sm font-normal text-black/60 max-w-[150px] lg:max-w-fit text-left'>{instagram}</p>
               ) : (
                 <p className='font-sans text-sm font-normal text-emerald-700'>Add Instagram</p>
               )}

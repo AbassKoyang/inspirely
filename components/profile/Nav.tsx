@@ -61,6 +61,7 @@ const Nav = () => {
                         <div className="">
                             <h1 className='font-sans text-2xl lg:text-5xl font-semibold text-black max-w-[200px] lg:max-w-full'>{user?.first_name} {user?.last_name}</h1> 
                             <p className='font-sans text-base font-normal text-black/60 mt-1 block lg:hidden'><span className='font-medium text-black/60'>{followersCount}</span> followers</p>
+                            <p className='font-sans text-sm font-normal text-black/60 mt-2'>{user?.bio}</p>
                         </div>
                     </div>         
                     <button className='group cursor-pointer' onClick={handleShare}><Share2 strokeWidth={1} className='text-black/60 group-hover:text-black' /></button>

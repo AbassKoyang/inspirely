@@ -90,7 +90,7 @@ const CommentsSidebar = ({isOpen, closeSidebar, post} : {isOpen: boolean; closeS
                 }))
                 setCommentContent('')
                 setIsTextAreaOpen(false)
-                toast.error("Reply sent")
+                toast.success("Reply sent")
             }
         })
     } 

@@ -49,6 +49,7 @@ const WritePage = () => {
   const [paragraphCount, setParagraphCount] = useState(0)
   const [readTime, setreadTime] = useState(0)
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false)
+  const router = useRouter();
 
 
   const form = useForm<CreatePostInput>({
@@ -178,6 +179,7 @@ const onSubmit = async (data: CreatePostInput) => {
         }, {withCredentials: true})
         console.log(response.data)
         toast.success("Article posted successfully")
+        router.back()
         return response.data
     } catch (error) {
         console.error("error creating post", error)

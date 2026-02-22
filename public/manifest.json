@@ -2,7 +2,7 @@
     "name": "Inspirely",
     "short_name": "Inspirely",
     "description": "Share your ideas with the world",
-    "start_url": "/",
+    "start_url": "/feed",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#047857",

@@ -91,7 +91,7 @@ const CommentSection = ({post} : {post: PostType}) => {
 
                 setCommentContent('')
                 setIsTextAreaOpen(false)
-                toast.error("Reply sent")
+                toast.success("Reply sent")
             }
         })
     } 

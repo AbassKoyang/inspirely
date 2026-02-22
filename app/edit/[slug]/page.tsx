@@ -36,8 +36,11 @@ const EditPage = () => {
         <div className="flex items-center gap-7">
           <div className="flex items-center gap-4">
             <button onClick={() => router.back()} className='text-black/60 text-xs font-sans cursor-pointer'>Back</button>
-            <button onClick={() => setisSidebarOpen(!isSidebarOpen)} className='text-xs py-[5px] px-4.5 text-white bg-emerald-700/90 hover:bg-emerald-700 rounded-4xl transition-all duration-200 ease-in-out cursor-pointer'>
+            <button onClick={() => setisSidebarOpen(!isSidebarOpen)} className='text-xs py-[5px] px-4.5 text-white bg-emerald-700/90 hover:bg-emerald-700 rounded-4xl transition-all duration-200 ease-in-out cursor-pointer hidden md:block'>
               Save and Publish
+            </button>
+            <button onClick={() => setisSidebarOpen(!isSidebarOpen)} className='text-xs py-[5px] px-4.5 text-white bg-emerald-700/90 hover:bg-emerald-700 rounded-4xl transition-all duration-200 ease-in-out cursor-pointer md:hidden'>
+              Save
             </button>
           </div>
 

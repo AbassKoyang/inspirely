@@ -37,7 +37,7 @@ const PostsResult = () => {
         {allPosts && (
             <div className="w-full flex flex-col gap-4">
                 {allPosts.map((post) => (
-                    <PostPreview post={post} />
+                    <PostPreview post={post} queryKey={`post-search-${query}`} />
                 ))}
             </div>
         )}

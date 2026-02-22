@@ -119,7 +119,7 @@ const updateProfileMutation = useMutation({
 
   return (
     <div className={`${isModalOpen ? 'block' : 'hidden'} fixed top-0 left-0 w-screen h-dvh flex justify-center z-300`}>
-        <div className="size-full overflow-y-auto flex justify-center z-100 py-30">
+        <div className="size-full overflow-y-auto flex justify-center z-100 py-15 lg:py-30 px-4">
             <div onClick={closeModal} className="z-10 absolute top-0 left-0 size-full bg-black/25"></div>
             <div className="w-full h-fit  max-w-xl bg-white p-6 py-8 rounded-md z-30">
             <div className="w-full flex items-center justify-center">
@@ -138,15 +138,15 @@ const updateProfileMutation = useMutation({
                 render={({ field, fieldState }) => (
                 <Field>
                     <FieldLabel htmlFor="profile-pic-url">Photo</FieldLabel>
-                    <div className="w-full flex items-center gap-7">
-                        <div className="size-[100px] rounded-full object-cover object-center overflow-hidden mt-2 bg-gray-100/90">
+                    <div className="w-full flex items-center gap-5 lg:gap-7">
+                        <div className="size-[60px] lg:size-[100px] rounded-full object-cover object-center overflow-hidden mt-2 bg-gray-100/90">
                             <img
                             className=''
                             src={profilePicUrl ? profilePicUrl : user?.profile_pic_url ? user.profile_pic_url : '/assets/images/default-avatar.png'}
                             alt='Profle Picture'
                             />
                         </div>
-                        <div className="">
+                        <div className="lg:max-w-fit max-w-[200px]">
                             <div className="flex items-center gap-5">
                                 <Button type='button' className='bg-transparent hover:bg-transparent overflow-hidden flex items-center justify-center relative p-0'>
                                     <p className='text-emerald-700 font-sans text-sm'>Update</p>
@@ -170,7 +170,7 @@ const updateProfileMutation = useMutation({
                                 placeholder=''
                                 />
                             </div>
-                            <p className='text-black/60 text-sm font-normal font-sans max-w-[350px]'>Recommended: Square JPG, PNG, or GIF, at least 1,000 pixels per side.</p>
+                            <p className='text-black/60 text-xs lg:text-sm font-normal font-sans max-w-[350px]'>Recommended: Square JPG, PNG, or GIF, at least 1,000 pixels per side.</p>
                         </div>
                     </div>
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
