@@ -8,12 +8,16 @@ import { truncateText } from '@/lib/utils'
 import { Bell, HelpCircle, Info, Settings } from 'lucide-react'
 import { api } from '@/lib/api'
 import { usePathname, useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/lib/contexts/authContext';
 
 
 const ProfileDropdown = ({user, isOpen, closeDropdown}:{user:User, isOpen:boolean, closeDropdown: () => void}) => {
     const name = truncateText(`${user.first_name} ${user.last_name}`, 12)
     const pathname = usePathname()
     const dropdownRef = useRef<HTMLDivElement>(null)
+    const queryClient = useQueryClient()
+    const {setUser} = useAuth() 
 
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
@@ -37,8 +41,10 @@ const ProfileDropdown = ({user, isOpen, closeDropdown}:{user:User, isOpen:boolea
     const handleSignout = async () => {
         try {
             closeDropdown()
+            await queryClient.cancelQueries({ queryKey: ['session-user'] })
             const response = await api.post('/api/auth/logout/')
             console.log(response.data)
+            setUser(null)
             window.location.replace('/login')
         } catch (error) {
             console.log("Error logging out")

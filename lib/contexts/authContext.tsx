@@ -8,10 +8,12 @@ import { useFetchSessionUser } from '../queries'
 
 const AuthContext = createContext<{
   user: User | null
-  loading: boolean
+  loading: boolean,
+  setUser: (user: User | null) => void
 }>({
   user: null,
   loading: true,
+  setUser: () => {}
 })
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -33,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [data])
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, setUser }}>
       {children}
     </AuthContext.Provider>
   )
