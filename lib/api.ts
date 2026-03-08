@@ -34,25 +34,75 @@ api.interceptors.response.use(
       if (isRefreshing) {
         return new Promise((resolve) => {
           addRefreshSubscriber(() => resolve(api(originalRequest)));
+        });import axios from "axios";
+
+        export const api = axios.create({
+          baseURL: process.env.NEXT_PUBLIC_API_URL,
+          withCredentials: true,
         });
-      }
-
-      isRefreshing = true;
-
-      try {
-        await api.post("/api/auth/refresh/");
-        isRefreshing = false;
-        onRefreshed();
-        return api(originalRequest);
-      } catch (err) {
-        isRefreshing = false;
-        window.location.href = "/login";
-        return Promise.reject(err);
-      }
-    }
-
-    return Promise.reject(error);
-  }
+        
+        const AUTH_ENDPOINTS = [
+          "/api/auth/login/",
+          "/api/auth/register/",
+          "/api/auth/refresh/",
+        ];
+        
+        let isRefreshing = false;
+        let refreshSubscribers: (() => void)[] = [];
+        
+        function subscribeTokenRefresh(cb: () => void) {
+          refreshSubscribers.push(cb);
+        }
+        
+        function onRefreshed() {
+          refreshSubscribers.forEach((cb) => cb());
+          refreshSubscribers = [];
+        }
+        
+        api.interceptors.response.use(
+          (response) => response,
+          async (error) => {
+            const originalRequest = error.config;
+        
+            const isAuthRequest = AUTH_ENDPOINTS.some((endpoint) =>
+              originalRequest.url?.includes(endpoint)
+            );
+        
+            if (
+              error.response?.status === 401 &&
+              !originalRequest._retry &&
+              !isAuthRequest
+            ) {
+              originalRequest._retry = true;
+        
+              if (isRefreshing) {
+                return new Promise((resolve) => {
+                  subscribeTokenRefresh(() => {
+                    resolve(api(originalRequest));
+                  });
+                });
+              }
+        
+              isRefreshing = true;
+        
+              try {
+                await api.post("/api/auth/refresh/");
+        
+                isRefreshing = false;
+                onRefreshed();
+        
+                return api(originalRequest);
+              } catch (refreshError) {
+                isRefreshing = false;
+        
+                window.location.href = "/login";
+        
+                return Promise.reject(refreshError);
+              }
+            }
+        
+            return Promise.reject(error);
+          }
 );
 
 
